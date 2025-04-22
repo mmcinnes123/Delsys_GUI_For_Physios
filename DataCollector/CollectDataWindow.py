@@ -141,19 +141,19 @@ class CollectDataWindow(QWidget):
         self.exportcsv_button.setFixedHeight(50)
         buttonLayout.addWidget(self.exportcsv_button)
 
-        # ---- Drop-down menu of sensor modes
-        self.SensorModeList = QComboBox(self)
-        self.SensorModeList.setToolTip('Sensor Modes')
-        self.SensorModeList.objectName = 'PlaceHolder'
-        self.SensorModeList.setStyleSheet('QComboBox {color: white;background: #848482}')
-        buttonLayout.addWidget(self.SensorModeList)
+        # # ---- Drop-down menu of sensor modes
+        # self.SensorModeList = QComboBox(self)
+        # self.SensorModeList.setToolTip('Sensor Modes')
+        # self.SensorModeList.objectName = 'PlaceHolder'
+        # self.SensorModeList.setStyleSheet('QComboBox {color: white;background: #848482}')
+        # buttonLayout.addWidget(self.SensorModeList)
 
         # ---- List of detected sensors
         self.SensorListBox = QListWidget(self)
         self.SensorListBox.setToolTip('Sensor List')
         self.SensorListBox.objectName = 'PlaceHolder'
         self.SensorListBox.setStyleSheet('QListWidget {color: white;background:#848482}')
-        self.SensorListBox.itemClicked.connect(self.sensorList_callback)
+        self.SensorListBox.itemClicked.connect(self.sensorMode_callback)
         self.SensorListBox.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         buttonLayout.addWidget(self.SensorListBox)
         buttonPanel.setLayout(buttonLayout)
@@ -373,38 +373,53 @@ class CollectDataWindow(QWidget):
         self.getpipelinestate()
         print("CSV Export: " + str(export))
 
-    def sensorList_callback(self):
+    def sensorMode_callback(self):
+
+        # Get the current selected sensor
         current_selected = self.SensorListBox.currentRow()
+
+        # Only implement if the selected sensor has changed
         if self.selectedSensor is None or self.selectedSensor != current_selected:
-            if self.selectedSensor is not None:
-                self.SensorModeList.currentIndexChanged.disconnect(self.sensorModeList_callback)
+
             self.selectedSensor = self.SensorListBox.currentRow()
-            modeList = self.CallbackConnector.base.getSampleModes(self.selectedSensor)
+            self.starttriggercheckbox.setEnabled(True)
+            self.stoptriggercheckbox.setEnabled(True)
+
+            curItem = self.SensorListBox.currentRow()
+            selMode = 'EMG RMS x4 (222Hz, 100ms win), OR 20 bits (74Hz), +/-5.5mV, 20-450Hz'
+            # self.print_available_sensor_modes()   # To see other modes, use the print_available_sensor_modes function
+
+            # Set the sensor mode
+            self.CallbackConnector.base.setSampleMode(curItem, selMode)
+            self.getpipelinestate()
+            self.starttriggercheckbox.setEnabled(True)
+            self.stoptriggercheckbox.setEnabled(True)
+
+            # Verify sensor mode
             curMode = self.CallbackConnector.base.getCurMode(self.selectedSensor)
+            print(f"\nMode for sensor #{self.selectedSensor} set to:")
+            print('\n   ', curMode)
 
-            if curMode is not None:
-                self.resetModeList(modeList)
-                self.SensorModeList.setCurrentText(curMode)
-                self.starttriggercheckbox.setEnabled(True)
-                self.stoptriggercheckbox.setEnabled(True)
-                self.SensorModeList.currentIndexChanged.connect(self.sensorModeList_callback)
+    def print_available_sensor_modes(self):
+        """
+        Prints all available sensor modes for the currently selected sensor.
+        If no sensor is selected, prints a message indicating that.
+        """
+        if self.selectedSensor is not None:
+            # Get the list of available modes for the selected sensor
+            mode_list = self.CallbackConnector.base.getSampleModes(self.selectedSensor)
 
-    def resetModeList(self, mode_list):
-        self.SensorModeList.clear()
-        self.SensorModeList.addItems(mode_list)
+            # Get the current mode
+            current_mode = self.CallbackConnector.base.getCurMode(self.selectedSensor)
 
-    def sensorModeList_callback(self):
-        curItem = self.SensorListBox.currentRow()
-        curMode = self.CallbackConnector.base.getCurMode(curItem)
-        selMode = self.SensorModeList.currentText()
-        if curMode != selMode:
-            if selMode != '':
-                self.CallbackConnector.base.setSampleMode(curItem, selMode)
-                self.getpipelinestate()
-                self.starttriggercheckbox.setEnabled(True)
-                self.stoptriggercheckbox.setEnabled(True)
+            print(f"\nAvailable modes for sensor #{self.selectedSensor}:")
+            print("-" * 40)
 
-                sensorList = self.CallbackConnector.base.TrigBase.GetScannedSensorsFound()
-                self.set_sensor_list_box(sensorList)
-                self.SensorModeList.setCurrentText(selMode)
-                self.SensorListBox.setCurrentRow(curItem)
+            # Print each available mode, marking the current mode with an asterisk
+            for mode in mode_list:
+                if mode == current_mode:
+                    print(f"* {mode} (current)")
+                else:
+                    print(f"  {mode}")
+        else:
+            print("No sensor selected. Please select a sensor first.")
