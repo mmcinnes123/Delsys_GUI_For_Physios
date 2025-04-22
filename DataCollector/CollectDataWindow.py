@@ -373,6 +373,7 @@ class CollectDataWindow(QWidget):
         self.getpipelinestate()
         print("CSV Export: " + str(export))
 
+
     def sensorMode_callback(self):
 
         # Get the current selected sensor
@@ -399,6 +400,7 @@ class CollectDataWindow(QWidget):
             curMode = self.CallbackConnector.base.getCurMode(self.selectedSensor)
             print(f"\nMode for sensor #{self.selectedSensor} set to:")
             print('\n   ', curMode)
+
 
     def print_available_sensor_modes(self):
         """
