@@ -20,6 +20,9 @@ class DataKernel():
         """Processes the data from the DelsysAPI and place it in the data_queue argument"""
         outArr = self.GetData()
         if outArr is not None:
+
+            print(outArr[4][0]) # This is q_w   # TODO: remove this line
+
             for i in range(len(outArr)):
                 self.allcollectiondata[i].extend(outArr[i][0].tolist())
             try:
