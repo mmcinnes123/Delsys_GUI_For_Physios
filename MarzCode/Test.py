@@ -21,17 +21,9 @@ trigno = AeroPy()
 # for method in methods:
 #     print(method)
 
-# # Get help on the object
-# help(trigno.AvailibleSensorModes)
+# Get help on the object
+help(trigno.StreamData)
+#
+# # Method 2
+# print(trigno.GetDataLog.__doc__)
 
-# Let's try to get the modes for a sensor (let's say sensor index 0)
-try:
-    modes = trigno.AvailibleSensorModes(0)
-    print("Available modes:", modes)
-except Exception as e:
-    print("Error:", e)
-
-# You can also check the type of the return value
-print("Return type:", type(modes))
-
-# Test change
