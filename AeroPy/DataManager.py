@@ -21,7 +21,7 @@ class DataKernel():
         outArr = self.GetData()
         if outArr is not None:
 
-            print(outArr[4][0]) # This is q_w   # TODO: remove this line
+            print('q_w', outArr[4][0]) # This is q_w   # TODO: remove this line
 
             for i in range(len(outArr)):
                 self.allcollectiondata[i].extend(outArr[i][0].tolist())
