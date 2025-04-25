@@ -13,6 +13,7 @@ clr.AddReference("System.Collections")
 
 app.use_app('PySide6')
 
+# Test commit
 
 class PlottingManagement():
     def __init__(self, collect_data_window, metrics, emgplot=None):
