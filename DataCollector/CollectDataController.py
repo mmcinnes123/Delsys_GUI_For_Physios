@@ -39,6 +39,7 @@ class PlottingManagement():
         while self.pauseFlag is False:
             self.DataHandler.processData(self.emg_plot)
             self.updatemetrics()
+            print(self.emg_plot)
 
     def streamingYT(self):
         """This is the data processing thread"""
@@ -67,6 +68,7 @@ class PlottingManagement():
 
     def updatemetrics(self):
         self.metrics.framescollected.setText(str(self.DataHandler.packetCount))
+        self.metrics.myMetric.setText(str(self.DataHandler.myQuat))
 
     def resetmetrics(self):
         self.metrics.framescollected.setText("0")

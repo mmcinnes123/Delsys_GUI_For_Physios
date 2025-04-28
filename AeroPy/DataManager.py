@@ -15,6 +15,7 @@ class DataKernel():
         self.allcollectiondata = []
         self.channel1time = []
         self.channel_guids = []
+        self.myQuat = [1, 0, 0, 0]
 
     def processData(self, data_queue):
         """Processes the data from the DelsysAPI and place it in the data_queue argument"""

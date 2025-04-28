@@ -202,6 +202,11 @@ class CollectDataWindow(QWidget):
         framescollectedlabel.setStyleSheet("color:white")
         collectionlabelsLayout.addWidget(framescollectedlabel)
 
+        mylabel = QLabel('My Label:', self)
+        mylabel.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        mylabel.setStyleSheet("color:white")
+        collectionlabelsLayout.addWidget(mylabel)
+
         collectionLabelPanel.setFixedWidth(200)
         collectionLabelPanel.setLayout(collectionlabelsLayout)
 
