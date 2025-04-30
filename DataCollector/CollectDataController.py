@@ -39,7 +39,6 @@ class PlottingManagement():
         while self.pauseFlag is False:
             self.DataHandler.processData(self.emg_plot)
             self.updatemetrics()
-            print(self.emg_plot)
 
     def streamingYT(self):
         """This is the data processing thread"""
