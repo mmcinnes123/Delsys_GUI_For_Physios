@@ -164,6 +164,7 @@ class GenericPlot(app.Canvas):
     def plot_new_data(self, data_frame, next_val):
         #---- Process possibly jagged array into rectangular array
         emgLen = max(len(x) for x in data_frame)                 # All processing is normalized to the fastest EMG rate
+        print('MARZ - Got to here - plot_new_data')
         for i in range(len(data_frame)):
             #--- Spread out / interpolate data 
             if len(data_frame[i]) < emgLen:

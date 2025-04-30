@@ -51,13 +51,17 @@ class PlottingManagement():
 
     def vispyPlot(self):
         """Plot Thread - Only Plotting EMG Channels"""
+        print('MARZ - Running vispyPlot()')
         while self.pauseFlag is False:
             if len(self.emg_plot) >= 2:
+                print('MARZ - pauseFlag is False and len(emg_plot) >= 2')
                 incData = self.emg_plot.popleft()  # Data at time T-1
                 try:
                     self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.emgChannelsIdx])])
                 except IndexError:
                     print("Index Error Occurred: vispyPlot()")
+
+                print('MARZ - emgChannelsIdx: ', self.base.emgChannelsIdx)
                 if self.base.emgChannelsIdx and len(self.outData[0]) > 0:
                     try:
                         self.EMGplot.plot_new_data(self.outData,

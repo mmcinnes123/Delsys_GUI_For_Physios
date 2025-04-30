@@ -22,12 +22,12 @@ class DataKernel():
         outArr = self.GetData()
         if outArr is not None:
 
-            # Look at the data
-            print(f"Number of channels in outArr: {len(outArr)}")   # This is 9 for this sensor mode (4 EMG, 4 quats, 'IMU accuracy')
-            if len(outArr) > 0 and len(outArr[0]) > 0:
-                print(outArr[4])    # First quat channel (a list of length 1, containing an array with 2 values of that variable (packet of 2)).
-                print(outArr[4][0]) # The first element of the list (i.e., the array with 2 values of that variable (packet of 2)).
-                print(outArr[4][0][0])  # The first value of the array (i.e., the first value of the packet of 2).
+            # # Look at the data
+            # print(f"Number of channels in outArr: {len(outArr)}")   # This is 9 for this sensor mode (4 EMG, 4 quats, 'IMU accuracy')
+            # if len(outArr) > 0 and len(outArr[0]) > 0:
+            #     print(outArr[4])    # First quat channel (a list of length 1, containing an array with 2 values of that variable (packet of 2)).
+            #     print(outArr[4][0]) # The first element of the list (i.e., the array with 2 values of that variable (packet of 2)).
+            #     print(outArr[4][0][0])  # The first value of the array (i.e., the first value of the packet of 2).
 
             for i in range(len(outArr)):
                 self.allcollectiondata[i].extend(outArr[i][0].tolist()) # This appends all 6 readings of each channel to the list
