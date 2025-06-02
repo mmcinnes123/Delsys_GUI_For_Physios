@@ -135,6 +135,7 @@ class TrignoBase():
 
                             ch_guid = ch_object.Id
                             ch_type = str(ch_object.Type)
+                            # print(f'Channel type: {ch_type}')
 
                             get_all_channels = True
                             if get_all_channels:
