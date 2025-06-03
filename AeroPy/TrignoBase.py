@@ -80,6 +80,8 @@ class TrignoBase():
         self.stop_trigger = stop_trigger
 
         configured = self.ConfigureCollectionOutput()
+        print(f'ORI channels: {self.oriChannelsIdx}')
+
         if configured:
             #(Optional) To get YT data output pass 'True' to Start method
             self.TrigBase.Start(self.collection_data_handler.streamYTData)
@@ -114,6 +116,7 @@ class TrignoBase():
                 self.channelobjects = []
                 self.plotCount = 0
                 self.emgChannelsIdx = []
+                self.oriChannelsIdx = []
                 globalChannelIdx = 0
                 self.channel_guids = []
 
@@ -184,6 +187,10 @@ class TrignoBase():
                             if ch_type == 'EMG':
                                 self.emgChannelsIdx.append(globalChannelIdx-1)
                                 self.plotCount += 1
+
+                            if ch_type == 'ORIENTATION':
+                                self.oriChannelsIdx.append(globalChannelIdx-1)
+
 
                             # ---- Exclude non-EMG channels from plots
                             else:

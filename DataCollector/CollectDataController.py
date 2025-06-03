@@ -38,11 +38,11 @@ class PlottingManagement():
             continue
         while self.pauseFlag is False:
             self.DataHandler.processData(self.emg_plot)
-            if self.emg_plot:  # checks if deque is not empty
-                print(f'emg_plot length: {len(self.emg_plot)}')
-                # print(f'Last element: {self.emg_plot[-1]}')
-            else:
-                print('emg_plot is empty')
+            # if self.emg_plot:  # checks if deque is not empty
+            #     print(f'emg_plot length: {len(self.emg_plot)}')
+            #     # print(f'Last element: {self.emg_plot[-1]}')
+            # else:
+            #     print('emg_plot is empty')
 
             self.updatemetrics()
 
@@ -55,15 +55,41 @@ class PlottingManagement():
             self.DataHandler.processYTData(self.emg_plot)
             self.updatemetrics()
 
-    def vispyPlot(self):
-        """Plot Thread - Only Plotting EMG Channels"""
-        # print('MARZ - Running vispyPlot()')
+    def myIMUdata(self):
         while self.pauseFlag is False:
             if len(self.emg_plot) >= 2:
-                # print('MARZ - pauseFlag is False and len(emg_plot) >= 2')
-                incData = self.emg_plot.popleft()  # Data at time T-1
+                incData = self.emg_plot.popleft()  # Returns the oldest element in the deque
                 try:
-                    self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.emgChannelsIdx])])
+                    self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs
+                except IndexError:
+                    print("Index Error Occurred: vispyPlot()")
+
+                # my_counter = 0
+                # while my_counter < 100:
+                #     my_counter += 1
+                #     print(f'outData: {self.outData}')
+                #     print(f'Sensor 1 q_w: {self.outData[0][0]}')    # There's a packet of values in this array so we take the first one
+                #     print(f'Sensor 1 q_x: {self.outData[1][0]}')
+                #     print(f'Sensor 1 q_y: {self.outData[2][0]}')
+                #     print(f'Sensor 1 q_z: {self.outData[3][0]}')
+                #     print(f'Sensor 2 q_w: {self.outData[4][0]}')
+                #     print(f'Sensor 2 q_x: {self.outData[5][0]}')
+                #     print(f'Sensor 2 q_y: {self.outData[6][0]}')
+                #     print(f'Sensor 2 q_z: {self.outData[7][0]}')
+                #     print(f'Sensor 3 q_w: {self.outData[8][0]}')
+                #     print(f'Sensor 3 q_x: {self.outData[9][0]}')
+                #     print(f'Sensor 3 q_y: {self.outData[10][0]}')
+                #     print(f'Sensor 3 q_z: {self.outData[11][0]}')
+
+    def vispyPlot(self):
+        """Plot Thread - Only Plotting EMG Channels"""
+        while self.pauseFlag is False:
+            if len(self.emg_plot) >= 2:
+                incData = self.emg_plot.popleft()  # Returns the oldest element in the deque
+                print(f'MARZ - len of incData firect element: {len(incData[0])}')
+                # print(f'MARZ - emgChannelsIdx{tuple([self.base.emgChannelsIdx])}')
+                try:
+                    self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.emgChannelsIdx])]) # Gets the elements of incData that matches channel IDs
                 except IndexError:
                     print("Index Error Occurred: vispyPlot()")
 
@@ -109,6 +135,9 @@ class PlottingManagement():
         if stop_trigger:
             self.t4 = threading.Thread(target=self.waiting_for_stop_trigger)
             self.t4.start()
+
+        self.t5 = threading.Thread(target=self.myIMUdata)
+        self.t5.start()
 
     def waiting_for_start_trigger(self):
         while self.base.TrigBase.IsWaitingForStartTrigger():
