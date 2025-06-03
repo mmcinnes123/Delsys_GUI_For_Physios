@@ -353,15 +353,17 @@ class CollectDataWindow(QWidget):
         self.SensorListBox.addItems(number_and_names_str)
 
     def start_callback(self):
-        self.CallbackConnector.base.Start_Callback(self.starttriggercheckbox.isChecked(),
-                                                   self.stoptriggercheckbox.isChecked())
-        self.CallbackConnector.resetmetrics()
-        self.starttriggercheckbox.setEnabled(False)
-        self.stoptriggercheckbox.setEnabled(False)
-        self.stop_button.setEnabled(True)
-        self.exportcsv_button.setEnabled(False)
-        self.exportcsv_button.setStyleSheet("color : gray")
-        self.getpipelinestate()
+        # self.CallbackConnector.base.Start_Callback(self.starttriggercheckbox.isChecked(),
+        #                                            self.stoptriggercheckbox.isChecked())
+        # self.CallbackConnector.resetmetrics()
+        # self.starttriggercheckbox.setEnabled(False)
+        # self.stoptriggercheckbox.setEnabled(False)
+        # self.stop_button.setEnabled(True)
+        # self.exportcsv_button.setEnabled(False)
+        # self.exportcsv_button.setStyleSheet("color : gray")
+        # self.getpipelinestate()
+
+        self.controller.showViewLiveData()
 
     def stop_callback(self):
         self.CallbackConnector.base.Stop_Callback()
