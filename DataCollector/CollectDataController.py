@@ -38,6 +38,12 @@ class PlottingManagement():
             continue
         while self.pauseFlag is False:
             self.DataHandler.processData(self.emg_plot)
+            if self.emg_plot:  # checks if deque is not empty
+                print(f'emg_plot length: {len(self.emg_plot)}')
+                # print(f'Last element: {self.emg_plot[-1]}')
+            else:
+                print('emg_plot is empty')
+
             self.updatemetrics()
 
     def streamingYT(self):
@@ -51,17 +57,17 @@ class PlottingManagement():
 
     def vispyPlot(self):
         """Plot Thread - Only Plotting EMG Channels"""
-        print('MARZ - Running vispyPlot()')
+        # print('MARZ - Running vispyPlot()')
         while self.pauseFlag is False:
             if len(self.emg_plot) >= 2:
-                print('MARZ - pauseFlag is False and len(emg_plot) >= 2')
+                # print('MARZ - pauseFlag is False and len(emg_plot) >= 2')
                 incData = self.emg_plot.popleft()  # Data at time T-1
                 try:
                     self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.emgChannelsIdx])])
                 except IndexError:
                     print("Index Error Occurred: vispyPlot()")
 
-                print('MARZ - emgChannelsIdx: ', self.base.emgChannelsIdx)
+                # print('MARZ - emgChannelsIdx: ', self.base.emgChannelsIdx)
                 if self.base.emgChannelsIdx and len(self.outData[0]) > 0:
                     try:
                         self.EMGplot.plot_new_data(self.outData,

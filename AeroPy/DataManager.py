@@ -22,21 +22,22 @@ class DataKernel():
         outArr = self.GetData()
         if outArr is not None:
 
-            # # Look at the data
+            # # # Shape of outArr
             # print(f"Number of channels in outArr: {len(outArr)}")   # This is 9 for this sensor mode (4 EMG, 4 quats, 'IMU accuracy')
-            # if len(outArr) > 0 and len(outArr[0]) > 0:
-            #     print(outArr[4])    # First quat channel (a list of length 1, containing an array with 2 values of that variable (packet of 2)).
-            #     print(outArr[4][0]) # The first element of the list (i.e., the array with 2 values of that variable (packet of 2)).
-            #     print(outArr[4][0][0])  # The first value of the array (i.e., the first value of the packet of 2).
+            # if len(outArr) > 4 and len(outArr[0]) > 0:
+            #     print(f'MARZ - outArr: {outArr}')
+            #     print(f'outArr[4]: {outArr[4]}')    # First quat channel (a list of length 1, containing an array packet with 2 values of that variable (packet of 2)).
+            #     print(f'outArr[4][0]: {outArr[4][0]}') # The first element of the list (i.e., the array with 2 values of that variable (packet of 2)).
+            #     print(f'outArr[4][0][0]: {outArr[4][0][0]}')  # The first value of the array (i.e., the first value of the packet of 2).
 
             for i in range(len(outArr)):
-                self.allcollectiondata[i].extend(outArr[i][0].tolist()) # This appends all 6 readings of each channel to the list
+                self.allcollectiondata[i].extend(outArr[i][0].tolist()) # This appends the whole packet of each channel to the list
             try:
                 for i in range(len(outArr[0])):
-                    if np.asarray(outArr[0]).ndim == 1:
+                    if np.asarray(outArr[0]).ndim == 1:     # If outArr is None
                         data_queue.append(list(np.asarray(outArr, dtype='object')[0]))
                     else:
-                        data_queue.append(list(np.asarray(outArr, dtype='object')[:, i]))
+                        data_queue.append(list(np.asarray(outArr, dtype='object')[:, i])) # Appending a list of 9 arrays, where each array has a packet of data
                 try:
                     self.myQuat = outArr[4][0][0]
                     self.packetCount += len(outArr[0])
