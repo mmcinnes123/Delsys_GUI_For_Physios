@@ -378,8 +378,9 @@ class CollectDataWindow(QWidget):
         self.getpipelinestate()
         print("CSV Export: " + str(export))
 
-
     def sensorMode_callback(self):
+
+        # See original repo to see how this used to work with a drop down of available sensor modes
 
         # Get the current selected sensor
         current_selected = self.SensorListBox.currentRow()
@@ -406,6 +407,24 @@ class CollectDataWindow(QWidget):
             print(f"\nMode for sensor #{self.selectedSensor} set to:")
             print('\n   ', curMode)
 
+    def autosetsensorMode_callback(self):
+
+        # Set to this mode which has four EMG channels and 4 Orientation (q_w, q_x, q_y, q_z)
+        selMode = 'EMG RMS x4 (222Hz, 100ms win), OR 20 bits (74Hz), +/-5.5mV, 20-450Hz'
+
+        # Iterate through each sensor
+        total_sensors = self.SensorListBox.count()
+        for sensor_idx in range(total_sensors):
+
+            self.CallbackConnector.base.setSampleMode(sensor_idx, selMode)
+
+            # Verify each sensor's mode
+            curMode = self.CallbackConnector.base.getCurMode(sensor_idx)
+            print(f"\nMode for sensor #{sensor_idx} set to:")
+            print('\n   ', curMode)
+
+        # After setting all sensors, update pipeline state
+        self.getpipelinestate()
 
     def print_available_sensor_modes(self):
         """

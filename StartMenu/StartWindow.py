@@ -44,17 +44,7 @@ class StartWindow(QWidget):
         button.setStyleSheet('QPushButton {color: white;}')
         buttonBox.addWidget(button)
 
-        plotBox = QHBoxLayout()
-
-        plot_label = QLabel('Display Plot')
-        plot_label.setStyleSheet('color: white')
-        plot_label.setAlignment(Qt.AlignVCenter | Qt.AlignRight)
-        plotBox.addWidget(plot_label)
-        self.plot_enabled = QCheckBox()
-        plotBox.addWidget(self.plot_enabled)
-        plotBox.setAlignment(Qt.AlignHCenter)
         grid.addLayout(buttonBox, 2, 0)
-        grid.addLayout(plotBox, 3, 0)
 
         self.setLayout(grid)
         self.setFixedSize(self.width(), self.height())
