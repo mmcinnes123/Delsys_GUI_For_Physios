@@ -53,3 +53,9 @@ class LiveDataWindow(QWidget):
 
         print('This button does nothing')
 
+
+    def closeEvent(self, event):
+
+        event.accept()  # Allow the window to close
+        self.controller.closeLiveData()
+

@@ -337,7 +337,7 @@ class CollectDataWindow(QWidget):
         self.exportcsv_button.setStyleSheet("color : gray")
         self.getpipelinestate()
 
-        # self.controller.showViewLiveData()
+        self.controller.showViewLiveData()  # Start collecting and open live data view
 
     def stop_callback(self):
         self.CallbackConnector.base.Stop_Callback()
