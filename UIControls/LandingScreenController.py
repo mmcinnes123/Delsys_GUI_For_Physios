@@ -23,8 +23,8 @@ class LandingScreenController():
         self.collectWindow.SetCallbackConnector()
         self.collectWindow.connect_callback()
         self.collectWindow.show()
-        self.collectWindow.scan_callback()
-        self.collectWindow.autosetsensorMode_callback()
+        self.collectWindow.scan_callback()  # Automatically scan for sensors when this window opens
+        self.collectWindow.autosetsensorMode_callback() # Automatically set sensor mode when this window opens
 
     def showViewLiveData(self):
         self.collectWindow.close()

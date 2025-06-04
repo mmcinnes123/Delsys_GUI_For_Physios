@@ -91,23 +91,6 @@ class CollectDataWindow(QWidget):
 
         buttonLayout.addLayout(findSensor_layout)
 
-        triggerLayout = QHBoxLayout()
-
-        self.starttriggerlabel = QLabel('Start Trigger', self)
-        self.starttriggerlabel.setStyleSheet("color : grey")
-        triggerLayout.addWidget(self.starttriggerlabel)
-        self.starttriggercheckbox = QCheckBox()
-        self.starttriggercheckbox.setEnabled(False)
-        triggerLayout.addWidget(self.starttriggercheckbox)
-        self.stoptriggerlabel = QLabel('Stop Trigger', self)
-        self.stoptriggerlabel.setStyleSheet("color : grey")
-        triggerLayout.addWidget(self.stoptriggerlabel)
-        self.stoptriggercheckbox = QCheckBox()
-        self.stoptriggercheckbox.setEnabled(False)
-        triggerLayout.addWidget(self.stoptriggercheckbox)
-
-        buttonLayout.addLayout(triggerLayout)
-
         # ---- Start Button
         self.start_button = QPushButton('Start', self)
         self.start_button.setToolTip('Start Sensor Stream')
@@ -225,10 +208,6 @@ class CollectDataWindow(QWidget):
         self.pair_button.setStyleSheet('QPushButton {color: white;}')
         self.scan_button.setEnabled(True)
         self.scan_button.setStyleSheet('QPushButton {color: white;}')
-        self.starttriggerlabel.setStyleSheet("color : white")
-        self.stoptriggerlabel.setStyleSheet("color : white")
-        self.starttriggercheckbox.setEnabled(True)
-        self.stoptriggercheckbox.setEnabled(True)
         self.getpipelinestate()
         self.MetricsConnector.pipelinestatelabel.setText(self.pipelinetext + " (Base Connected)")
 
@@ -333,8 +312,6 @@ class CollectDataWindow(QWidget):
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet("color : white")
             self.MetricsConnector.sensorsconnected.setText(str(len(sensorList)))
-            self.starttriggercheckbox.setEnabled(True)
-            self.stoptriggercheckbox.setEnabled(True)
         self.getpipelinestate()
         self.exportcsv_button.setEnabled(False)
         self.exportcsv_button.setStyleSheet("color : gray")
@@ -353,17 +330,14 @@ class CollectDataWindow(QWidget):
         self.SensorListBox.addItems(number_and_names_str)
 
     def start_callback(self):
-        # self.CallbackConnector.base.Start_Callback(self.starttriggercheckbox.isChecked(),
-        #                                            self.stoptriggercheckbox.isChecked())
-        # self.CallbackConnector.resetmetrics()
-        # self.starttriggercheckbox.setEnabled(False)
-        # self.stoptriggercheckbox.setEnabled(False)
-        # self.stop_button.setEnabled(True)
-        # self.exportcsv_button.setEnabled(False)
-        # self.exportcsv_button.setStyleSheet("color : gray")
-        # self.getpipelinestate()
+        self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not usign them
+        self.CallbackConnector.resetmetrics()
+        self.stop_button.setEnabled(True)
+        self.exportcsv_button.setEnabled(False)
+        self.exportcsv_button.setStyleSheet("color : gray")
+        self.getpipelinestate()
 
-        self.controller.showViewLiveData()
+        # self.controller.showViewLiveData()
 
     def stop_callback(self):
         self.CallbackConnector.base.Stop_Callback()
@@ -391,8 +365,6 @@ class CollectDataWindow(QWidget):
         if self.selectedSensor is None or self.selectedSensor != current_selected:
 
             self.selectedSensor = self.SensorListBox.currentRow()
-            self.starttriggercheckbox.setEnabled(True)
-            self.stoptriggercheckbox.setEnabled(True)
 
             curItem = self.SensorListBox.currentRow()
             selMode = 'EMG RMS x4 (222Hz, 100ms win), OR 20 bits (74Hz), +/-5.5mV, 20-450Hz'
@@ -401,8 +373,6 @@ class CollectDataWindow(QWidget):
             # Set the sensor mode
             self.CallbackConnector.base.setSampleMode(curItem, selMode)
             self.getpipelinestate()
-            self.starttriggercheckbox.setEnabled(True)
-            self.stoptriggercheckbox.setEnabled(True)
 
             # Verify sensor mode
             curMode = self.CallbackConnector.base.getCurMode(self.selectedSensor)
