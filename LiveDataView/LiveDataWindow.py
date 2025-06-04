@@ -3,7 +3,9 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
+# from DataCollector.IMUDataController import *
 from DataCollector.CollectDataController import *
+# from DataCollector.IMUMetricsManagement import IMUMetricsManagement
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
 from Plotter import GenericPlot as gp
 
@@ -15,29 +17,7 @@ class LiveDataWindow(QWidget):
         self.controller = controller
         self.grid = QGridLayout()
         self.setStyleSheet("background-color:#3d4c51;")
-        self.setWindowTitle("Start Menu")
-
-        imageBox = QVBoxLayout()
-        self.im = QPixmap("./Images/delsys.png")
-        self.label = QLabel()
-        self.label.setPixmap(self.im)
-        self.label.setAlignment(Qt.AlignCenter)
-        imageBox.addWidget(self.label)
-        imageBox.setAlignment(Qt.AlignBaseline)
-        imageBox.setContentsMargins(0,100,0,0)
-        self.grid.addLayout(imageBox, 0, 0)
-
-        errorbox = QHBoxLayout()
-        errorbox.setSpacing(0)
-        self.error = QLabel()
-        self.error.setText("")
-        self.error.setAlignment(Qt.AlignHCenter)
-        self.error.setStyleSheet('QLabel {color: red;}')
-        errorbox.addWidget(self.error)
-        errorbox.setAlignment(Qt.AlignRight)
-        self.grid.addLayout(errorbox,1,0)
-
-
+        self.setWindowTitle("Live Window")
 
         self.setLayout(self.grid)
         self.setFixedSize(self.width(), self.height())
@@ -48,8 +28,18 @@ class LiveDataWindow(QWidget):
         self.MetricsConnector = CollectionMetricsManagement()   # Set the metrics connector
         self.CallbackConnector = PlottingManagement(self, self.MetricsConnector, self.plotCanvas)   # Set the callback connector
 
+        self.collectionLabelPanel = self.CollectionLabelPanel()
+        self.collectionLabelPanel.setFixedHeight(275)
+        self.metricspanel = QWidget()
+        self.metricspane = QHBoxLayout()
+        self.metricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.metricspane.addWidget(self.collectionLabelPanel)
+        self.metricspane.addWidget(self.MetricsConnector.collectionmetrics)
+        self.metricspanel.setLayout(self.metricspane)
+        self.metricspanel.setFixedWidth(400)
+        self.grid.addWidget(self.metricspanel, 0, 1)
+
     def Plotter(self):
-        # TODO: Make blank plot canvas to pass in to PlottingManagement
         widget = QWidget()
         widget.setLayout(QVBoxLayout())
 
@@ -67,10 +57,24 @@ class LiveDataWindow(QWidget):
 
         return widget
 
-    def Do_Nothing_Callback(self):
 
-        print('This button does nothing')
+    def CollectionLabelPanel(self):
+        collectionLabelPanel = QWidget()
+        collectionlabelsLayout = QVBoxLayout()
 
+        mylabel = QLabel('My Label:', self)
+        mylabel.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        mylabel.setStyleSheet("color:white")
+        collectionlabelsLayout.addWidget(mylabel)
+
+        collectionLabelPanel.setFixedWidth(200)
+        collectionLabelPanel.setLayout(collectionlabelsLayout)
+
+        return collectionLabelPanel
+
+    def start_callback(self):
+        self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
+        self.CallbackConnector.resetmetrics()
 
     def closeEvent(self, event):
 
