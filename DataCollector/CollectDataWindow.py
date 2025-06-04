@@ -330,7 +330,7 @@ class CollectDataWindow(QWidget):
         self.SensorListBox.addItems(number_and_names_str)
 
     def start_callback(self):
-        self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not usign them
+        self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
         self.CallbackConnector.resetmetrics()
         self.stop_button.setEnabled(True)
         self.exportcsv_button.setEnabled(False)
