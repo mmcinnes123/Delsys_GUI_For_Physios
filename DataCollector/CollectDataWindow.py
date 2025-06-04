@@ -9,13 +9,14 @@ import time
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-from DataCollector.CollectDataController import *
 import tkinter as tk
 from tkinter import filedialog
 
+from DataCollector.CollectDataController import *
+from DataCollector.IMUDataController import *
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
 from Plotter import GenericPlot as gp
-
+from LiveDataView.LiveDataWindow import LiveDataWindow
 
 class CollectDataWindow(QWidget):
     plot_enabled = False
@@ -27,6 +28,7 @@ class CollectDataWindow(QWidget):
         self.buttonPanel = self.ButtonPanel()
         self.plotPanel = None
         self.collectionLabelPanel = self.CollectionLabelPanel()
+        self.live_data_window = LiveDataWindow(controller)
 
         self.grid = QGridLayout(self)
 
@@ -56,9 +58,9 @@ class CollectDataWindow(QWidget):
 
     def SetCallbackConnector(self):
         if self.plot_enabled:
-            self.CallbackConnector = PlottingManagement(self, self.MetricsConnector, self.plotCanvas)
+            self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self.MetricsConnector, self.plotCanvas)
         else:
-            self.CallbackConnector = PlottingManagement(self, self.MetricsConnector)
+            self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self.MetricsConnector, self.plotCanvas)
 
     # -----------------------------------------------------------------------
     # ---- GUI Components
@@ -330,12 +332,12 @@ class CollectDataWindow(QWidget):
         self.SensorListBox.addItems(number_and_names_str)
 
     def start_callback(self):
-        # self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
-        # self.CallbackConnector.resetmetrics()
+        self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
+        self.CallbackConnector.resetmetrics()
         self.stop_button.setEnabled(True)
         self.exportcsv_button.setEnabled(False)
         self.exportcsv_button.setStyleSheet("color : gray")
-        # self.getpipelinestate()
+        self.getpipelinestate()
 
         self.controller.showViewLiveData()  # Start collecting and open live data view
 

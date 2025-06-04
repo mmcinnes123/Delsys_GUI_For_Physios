@@ -29,7 +29,6 @@ class LandingScreenController():
     def showViewLiveData(self):
         self.collectWindow.close()
         self.liveWindow.show()
-        self.liveWindow.start_callback()
 
     def closeLiveData(self):
         self.collectWindow.show()
