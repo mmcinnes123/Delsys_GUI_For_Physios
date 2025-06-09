@@ -21,12 +21,9 @@ class LandingScreenController():
     def showCollectData(self):
         self.startWindow.close()
         self.collectWindow.plot_enabled = True
-        self.collectWindow.AddPlotPanel()
-        self.collectWindow.SetCallbackConnector()
         self.collectWindow.connect_callback()
         self.collectWindow.show()
         self.collectWindow.scan_callback()  # Automatically scan for sensors when this window opens
-        self.collectWindow.autosetsensorMode_callback() # Automatically set sensor mode when this window opens
 
     def showViewLiveData(self):
         self.collectWindow.close()

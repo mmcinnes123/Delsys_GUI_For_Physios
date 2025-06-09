@@ -52,15 +52,10 @@ class CollectDataWindow(QWidget):
         self.pairing = False
         self.selectedSensor = None
 
-    def AddPlotPanel(self):
         self.plotPanel = self.Plotter()
         self.grid.addWidget(self.plotPanel, 0, 2)
 
-    def SetCallbackConnector(self):
-        if self.plot_enabled:
-            self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self.MetricsConnector, self.plotCanvas)
-        else:
-            self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self.MetricsConnector, self.plotCanvas)
+        self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self.MetricsConnector, self.plotCanvas)
 
     # -----------------------------------------------------------------------
     # ---- GUI Components
@@ -317,6 +312,8 @@ class CollectDataWindow(QWidget):
         self.getpipelinestate()
         self.exportcsv_button.setEnabled(False)
         self.exportcsv_button.setStyleSheet("color : gray")
+
+        self.autosetsensorMode_callback()
 
     def set_sensor_list_box(self, sensorList):
         self.SensorListBox.clear()
