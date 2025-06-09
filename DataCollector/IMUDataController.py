@@ -16,10 +16,10 @@ app.use_app('PySide6')
 # Test commit
 
 class IMUPlottingManagement():
-    def __init__(self, data_window, metrics, plot_canvas):
+    def __init__(self, live_data_window, metrics, plot_canvas):
         self.base = TrignoBase(self)
         print('Base has been called with IMUPlottingManagement as the data_collection_handler argument.')
-        self.data_window = data_window
+        self.live_data_window = live_data_window
         self.metrics = metrics
         self.packetCount = 0  # Number of packets received from base
         self.pauseFlag = True  # Flag to start/stop collection and plotting
@@ -29,9 +29,37 @@ class IMUPlottingManagement():
         self.Index = None
         self.newTransform = None
         self.myQuat = 0
+        self.EMGplot = live_data_window.plotCanvas
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
-        self.EMGplot = False
+        # self.EMGplot = False
+
+    def test_emg_plot(self):
+        import numpy as np
+
+        # Number of channels and samples
+        num_channels = 2
+        num_samples = 1000
+
+        # Make sure data_frame is a list of arrays (not a 2D array)
+        data_frame = [
+            list(np.sin(np.linspace(0, 10, num_samples)) * 100),  # Channel 1: sine wave
+            list(np.random.randn(num_samples) * 50)  # Channel 2: random noise
+        ]
+
+        # Initialize the canvas first (assuming this matches your earlier initiateCanvas call)
+        try:
+            self.EMGplot.initiateCanvas(None, None, num_channels, 1, 20000)
+
+            # Create next_val (values for interpolation at the end of the window)
+            next_val = [0 for _ in range(num_channels)]  # One value per channel
+
+            # Now try plotting
+            self.EMGplot.plot_new_data(data_frame, next_val)
+            print("Plot test successful!")
+        except Exception as e:
+            print(f"Error during plotting: {e}")
+
 
     def streaming(self):
         """This is the data processing thread"""
@@ -93,6 +121,10 @@ class IMUPlottingManagement():
         self.t1 = threading.Thread(target=self.streaming)
         print('Starting streaming thread...')
         self.t1.start()
+
+        self.t2 = threading.Thread(target=self.test_emg_plot)
+        print('Starting test_emg_plot thread...')
+        self.t2.start()
 
         self.t5 = threading.Thread(target=self.myIMUdata)
         print('Starting myIMUdata thread...')

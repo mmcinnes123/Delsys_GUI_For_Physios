@@ -26,7 +26,7 @@ class LiveDataWindow(QWidget):
         self.grid.addWidget(self.plotPanel, 0, 2)
 
         self.MetricsConnector = CollectionMetricsManagement()   # Set the metrics connector
-        self.CallbackConnector = PlottingManagement(self, self.MetricsConnector, self.plotCanvas)   # Set the callback connector
+        # self.CallbackConnector = PlottingManagement(self, self.MetricsConnector, self.plotCanvas)   # Set the callback connector
 
         self.collectionLabelPanel = self.CollectionLabelPanel()
         self.collectionLabelPanel.setFixedHeight(275)
@@ -47,7 +47,7 @@ class LiveDataWindow(QWidget):
         pc = gp.GenericPlot(plot_mode)
         pc.native.objectName = 'vispyCanvas'
         pc.native.parent = self
-        label = QLabel("*This Demo plots EMG Channels only")
+        label = QLabel("My Live Data Window Plotter")
         label.setStyleSheet('.QLabel { font-size: 8pt;}')
         label.setFixedHeight(20)
         label.setAlignment(Qt.AlignmentFlag.AlignRight)
@@ -72,9 +72,9 @@ class LiveDataWindow(QWidget):
 
         return collectionLabelPanel
 
-    def start_callback(self):
-        self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
-        self.CallbackConnector.resetmetrics()
+    # def start_callback(self):
+    #     self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
+    #     self.CallbackConnector.resetmetrics()
 
     def closeEvent(self, event):
 
