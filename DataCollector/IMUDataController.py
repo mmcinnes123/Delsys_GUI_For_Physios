@@ -30,6 +30,9 @@ class IMUPlottingManagement():
         self.newTransform = None
         self.myQuat = 0
 
+        self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
+        self.EMGplot = False
+
     def streaming(self):
         """This is the data processing thread"""
         self.emg_queue = deque()
