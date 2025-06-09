@@ -20,6 +20,8 @@ class LandingScreenController():
 
     def showCollectData(self):
         self.startWindow.close()
+        self.collectWindow.plot_enabled = True
+        self.collectWindow.AddPlotPanel()
         self.collectWindow.SetCallbackConnector()
         self.collectWindow.connect_callback()
         self.collectWindow.show()
