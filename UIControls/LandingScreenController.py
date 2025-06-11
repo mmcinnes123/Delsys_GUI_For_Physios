@@ -6,8 +6,8 @@ from LiveDataView.LiveDataWindow import LiveDataWindow
 class LandingScreenController():
     def __init__(self):
         self.startWindow = StartWindow(self)
-        self.collectWindow = CollectDataWindow(self)
         self.liveWindow = LiveDataWindow(self)
+        self.collectWindow = CollectDataWindow(self)
 
         self.startWindow.show()
 

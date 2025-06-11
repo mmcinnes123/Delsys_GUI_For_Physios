@@ -16,7 +16,6 @@ from DataCollector.CollectDataController import *
 from DataCollector.IMUDataController import *
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
 from Plotter import GenericPlot as gp
-from LiveDataView.LiveDataWindow import LiveDataWindow
 
 class CollectDataWindow(QWidget):
     plot_enabled = False
@@ -28,7 +27,7 @@ class CollectDataWindow(QWidget):
         self.buttonPanel = self.ButtonPanel()
         self.plotPanel = None
         self.collectionLabelPanel = self.CollectionLabelPanel()
-        self.live_data_window = LiveDataWindow(controller)
+        self.live_data_window = controller.liveWindow
 
         self.grid = QGridLayout(self)
 

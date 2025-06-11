@@ -16,6 +16,7 @@ class LiveDataWindow(QWidget):
 
     def __init__(self, controller):
         QWidget.__init__(self)
+        print('Created Instance of LiveDataWindow Class! \n')
         self.controller = controller
         self.grid = QGridLayout()
         self.setStyleSheet("background-color:#3d4c51;")

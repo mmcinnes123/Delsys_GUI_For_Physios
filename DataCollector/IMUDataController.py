@@ -41,7 +41,6 @@ class IMUPlottingManagement():
             return
 
         if not self.EMGplot.is_initialized:
-            print("Initializing plot canvas...")
             self.EMGplot.initiateCanvas()  # Make sure the canvas is initialized
 
         # Add a counter to generate different values

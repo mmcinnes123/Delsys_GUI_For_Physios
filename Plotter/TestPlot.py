@@ -17,6 +17,8 @@ class SimplePlot(app.Canvas):
         self.last_plotted_column = -1
 
     def initiateCanvas(self, color=None, index=None, nrows=1, ncols=1, plot_window_sample_count=1000):
+        print("Initializing plot canvas...")
+
         self.n = int(plot_window_sample_count)
         self._reset_data_plot_buffer()
 

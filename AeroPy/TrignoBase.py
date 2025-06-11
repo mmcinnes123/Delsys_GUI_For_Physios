@@ -199,10 +199,10 @@ class TrignoBase():
 
 
 
-                if self.collection_data_handler.EMGplot:
-                    # self.collection_data_handler.EMGplot.initiateCanvas(None, None, self.plotCount, 1, 20000)
-                    self.collection_data_handler.EMGplot.initiateCanvas(plot_window_sample_count=1000
-)
+#                 if self.collection_data_handler.EMGplot:
+#                     # self.collection_data_handler.EMGplot.initiateCanvas(None, None, self.plotCount, 1, 20000)
+#                     self.collection_data_handler.EMGplot.initiateCanvas(plot_window_sample_count=1000
+# )
 
                 return True
         else:
