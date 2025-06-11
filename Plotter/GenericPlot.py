@@ -52,7 +52,7 @@ class GenericPlot(app.Canvas):
         #---- Generate the signals as a (m, n) array
         self._reset_data_plot_buffer()
 
-        #---- Color of each vertex (TODO: make it more efficient by using a GLSL-based color map and the index).
+        #---- Color of each vertex
         if color is None:
             color = np.repeat(np.random.uniform(size=(self.m, 3), low=.5, high=.9), self.n, axis=0).astype(np.float32)
 

@@ -10,8 +10,6 @@ from DataCollector.CollectionMetricsManagement import CollectionMetricsManagemen
 from Plotter import GenericPlot as gp
 from Plotter.TestPlot import SimplePlot
 
-# TODO: Start creating your own vispy plot in the LiveDataWindow and see if you can update it from IMUDataController.py
-
 class LiveDataWindow(QWidget):
 
     def __init__(self, controller):

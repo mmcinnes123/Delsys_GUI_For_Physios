@@ -35,29 +35,6 @@ class IMUPlottingManagement():
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
         # self.EMGplot = False
 
-    def test_emg_plot(self):
-        if not hasattr(self.EMGplot, 'is_initialized'):
-            print("Warning: Plot canvas is not initialized!")
-            return
-
-        if not self.EMGplot.is_initialized:
-            self.EMGplot.initiateCanvas()  # Make sure the canvas is initialized
-
-        # Add a counter to generate different values
-        if not hasattr(self, 'test_counter'):
-            self.test_counter = 0
-
-        while self.pauseFlag is False:
-
-            # Generate an oscillating value for visibility
-            test_value = np.sin(self.test_counter * 0.1)
-            print(f"Plotting value: {test_value}")
-
-            self.EMGplot.plot_new_data(test_value)
-            self.test_counter += 1
-
-            # Add a small delay to make the updates visible
-            time.sleep(0.1)  # Import time at the top of your file if not already done
 
     def streaming(self):
         """This is the data processing thread"""
@@ -72,8 +49,13 @@ class IMUPlottingManagement():
             # else:
             #     print('emg_plot is empty')
 
+    # TODO: Tidy up function below + Rename things in general to make sure everything's making sense
 
     def myIMUdata(self):
+
+        if not self.EMGplot.is_initialized:
+            self.EMGplot.initiateCanvas()  # Make sure the canvas is initialized
+
         while self.pauseFlag is False:
             if len(self.emg_plot) >= 2:
                 incData = self.emg_plot.popleft()  # Returns the oldest element in the deque
@@ -85,6 +67,7 @@ class IMUPlottingManagement():
                 self.my_quat = self.outData[0][0]
                 self.updatemetrics()
 
+                self.EMGplot.plot_new_data(self.my_quat)
                 # my_counter = 0
                 # while my_counter < 100:
                 #     my_counter += 1
@@ -120,8 +103,8 @@ class IMUPlottingManagement():
         print('Starting streaming thread...')
         self.t1.start()
 
-        self.t2 = threading.Thread(target=self.test_emg_plot)
-        print('Starting test_emg_plot thread...')
+        self.t2 = threading.Thread(target=self.myIMUdata)
+        print('Starting myIMUdata thread...')
         self.t2.start()
 
         self.t5 = threading.Thread(target=self.myIMUdata)
