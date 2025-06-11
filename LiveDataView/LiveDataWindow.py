@@ -8,7 +8,9 @@ from DataCollector.CollectDataController import *
 # from DataCollector.IMUMetricsManagement import IMUMetricsManagement
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
 from Plotter import GenericPlot as gp
+from Plotter.TestPlot import SimplePlot
 
+# TODO: Start creating your own vispy plot in the LiveDataWindow and see if you can update it from IMUDataController.py
 
 class LiveDataWindow(QWidget):
 
@@ -44,7 +46,7 @@ class LiveDataWindow(QWidget):
         widget.setLayout(QVBoxLayout())
 
         plot_mode = 'windowed'  # Select between 'scrolling' and 'windowed'
-        pc = gp.GenericPlot(plot_mode)
+        pc = SimplePlot(plot_mode)
         pc.native.objectName = 'vispyCanvas'
         pc.native.parent = self
         label = QLabel("My Live Data Window Plotter")

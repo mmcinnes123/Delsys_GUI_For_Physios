@@ -4,6 +4,7 @@ This is the controller for the GUI that lets you connect to a base, scan via rf 
 """
 
 from collections import deque
+import time
 
 from Plotter.GenericPlot import *
 from AeroPy.TrignoBase import *
@@ -35,31 +36,29 @@ class IMUPlottingManagement():
         # self.EMGplot = False
 
     def test_emg_plot(self):
-        import numpy as np
+        if not hasattr(self.EMGplot, 'is_initialized'):
+            print("Warning: Plot canvas is not initialized!")
+            return
 
-        # Number of channels and samples
-        num_channels = 2
-        num_samples = 1000
+        if not self.EMGplot.is_initialized:
+            print("Initializing plot canvas...")
+            self.EMGplot.initiateCanvas()  # Make sure the canvas is initialized
 
-        # Make sure data_frame is a list of arrays (not a 2D array)
-        data_frame = [
-            list(np.sin(np.linspace(0, 10, num_samples)) * 100),  # Channel 1: sine wave
-            list(np.random.randn(num_samples) * 50)  # Channel 2: random noise
-        ]
+        # Add a counter to generate different values
+        if not hasattr(self, 'test_counter'):
+            self.test_counter = 0
 
-        # Initialize the canvas first (assuming this matches your earlier initiateCanvas call)
-        try:
-            self.EMGplot.initiateCanvas(None, None, num_channels, 1, 20000)
+        while self.pauseFlag is False:
 
-            # Create next_val (values for interpolation at the end of the window)
-            next_val = [0 for _ in range(num_channels)]  # One value per channel
+            # Generate an oscillating value for visibility
+            test_value = np.sin(self.test_counter * 0.1)
+            print(f"Plotting value: {test_value}")
 
-            # Now try plotting
-            self.EMGplot.plot_new_data(data_frame, next_val)
-            print("Plot test successful!")
-        except Exception as e:
-            print(f"Error during plotting: {e}")
+            self.EMGplot.plot_new_data(test_value)
+            self.test_counter += 1
 
+            # Add a small delay to make the updates visible
+            time.sleep(0.1)  # Import time at the top of your file if not already done
 
     def streaming(self):
         """This is the data processing thread"""
@@ -105,7 +104,7 @@ class IMUPlottingManagement():
                 #     print(f'Sensor 3 q_z: {self.outData[11][0]}')
 
     def updatemetrics(self):
-        print('Updating metrics... ')
+        # print('Updating metrics... ')
         self.metrics.myMetric.setText('This')
         # self.metrics.myMetric.setText(str(self.myQuat))
 
