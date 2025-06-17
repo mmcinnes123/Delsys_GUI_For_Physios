@@ -60,7 +60,6 @@ class SimplePlot(app.Canvas):
         self.last_plotted_column = -1
 
     def plot_new_data(self, data_point, next_val=None):
-        print('plot_new_data was called')
         if self.plot_mode.lower() == 'scrolling':
             self.y[:-1] = self.y[1:]
             self.y[-1] = data_point

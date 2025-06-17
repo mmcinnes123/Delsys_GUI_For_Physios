@@ -19,11 +19,10 @@ app.use_app('PySide6')
 class IMUPlottingManagement():
     def __init__(self, live_data_window, metrics, plot_canvas):
         self.base = TrignoBase(self)
-        print('Base has been called with IMUPlottingManagement as the data_collection_handler argument.')
         self.live_data_window = live_data_window
         self.metrics = metrics
         self.packetCount = 0  # Number of packets received from base
-        self.pauseFlag = True  # Flag to start/stop collection and plotting
+        self.pauseFlag = True  # Flag to start/stop collection and plotting (controlled in Base start and stop callbacks)
         self.DataHandler = DataKernel(self.base)  # Data handler for receiving data from base
         self.base.DataHandler = self.DataHandler
         self.outData = [[0]]
@@ -33,21 +32,15 @@ class IMUPlottingManagement():
         self.EMGplot = live_data_window.plotCanvas
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
-        # self.EMGplot = False
 
 
     def streaming(self):
         """This is the data processing thread"""
-        self.emg_queue = deque()
-        while self.pauseFlag is True:
+        while self.pauseFlag is True:   # Wait for base start callback
             continue
         while self.pauseFlag is False:
-            self.DataHandler.processData(self.emg_plot)
-            # if self.emg_plot:  # checks if deque is not empty
-            #     print(f'emg_plot length: {len(self.emg_plot)}')
-            #     # print(f'Last element: {self.emg_plot[-1]}')
-            # else:
-            #     print('emg_plot is empty')
+            self.DataHandler.processData(self.data_deque) # Get packets of data from the base and append to the queue
+
 
     # TODO: Tidy up function below + Rename things in general to make sure everything's making sense
 
@@ -57,8 +50,8 @@ class IMUPlottingManagement():
             self.EMGplot.initiateCanvas()  # Make sure the canvas is initialized
 
         while self.pauseFlag is False:
-            if len(self.emg_plot) >= 2:
-                incData = self.emg_plot.popleft()  # Returns the oldest element in the deque
+            if len(self.data_deque) >= 2:
+                incData = self.data_deque.popleft()  # Returns the oldest element in the deque
                 try:
                     self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs
                 except IndexError:
@@ -96,7 +89,7 @@ class IMUPlottingManagement():
 
     def threadManager(self, start_trigger, stop_trigger):
         """Handles the threads for the DataCollector gui"""
-        self.emg_plot = deque()
+        self.data_deque = deque()     # Create a new, empty double-ended queue
 
         # Start standard data stream (only channel data, no time values)
         self.t1 = threading.Thread(target=self.streaming)
@@ -107,7 +100,4 @@ class IMUPlottingManagement():
         print('Starting myIMUdata thread...')
         self.t2.start()
 
-        self.t5 = threading.Thread(target=self.myIMUdata)
-        print('Starting myIMUdata thread...')
-        self.t5.start()
 

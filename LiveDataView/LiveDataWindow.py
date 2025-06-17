@@ -27,7 +27,6 @@ class LiveDataWindow(QWidget):
         self.grid.addWidget(self.plotPanel, 0, 2)
 
         self.MetricsConnector = CollectionMetricsManagement()   # Set the metrics connector
-        # self.CallbackConnector = PlottingManagement(self, self.MetricsConnector, self.plotCanvas)   # Set the callback connector
 
         self.collectionLabelPanel = self.CollectionLabelPanel()
         self.collectionLabelPanel.setFixedHeight(275)
@@ -39,6 +38,12 @@ class LiveDataWindow(QWidget):
         self.metricspanel.setLayout(self.metricspane)
         self.metricspanel.setFixedWidth(400)
         self.grid.addWidget(self.metricspanel, 0, 1)
+
+        # Relationship:
+        # metricspanel (QWidget)
+        #     └── metricspane (QHBoxLayout)
+        #             ├── collectionLabelPanel
+        #             └── MetricsConnector.collectionmetrics
 
     def Plotter(self):
         widget = QWidget()
@@ -73,9 +78,6 @@ class LiveDataWindow(QWidget):
 
         return collectionLabelPanel
 
-    # def start_callback(self):
-    #     self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
-    #     self.CallbackConnector.resetmetrics()
 
     def closeEvent(self, event):
 
