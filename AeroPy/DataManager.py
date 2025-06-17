@@ -32,6 +32,7 @@ class DataKernel():
 
             for i in range(len(outArr)):
                 self.allcollectiondata[i].extend(outArr[i][0].tolist()) # This appends the whole packet of each channel to the list
+                # TODO: Consider getting rid of this step (above) so memory isn't being used to save data
             try:
                 for i in range(len(outArr[0])):
                     if np.asarray(outArr[0]).ndim == 1:     # If outArr is None
@@ -39,7 +40,7 @@ class DataKernel():
                     else:
                         data_queue.append(list(np.asarray(outArr, dtype='object')[:, i])) # Appending a list of 9 arrays, where each array has a packet of data
                 try:
-                    self.myQuat = outArr[4][0][0]
+                    # self.myQuat = outArr[4][0][0]
                     self.packetCount += len(outArr[0])
                     self.sampleCount += len(outArr[0][0])
                 except:

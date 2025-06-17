@@ -5,6 +5,7 @@ This is the controller for the GUI that lets you connect to a base, scan via rf 
 
 from collections import deque
 import time
+import qmt
 
 from Plotter.GenericPlot import *
 from AeroPy.TrignoBase import *
@@ -51,13 +52,19 @@ class IMUPlottingManagement():
 
         while self.pauseFlag is False:
             if len(self.data_deque) >= 2:
-                incData = self.data_deque.popleft()  # Returns the oldest element in the deque
+                incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
                 try:
                     self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs
                 except IndexError:
                     print("Index Error Occurred: vispyPlot()")
 
                 self.my_quat = self.outData[0][0]
+
+                all_sensor_quats = self.getQuatsfromOutData(self.outData)
+
+                # Express IMU1 ori as Euler angles
+                s1_eul = np.rad2deg(qmt.eulerAngles(all_sensor_quats[0], axes='zyx'))
+                print(s1_eul.shape)
                 self.updatemetrics()
 
                 self.EMGplot.plot_new_data(self.my_quat)
@@ -79,7 +86,6 @@ class IMUPlottingManagement():
                 #     print(f'Sensor 3 q_z: {self.outData[11][0]}')
 
     def updatemetrics(self):
-        print(f"Raw value being printed: {self.my_quat}")
         self.metrics.myMetric.setText(f"{self.my_quat:.2f}")
         self.live_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
 
@@ -100,4 +106,21 @@ class IMUPlottingManagement():
         print('Starting myIMUdata thread...')
         self.t2.start()
 
+
+    def getQuatsfromOutData(self, outData):
+
+        sensor_indices = [(0, 1, 2, 3), (4, 5, 6, 7), (8, 9, 10, 11)]  # Indices for s1, s2, s3
+        all_sensor_quats = []
+        max_index = len(outData) - 1
+
+        for i, indices in enumerate(sensor_indices):
+            if max(indices) <= max_index:
+                try:
+                    quat = qmt.normalized(np.array([self.outData[j][0] for j in indices]))
+                    all_sensor_quats.append(quat)
+                except IndexError:
+                    print(f'Warning: Only {(max_index + 1)/2} sensors connected')
+                    continue
+
+        return all_sensor_quats
 

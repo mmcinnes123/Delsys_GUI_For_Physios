@@ -89,7 +89,6 @@ class PlottingManagement():
         while self.pauseFlag is False:
             if len(self.emg_plot) >= 2:
                 incData = self.emg_plot.popleft()  # Returns the oldest element in the deque
-                print(f'MARZ - len of incData firect element: {len(incData[0])}')
                 # print(f'MARZ - emgChannelsIdx{tuple([self.base.emgChannelsIdx])}')
                 try:
                     self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.emgChannelsIdx])]) # Gets the elements of incData that matches channel IDs
