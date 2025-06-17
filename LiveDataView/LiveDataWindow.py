@@ -78,8 +78,8 @@ class LiveDataWindow(QWidget):
         return collectionLabelPanel
 
 
-    def closeEvent(self, event):
-
-        event.accept()  # Allow the window to close
-        self.controller.closeLiveData()
+    # def closeEvent(self, event):
+    #
+    #     event.accept()  # Allow the window to close
+    #     self.controller.closeLiveData()
 

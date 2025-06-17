@@ -21,6 +21,7 @@ class IMUPlottingManagement():
     def __init__(self, live_data_window, collect_window):
         self.base = TrignoBase(self)
         self.live_data_window = live_data_window
+        self.collect_window = collect_window
         self.metrics = live_data_window.MetricsConnector
         self.collect_window_metrics = collect_window.MetricsConnector
         self.packetCount = 0  # Number of packets received from base
@@ -48,8 +49,8 @@ class IMUPlottingManagement():
 
     def myIMUdata(self):
 
-        if not self.live_window_plot.is_initialized:
-            self.live_window_plot.initiateCanvas()  # Make sure the canvas is initialized
+        if not self.collect_window_plot.is_initialized:
+            self.collect_window_plot.initiateCanvas()  # Make sure the canvas is initialized
 
         while self.pauseFlag is False:
             if len(self.data_deque) >= 2:
@@ -70,7 +71,7 @@ class IMUPlottingManagement():
 
                 # Express IMU1 ori as Euler angles and plot
                 self.s1_eul = np.rad2deg(qmt.eulerAngles(all_sensor_quats[0], axes='zyx'))
-                self.live_window_plot.plot_new_data(elbow_euls)
+                self.collect_window_plot.plot_new_data(elbow_euls)
 
                 self.updatemetrics()
 

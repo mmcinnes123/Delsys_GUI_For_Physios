@@ -115,6 +115,7 @@ class SimplePlot(app.Canvas):
             self.y_traces[:, -1] = data_points
         elif self.plot_mode.lower() == 'windowed':
             next_index = self.last_plotted_column + 1
+            print(f'Got to here: {next_index}')
             if next_index >= self.n:
                 self._reset_data_plot_buffer()
                 next_index = 0

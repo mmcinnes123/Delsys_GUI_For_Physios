@@ -111,6 +111,17 @@ class CollectDataWindow(QWidget):
         self.stop_button.setFixedHeight(50)
         buttonLayout.addWidget(self.stop_button)
 
+        # ---- Live Data Window Button
+        self.start_vis_button = QPushButton('Start Visualisation', self)
+        self.start_vis_button.setToolTip('Show Live Data Window')
+        self.start_vis_button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        self.start_vis_button.objectName = 'ShowLive'
+        self.start_vis_button.clicked.connect(self.start_vis_callback)
+        self.start_vis_button.setStyleSheet('QPushButton {color: grey;}')
+        self.start_vis_button.setEnabled(False)
+        self.start_vis_button.setFixedHeight(50)
+        buttonLayout.addWidget(self.start_vis_button)
+
         # ---- Export CSV Button
         self.exportcsv_button = QPushButton('Export CSV', self)
         self.exportcsv_button.setToolTip('Export collected data to project root - data.csv')
@@ -149,7 +160,7 @@ class CollectDataWindow(QWidget):
         pc = SimplePlot(plot_mode)
         pc.native.objectName = 'vispyCanvas'
         pc.native.parent = self
-        label = QLabel("My Live Data Window Plotter")
+        label = QLabel("My Test Window Plotter")
         label.setStyleSheet('.QLabel { font-size: 8pt;}')
         label.setFixedHeight(20)
         label.setAlignment(Qt.AlignmentFlag.AlignRight)
@@ -304,6 +315,8 @@ class CollectDataWindow(QWidget):
             self.start_button.setStyleSheet("color : white")
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet("color : white")
+            self.start_vis_button.setEnabled(True)
+            self.start_vis_button.setStyleSheet("color : white")
             self.MetricsConnector.sensorsconnected.setText(str(len(sensorList)))
         self.getpipelinestate()
         self.exportcsv_button.setEnabled(False)
@@ -332,13 +345,14 @@ class CollectDataWindow(QWidget):
         self.exportcsv_button.setStyleSheet("color : gray")
         self.getpipelinestate()
 
-        self.controller.showViewLiveData()  # Start collecting and open live data view
-
     def stop_callback(self):
         self.CallbackConnector.base.Stop_Callback()
         self.getpipelinestate()
         self.exportcsv_button.setEnabled(True)
         self.exportcsv_button.setStyleSheet("color : white")
+
+    def start_vis_callback(self):
+        self.controller.showViewLiveData()  # Open live data view
 
     def exportcsv_callback(self):
         export = None
