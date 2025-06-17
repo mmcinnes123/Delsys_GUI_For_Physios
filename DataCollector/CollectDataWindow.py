@@ -315,8 +315,6 @@ class CollectDataWindow(QWidget):
             self.start_button.setStyleSheet("color : white")
             self.stop_button.setEnabled(True)
             self.stop_button.setStyleSheet("color : white")
-            self.start_vis_button.setEnabled(True)
-            self.start_vis_button.setStyleSheet("color : white")
             self.MetricsConnector.sensorsconnected.setText(str(len(sensorList)))
         self.getpipelinestate()
         self.exportcsv_button.setEnabled(False)
@@ -343,6 +341,8 @@ class CollectDataWindow(QWidget):
         self.stop_button.setEnabled(True)
         self.exportcsv_button.setEnabled(False)
         self.exportcsv_button.setStyleSheet("color : gray")
+        self.start_vis_button.setEnabled(True)
+        self.start_vis_button.setStyleSheet("color : white")
         self.getpipelinestate()
 
     def stop_callback(self):
@@ -352,6 +352,8 @@ class CollectDataWindow(QWidget):
         self.exportcsv_button.setStyleSheet("color : white")
 
     def start_vis_callback(self):
+        self.start_vis_button.setEnabled(False)
+        self.start_vis_button.setStyleSheet("color : gray")
         self.controller.showViewLiveData()  # Open live data view
 
     def exportcsv_callback(self):
@@ -430,3 +432,19 @@ class CollectDataWindow(QWidget):
                     print(f"  {mode}")
         else:
             print("No sensor selected. Please select a sensor first.")
+
+    def closeEvent(self, event):
+        self.getpipelinestate()
+        if self.pipelinetext == 'Running':
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setText("Pipeline is still running!")
+            msg.setInformativeText("Please stop the pipeline before closing.")
+            msg.setWindowTitle("Warning")
+            msg.exec()
+            # Reject the close event
+            event.ignore()
+        else:
+            # Pipeline is not running, accept the close event
+            event.accept()
+
