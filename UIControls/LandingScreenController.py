@@ -26,9 +26,9 @@ class LandingScreenController():
         self.collectWindow.scan_callback()  # Automatically scan for sensors when this window opens
 
     def showViewLiveData(self):
-        self.collectWindow.close()
+        # self.collectWindow.close()
         self.liveWindow.show()
 
     def closeLiveData(self):
-        self.collectWindow.show()
+        # self.collectWindow.show()
         self.collectWindow.stop_callback()

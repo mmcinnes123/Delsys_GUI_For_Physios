@@ -5,8 +5,8 @@ from PySide6.QtWidgets import *
 
 # from DataCollector.IMUDataController import *
 from DataCollector.CollectDataController import *
-# from DataCollector.IMUMetricsManagement import IMUMetricsManagement
-from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
+from DataCollector.IMUMetricsManagement import IMUMetricsManagement
+# from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
 from Plotter import GenericPlot as gp
 from Plotter.TestPlot import SimplePlot
 
@@ -14,7 +14,6 @@ class LiveDataWindow(QWidget):
 
     def __init__(self, controller):
         QWidget.__init__(self)
-        print('Created Instance of LiveDataWindow Class! \n')
         self.controller = controller
         self.grid = QGridLayout()
         self.setStyleSheet("background-color:#3d4c51;")
@@ -26,7 +25,7 @@ class LiveDataWindow(QWidget):
         self.plotPanel = self.Plotter()     # Add plot panel
         self.grid.addWidget(self.plotPanel, 0, 2)
 
-        self.MetricsConnector = CollectionMetricsManagement()   # Set the metrics connector
+        self.MetricsConnector = IMUMetricsManagement()   # Set the metrics connector
 
         self.collectionLabelPanel = self.CollectionLabelPanel()
         self.collectionLabelPanel.setFixedHeight(275)
@@ -34,7 +33,7 @@ class LiveDataWindow(QWidget):
         self.metricspane = QHBoxLayout()
         self.metricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.metricspane.addWidget(self.collectionLabelPanel)
-        self.metricspane.addWidget(self.MetricsConnector.collectionmetrics)
+        self.metricspane.addWidget(self.MetricsConnector.imuValues)
         self.metricspanel.setLayout(self.metricspane)
         self.metricspanel.setFixedWidth(400)
         self.grid.addWidget(self.metricspanel, 0, 1)

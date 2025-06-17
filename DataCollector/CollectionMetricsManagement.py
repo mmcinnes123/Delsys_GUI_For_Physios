@@ -31,11 +31,6 @@ class CollectionMetricsManagement():
         self.framescollected.setStyleSheet("color : white ")
         collectionvaluesLayout.addWidget(self.framescollected)
 
-        self.myMetric = QLabel('-')
-        self.myMetric.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
-        self.myMetric.setStyleSheet("color : white ")
-        collectionvaluesLayout.addWidget(self.myMetric)
-
         collectionValuesPanel.setFixedWidth(200)
         collectionValuesPanel.setLayout(collectionvaluesLayout)
 

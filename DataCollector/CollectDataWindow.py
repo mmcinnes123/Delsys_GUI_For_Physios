@@ -51,10 +51,7 @@ class CollectDataWindow(QWidget):
         self.pairing = False
         self.selectedSensor = None
 
-        self.plotPanel = self.Plotter()
-        self.grid.addWidget(self.plotPanel, 0, 2)
-
-        self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self.MetricsConnector, self.plotCanvas)
+        self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self.live_data_window.MetricsConnector, self.MetricsConnector)
 
     # -----------------------------------------------------------------------
     # ---- GUI Components
@@ -180,11 +177,6 @@ class CollectDataWindow(QWidget):
         framescollectedlabel.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         framescollectedlabel.setStyleSheet("color:white")
         collectionlabelsLayout.addWidget(framescollectedlabel)
-
-        mylabel = QLabel('My Label:', self)
-        mylabel.setAlignment(Qt.AlignCenter | Qt.AlignRight)
-        mylabel.setStyleSheet("color:white")
-        collectionlabelsLayout.addWidget(mylabel)
 
         collectionLabelPanel.setFixedWidth(200)
         collectionLabelPanel.setLayout(collectionlabelsLayout)

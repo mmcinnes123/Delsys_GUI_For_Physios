@@ -17,10 +17,11 @@ app.use_app('PySide6')
 # Test commit
 
 class IMUPlottingManagement():
-    def __init__(self, live_data_window, metrics, plot_canvas):
+    def __init__(self, live_data_window, live_window_metrics, collect_window_metrics):
         self.base = TrignoBase(self)
         self.live_data_window = live_data_window
-        self.metrics = metrics
+        self.metrics = live_window_metrics
+        self.live_window_metrics = collect_window_metrics
         self.packetCount = 0  # Number of packets received from base
         self.pauseFlag = True  # Flag to start/stop collection and plotting (controlled in Base start and stop callbacks)
         self.DataHandler = DataKernel(self.base)  # Data handler for receiving data from base
@@ -28,7 +29,6 @@ class IMUPlottingManagement():
         self.outData = [[0]]
         self.Index = None
         self.newTransform = None
-        self.myQuat = 0
         self.EMGplot = live_data_window.plotCanvas
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
@@ -79,13 +79,13 @@ class IMUPlottingManagement():
                 #     print(f'Sensor 3 q_z: {self.outData[11][0]}')
 
     def updatemetrics(self):
-        # print('Updating metrics... ')
-        self.metrics.myMetric.setText('This')
-        # self.metrics.myMetric.setText(str(self.myQuat))
+        print(f"Raw value being printed: {self.my_quat}")
+        self.metrics.myMetric.setText(f"{self.my_quat:.2f}")
+        self.live_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
 
     def resetmetrics(self):
-        self.metrics.framescollected.setText("0")
-        self.metrics.totalchannels.setText(str(self.base.channelcount))
+        self.live_window_metrics.framescollected.setText("0")  # Reset collect data window metrics
+        self.live_window_metrics.totalchannels.setText(str(self.base.channelcount))  # Reset collect data window metrics
 
     def threadManager(self, start_trigger, stop_trigger):
         """Handles the threads for the DataCollector gui"""

@@ -15,6 +15,7 @@ class SimplePlot(app.Canvas):
         self.y = None
         self.plot_mode = plot_mode
         self.last_plotted_column = -1
+        self.axis_program = None  # Add this line
 
     def initiateCanvas(self, color=None, index=None, nrows=1, ncols=1, plot_window_sample_count=1000):
         print("Initializing plot canvas...")
@@ -53,6 +54,38 @@ class SimplePlot(app.Canvas):
         self.program['u_scale'] = 1.0
         self.program['u_n'] = self.n
 
+        # Add vertex shader for axis
+        AXIS_VERT_SHADER = """
+                #version 120
+                attribute vec2 a_position;
+                void main() {
+                    gl_Position = vec4(a_position, 0.0, 1.0);
+                }
+                """
+
+        AXIS_FRAG_SHADER = """
+                #version 120
+                void main() {
+                    gl_FragColor = vec4(1.0, 1.0, 1.0, 0.5);  // White color with transparency
+                }
+                """
+
+        # Create vertices for y-axis line and ticks
+        axis_vertices = []
+        # Main y-axis line
+        axis_vertices.extend([(-0.9, -1), (-0.9, 1)])  # Vertical line
+
+        # Add tick marks
+        tick_length = 0.05
+        for y in np.linspace(-1, 1, 11):  # 11 ticks from -1 to 1
+            axis_vertices.extend([
+                (-0.9, y),  # Start of tick
+                (-0.9 - tick_length, y)  # End of tick
+            ])
+
+        self.axis_program = gloo.Program(AXIS_VERT_SHADER, AXIS_FRAG_SHADER)
+        self.axis_program['a_position'] = np.array(axis_vertices, dtype=np.float32)
+
         self.is_initialized = True
 
     def _reset_data_plot_buffer(self):
@@ -88,3 +121,15 @@ class SimplePlot(app.Canvas):
     def set_scaling(self, scale):
         if self.is_initialized:
             self.program['u_scale'] = float(scale)
+
+    def on_draw(self, event):
+        if self.is_initialized:
+            gloo.clear()
+            self.program.draw('line_strip')
+            # Draw the axis
+            self.axis_program.draw('lines')
+
+    def add_y_labels(self):
+        # This would require additional text rendering logic
+        # You might want to use vispy.scene.Text or another text rendering approach
+        pass

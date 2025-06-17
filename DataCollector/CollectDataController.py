@@ -1,4 +1,7 @@
 """
+NO LONGER IN USE
+
+
 Controller class for the Data Collector GUI
 This is the controller for the GUI that lets you connect to a base, scan via rf for sensors, and stream data from them in real time.
 """
@@ -103,7 +106,6 @@ class PlottingManagement():
 
     def updatemetrics(self):
         self.metrics.framescollected.setText(str(self.DataHandler.packetCount))
-        self.metrics.myMetric.setText(str(self.DataHandler.myQuat))
 
     def resetmetrics(self):
         self.metrics.framescollected.setText("0")
