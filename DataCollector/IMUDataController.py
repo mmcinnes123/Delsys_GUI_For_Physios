@@ -33,6 +33,7 @@ class IMUPlottingManagement():
         self.newTransform = None
         self.live_window_plot = live_data_window.plotCanvas
         self.collect_window_plot = collect_window.plotCanvas
+        self.vis_data = False   # Flag whether vis data window is open or not
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
@@ -47,12 +48,12 @@ class IMUPlottingManagement():
 
     # TODO: Write STOP somewhere which checks three sensors are connected before running any of this
 
-    def myIMUdata(self):
+    def sensor_data_check(self):
 
         if not self.collect_window_plot.is_initialized:
             self.collect_window_plot.initiateCanvas()  # Make sure the canvas is initialized
 
-        while self.pauseFlag is False:
+        while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
             if len(self.data_deque) >= 2:
                 incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
                 try:
@@ -76,7 +77,6 @@ class IMUPlottingManagement():
                 self.updatemetrics()
 
 
-
     def updatemetrics(self):
         self.metrics.myMetric.setText(f"{self.my_quat:.2f}")
         self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
@@ -94,8 +94,8 @@ class IMUPlottingManagement():
         print('Starting streaming thread...')
         self.t1.start()
 
-        self.t2 = threading.Thread(target=self.myIMUdata)
-        print('Starting myIMUdata thread...')
+        self.t2 = threading.Thread(target=self.sensor_data_check)
+        print('Starting sensor_data_check thread...')
         self.t2.start()
 
 

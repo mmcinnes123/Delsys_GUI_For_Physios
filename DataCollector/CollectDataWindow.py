@@ -58,6 +58,7 @@ class CollectDataWindow(QWidget):
 
         self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self)
 
+
     # -----------------------------------------------------------------------
     # ---- GUI Components
     def ButtonPanel(self):
@@ -351,9 +352,11 @@ class CollectDataWindow(QWidget):
         self.exportcsv_button.setEnabled(True)
         self.exportcsv_button.setStyleSheet("color : white")
 
+
     def start_vis_callback(self):
         self.start_vis_button.setEnabled(False)
         self.start_vis_button.setStyleSheet("color : gray")
+        self.CallbackConnector.vis_data = True
         self.controller.showViewLiveData()  # Open live data view
 
     def exportcsv_callback(self):

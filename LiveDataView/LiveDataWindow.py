@@ -78,8 +78,9 @@ class LiveDataWindow(QWidget):
         return collectionLabelPanel
 
 
-    # def closeEvent(self, event):
-    #
-    #     event.accept()  # Allow the window to close
-    #     self.controller.closeLiveData()
+    def closeEvent(self, event):
+        self.controller.collectWindow.CallbackConnector.vis_data = False
+        self.controller.collectWindow.start_vis_button.setEnabled(True)
+        self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
+        event.accept()  # Allow the window to close
 
