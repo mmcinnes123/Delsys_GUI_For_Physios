@@ -15,6 +15,8 @@ from tkinter import filedialog
 from DataCollector.CollectDataController import *
 from DataCollector.IMUDataController import *
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
+from Plotter.TestPlot import SimplePlot
+
 from Plotter import GenericPlot as gp
 
 class CollectDataWindow(QWidget):
@@ -30,6 +32,9 @@ class CollectDataWindow(QWidget):
         self.live_data_window = controller.liveWindow
 
         self.grid = QGridLayout(self)
+
+        self.plotPanel = self.Plotter()     # Add plot panel
+        self.grid.addWidget(self.plotPanel, 0, 2)
 
         self.MetricsConnector = CollectionMetricsManagement()
         self.collectionLabelPanel.setFixedHeight(275)
@@ -51,7 +56,7 @@ class CollectDataWindow(QWidget):
         self.pairing = False
         self.selectedSensor = None
 
-        self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self.live_data_window.MetricsConnector, self.MetricsConnector)
+        self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self)
 
     # -----------------------------------------------------------------------
     # ---- GUI Components
@@ -141,10 +146,10 @@ class CollectDataWindow(QWidget):
         widget.setLayout(QVBoxLayout())
 
         plot_mode = 'windowed'  # Select between 'scrolling' and 'windowed'
-        pc = gp.GenericPlot(plot_mode)
+        pc = SimplePlot(plot_mode)
         pc.native.objectName = 'vispyCanvas'
         pc.native.parent = self
-        label = QLabel("*This Demo plots EMG Channels only")
+        label = QLabel("My Live Data Window Plotter")
         label.setStyleSheet('.QLabel { font-size: 8pt;}')
         label.setFixedHeight(20)
         label.setAlignment(Qt.AlignmentFlag.AlignRight)

@@ -18,11 +18,11 @@ app.use_app('PySide6')
 # Test commit
 
 class IMUPlottingManagement():
-    def __init__(self, live_data_window, live_window_metrics, collect_window_metrics):
+    def __init__(self, live_data_window, collect_window):
         self.base = TrignoBase(self)
         self.live_data_window = live_data_window
-        self.metrics = live_window_metrics
-        self.live_window_metrics = collect_window_metrics
+        self.metrics = live_data_window.MetricsConnector
+        self.collect_window_metrics = collect_window.MetricsConnector
         self.packetCount = 0  # Number of packets received from base
         self.pauseFlag = True  # Flag to start/stop collection and plotting (controlled in Base start and stop callbacks)
         self.DataHandler = DataKernel(self.base)  # Data handler for receiving data from base
@@ -30,7 +30,8 @@ class IMUPlottingManagement():
         self.outData = [[0]]
         self.Index = None
         self.newTransform = None
-        self.EMGplot = live_data_window.plotCanvas
+        self.live_window_plot = live_data_window.plotCanvas
+        self.collect_window_plot = collect_window.plotCanvas
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
@@ -43,12 +44,12 @@ class IMUPlottingManagement():
             self.DataHandler.processData(self.data_deque) # Get packets of data from the base and append to the queue
 
 
-    # TODO: Tidy up function below + Rename things in general to make sure everything's making sense
+    # TODO: Write STOP somewhere which checks three sensors are connected before running any of this
 
     def myIMUdata(self):
 
-        if not self.EMGplot.is_initialized:
-            self.EMGplot.initiateCanvas()  # Make sure the canvas is initialized
+        if not self.live_window_plot.is_initialized:
+            self.live_window_plot.initiateCanvas()  # Make sure the canvas is initialized
 
         while self.pauseFlag is False:
             if len(self.data_deque) >= 2:
@@ -61,37 +62,27 @@ class IMUPlottingManagement():
                 self.my_quat = self.outData[0][0]
 
                 all_sensor_quats = self.getQuatsfromOutData(self.outData)
+                s1_quat, s2_quat, s3_quat = all_sensor_quats
 
-                # Express IMU1 ori as Euler angles
-                s1_eul = np.rad2deg(qmt.eulerAngles(all_sensor_quats[0], axes='zyx'))
-                print(s1_eul.shape)
+                # Get relative orientation of two sensors
+                elbow_quat = qmt.qrel(s2_quat, s3_quat)
+                elbow_euls = np.rad2deg(qmt.eulerAngles(elbow_quat, axes='zxy'))
+
+                # Express IMU1 ori as Euler angles and plot
+                self.s1_eul = np.rad2deg(qmt.eulerAngles(all_sensor_quats[0], axes='zyx'))
+                self.live_window_plot.plot_new_data(elbow_euls)
+
                 self.updatemetrics()
 
-                self.EMGplot.plot_new_data(self.my_quat)
-                # my_counter = 0
-                # while my_counter < 100:
-                #     my_counter += 1
-                #     print(f'outData: {self.outData}')
-                #     print(f'Sensor 1 q_w: {self.outData[0][0]}')    # There's a packet of values in this array so we take the first one
-                #     print(f'Sensor 1 q_x: {self.outData[1][0]}')
-                #     print(f'Sensor 1 q_y: {self.outData[2][0]}')
-                #     print(f'Sensor 1 q_z: {self.outData[3][0]}')
-                #     print(f'Sensor 2 q_w: {self.outData[4][0]}')
-                #     print(f'Sensor 2 q_x: {self.outData[5][0]}')
-                #     print(f'Sensor 2 q_y: {self.outData[6][0]}')
-                #     print(f'Sensor 2 q_z: {self.outData[7][0]}')
-                #     print(f'Sensor 3 q_w: {self.outData[8][0]}')
-                #     print(f'Sensor 3 q_x: {self.outData[9][0]}')
-                #     print(f'Sensor 3 q_y: {self.outData[10][0]}')
-                #     print(f'Sensor 3 q_z: {self.outData[11][0]}')
+
 
     def updatemetrics(self):
         self.metrics.myMetric.setText(f"{self.my_quat:.2f}")
-        self.live_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
+        self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
 
     def resetmetrics(self):
-        self.live_window_metrics.framescollected.setText("0")  # Reset collect data window metrics
-        self.live_window_metrics.totalchannels.setText(str(self.base.channelcount))  # Reset collect data window metrics
+        self.collect_window_metrics.framescollected.setText("0")  # Reset collect data window metrics
+        self.collect_window_metrics.totalchannels.setText(str(self.base.channelcount))  # Reset collect data window metrics
 
     def threadManager(self, start_trigger, stop_trigger):
         """Handles the threads for the DataCollector gui"""
