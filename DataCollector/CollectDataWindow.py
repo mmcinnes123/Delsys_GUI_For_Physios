@@ -314,8 +314,6 @@ class CollectDataWindow(QWidget):
         if len(sensorList) > 0:
             self.start_button.setEnabled(True)
             self.start_button.setStyleSheet("color : white")
-            self.stop_button.setEnabled(True)
-            self.stop_button.setStyleSheet("color : white")
             self.MetricsConnector.sensorsconnected.setText(str(len(sensorList)))
         self.getpipelinestate()
         self.exportcsv_button.setEnabled(False)
@@ -339,18 +337,30 @@ class CollectDataWindow(QWidget):
     def start_callback(self):
         self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
         self.CallbackConnector.resetmetrics()
+
         self.stop_button.setEnabled(True)
-        self.exportcsv_button.setEnabled(False)
-        self.exportcsv_button.setStyleSheet("color : gray")
+        self.stop_button.setStyleSheet("color : white")
         self.start_vis_button.setEnabled(True)
         self.start_vis_button.setStyleSheet("color : white")
+        self.start_button.setEnabled(False)
+        self.start_button.setStyleSheet("color : gray")
+        self.exportcsv_button.setEnabled(False)
+        self.exportcsv_button.setStyleSheet("color : gray")
+
         self.getpipelinestate()
 
     def stop_callback(self):
         self.CallbackConnector.base.Stop_Callback()
         self.getpipelinestate()
+
         self.exportcsv_button.setEnabled(True)
         self.exportcsv_button.setStyleSheet("color : white")
+        self.start_button.setEnabled(True)
+        self.start_button.setStyleSheet("color : white")
+        self.stop_button.setEnabled(False)
+        self.stop_button.setStyleSheet("color : gray")
+        self.start_vis_button.setEnabled(False)
+        self.start_vis_button.setStyleSheet("color : gray")
 
 
     def start_vis_callback(self):
