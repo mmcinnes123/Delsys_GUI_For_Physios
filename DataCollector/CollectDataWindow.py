@@ -315,11 +315,11 @@ class CollectDataWindow(QWidget):
             self.start_button.setEnabled(True)
             self.start_button.setStyleSheet("color : white")
             self.MetricsConnector.sensorsconnected.setText(str(len(sensorList)))
-        self.getpipelinestate()
-        self.exportcsv_button.setEnabled(False)
-        self.exportcsv_button.setStyleSheet("color : gray")
+            self.getpipelinestate()
+            self.exportcsv_button.setEnabled(False)
+            self.exportcsv_button.setStyleSheet("color : gray")
 
-        self.autosetsensorMode_callback()
+            self.autosetsensorMode_callback()
 
     def set_sensor_list_box(self, sensorList):
         self.SensorListBox.clear()

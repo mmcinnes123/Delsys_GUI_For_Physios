@@ -56,9 +56,8 @@ class TrignoBase():
         try:
             f = self.TrigBase.ScanSensors().Result
         except Exception as e:
-            print("Python demo attempt another scan...")
-            time.sleep(1)
-            self.Scan_Callback()
+            print("Warning: Scan failed")
+            return []
 
         self.all_scanned_sensors = self.TrigBase.GetScannedSensorsFound()
         print("Sensors Found:\n")
@@ -195,14 +194,6 @@ class TrignoBase():
                             # ---- Exclude non-EMG channels from plots
                             else:
                                 pass
-
-
-
-
-#                 if self.collection_data_handler.EMGplot:
-#                     # self.collection_data_handler.EMGplot.initiateCanvas(None, None, self.plotCount, 1, 20000)
-#                     self.collection_data_handler.EMGplot.initiateCanvas(plot_window_sample_count=1000
-# )
 
                 return True
         else:
