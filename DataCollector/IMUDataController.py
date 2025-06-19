@@ -64,15 +64,26 @@ class IMUPlottingManagement():
                 self.my_quat = self.outData[0][0]
 
                 all_sensor_quats = self.getQuatsfromOutData(self.outData)
-                s1_quat, s2_quat, s3_quat = all_sensor_quats
+                if len(all_sensor_quats) == 1:
+                    s1_quat = all_sensor_quats
+                elif len(all_sensor_quats) == 2:
+                    s1_quat, s2_quat = all_sensor_quats
+                elif len(all_sensor_quats) == 3:
+                    s1_quat, s2_quat, s3_quat = all_sensor_quats
+                else:
+                    print("Warning: Only {(max_index + 1)/2} sensors connected")
+                    continue
 
                 # Get relative orientation of two sensors
-                elbow_quat = qmt.qrel(s2_quat, s3_quat)
-                elbow_euls = np.rad2deg(qmt.eulerAngles(elbow_quat, axes='zxy'))
+                # elbow_quat = qmt.qrel(s2_quat, s3_quat)
+                # elbow_euls = np.rad2deg(qmt.eulerAngles(elbow_quat, axes='zxy'))
 
                 # Express IMU1 ori as Euler angles and plot
                 self.s1_eul = np.rad2deg(qmt.eulerAngles(all_sensor_quats[0], axes='zyx'))
-                self.collect_window_plot.plot_new_data(elbow_euls)
+                # self.collect_window_plot.plot_new_data(self.s1_eul)
+
+                # Plot static numbers
+                self.collect_window_plot.plot_new_data(np.array([0.0, 45.0, 90.0]))
 
                 self.updatemetrics()
 
