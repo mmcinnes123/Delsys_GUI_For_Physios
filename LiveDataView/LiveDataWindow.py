@@ -33,7 +33,7 @@ class LiveDataWindow(QWidget):
         self.metricspane = QHBoxLayout()
         self.metricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.metricspane.addWidget(self.collectionLabelPanel)
-        self.metricspane.addWidget(self.MetricsConnector.imuValues)
+        self.metricspane.addWidget(self.MetricsConnector.imuTestValues)
         self.metricspanel.setLayout(self.metricspane)
         self.metricspanel.setFixedWidth(400)
         self.grid.addWidget(self.metricspanel, 0, 1)

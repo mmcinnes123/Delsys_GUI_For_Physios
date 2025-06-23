@@ -27,13 +27,13 @@ class CollectDataWindow(QWidget):
         self.pipelinetext = "Off"
         self.controller = controller
         self.live_data_window = controller.liveWindow
-        self.MetricsConnector = CollectionMetricsManagement()
+        self.ConnectMetricsConnector = CollectionMetricsManagement()
 
         self.buttonPanel = self.ButtonPanel()
         self.plotPanel = self.Plotter()
 
 
-        self.metricsPanel = self.MetricPanel()
+        self.metricsPanel = self.MetricsPanel()
 
         self.grid = QGridLayout(self)
 
@@ -53,18 +53,42 @@ class CollectDataWindow(QWidget):
     # -----------------------------------------------------------------------
     # ---- GUI Components
 
-    def MetricPanel(self):
-        self.metricsPanel = QWidget()
-        self.metricspane = QHBoxLayout()
-        self.metricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
+    def ConnectMetricPanel(self):
+        self.connectMetricsPanel = QWidget()
+        self.connectmetricspane = QHBoxLayout()
+        self.connectmetricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.collectionLabelPanel = self.CollectionLabelPanel()
-        self.metricspane.addWidget(self.collectionLabelPanel)
-        self.metricspane.addWidget(self.MetricsConnector.collectionmetrics) # Get metrics panel from CollectionMetricsManagement
+        self.connectmetricspane.addWidget(self.collectionLabelPanel)
+        self.connectmetricspane.addWidget(self.ConnectMetricsConnector.collectionmetrics) # Get metrics panel from CollectionMetricsManagement
         self.collectionLabelPanel.setFixedHeight(275)
-        self.MetricsConnector.collectionmetrics.setFixedHeight(275)
+        self.ConnectMetricsConnector.collectionmetrics.setFixedHeight(275)
+        self.connectMetricsPanel.setLayout(self.connectmetricspane)
+        self.connectMetricsPanel.setFixedWidth(400)
+        return self.connectMetricsPanel
+
+    def MetricsPanel(self):
+        self.metricsPanel = QWidget()
+        self.metricspane = QVBoxLayout()
+        self.connectMetricsPanel = self.ConnectMetricPanel()
+        self.testMetricPanel = self.TestMetricsPanel()
+        self.metricspane.addWidget(self.connectMetricsPanel)
+        self.metricspane.addWidget(self.testMetricPanel)
         self.metricsPanel.setLayout(self.metricspane)
         self.metricsPanel.setFixedWidth(400)
         return self.metricsPanel
+
+    def TestMetricsPanel(self):
+        self.testMetricsPanel = QWidget()
+        self.testmetricspane = QHBoxLayout()
+        self.testmetricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.testLabelPanel = self.TestLabelPanel()
+        self.testmetricspane.addWidget(self.testLabelPanel)
+        self.testmetricspane.addWidget(self.ConnectMetricsConnector.imuTestValues)
+        self.testLabelPanel.setFixedHeight(275)
+        self.ConnectMetricsConnector.imuTestValues.setFixedHeight(275)
+        self.testMetricsPanel.setLayout(self.testmetricspane)
+        self.testMetricsPanel.setFixedWidth(400)
+        return self.testMetricsPanel
 
     def ButtonPanel(self):
         buttonPanel = QWidget()
@@ -205,11 +229,77 @@ class CollectDataWindow(QWidget):
 
         return collectionLabelPanel
 
+    def TestLabelPanel(self):
+        testLabelPanel = QWidget()
+        testlabelsLayout = QVBoxLayout()
+
+        senAeul1label = QLabel('Sensor A Yaw:')
+        senAeul1label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senAeul1label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senAeul1label)
+
+        senAeul2label = QLabel('Sensor A Roll:')
+        senAeul2label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senAeul2label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senAeul2label)
+
+        senAeul3label = QLabel('Sensor A Pitch:')
+        senAeul3label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senAeul3label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senAeul3label)
+
+        line1 = QFrame()
+        line1.setFrameShape(QFrame.HLine)
+        line1.setFrameShadow(QFrame.Sunken)
+        line1.setStyleSheet("background-color: white")
+        testlabelsLayout.addWidget(line1)
+
+        senBeul1label = QLabel('Sensor B Yaw:')
+        senBeul1label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senBeul1label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senBeul1label)
+
+        senBeul2label = QLabel('Sensor B Roll:')
+        senBeul2label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senBeul2label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senBeul2label)
+
+        senBeul3label = QLabel('Sensor B Pitch:')
+        senBeul3label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senBeul3label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senBeul3label)
+
+        line1 = QFrame()
+        line1.setFrameShape(QFrame.HLine)
+        line1.setFrameShadow(QFrame.Sunken)
+        line1.setStyleSheet("background-color: white")
+        testlabelsLayout.addWidget(line1)
+
+        senCeul1label = QLabel('Sensor C Yaw:')
+        senCeul1label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senCeul1label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senCeul1label)
+
+        senCeul2label = QLabel('Sensor C Roll:')
+        senCeul2label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senCeul2label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senCeul2label)
+
+        senCeul3label = QLabel('Sensor C Pitch:')
+        senCeul3label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
+        senCeul3label.setStyleSheet("color:white")
+        testlabelsLayout.addWidget(senCeul3label)
+
+        testLabelPanel.setFixedWidth(200)
+        testLabelPanel.setLayout(testlabelsLayout)
+
+        return testLabelPanel
+
     # -----------------------------------------------------------------------
     # ---- Callback Functions
     def getpipelinestate(self):
         self.pipelinetext = self.CallbackConnector.base.PipelineState_Callback()
-        self.MetricsConnector.pipelinestatelabel.setText(self.pipelinetext)
+        self.ConnectMetricsConnector.pipelinestatelabel.setText(self.pipelinetext)
 
     def connect_callback(self):
         self.CallbackConnector.base.Connect_Callback()
@@ -219,7 +309,7 @@ class CollectDataWindow(QWidget):
         self.scan_button.setEnabled(True)
         self.scan_button.setStyleSheet('QPushButton {color: white;}')
         self.getpipelinestate()
-        self.MetricsConnector.pipelinestatelabel.setText(self.pipelinetext + " (Base Connected)")
+        self.ConnectMetricsConnector.pipelinestatelabel.setText(self.pipelinetext + " (Base Connected)")
 
     def pair_callback(self):
         """Pair button callback"""
@@ -319,7 +409,7 @@ class CollectDataWindow(QWidget):
         if len(sensorList) > 0:
             self.start_button.setEnabled(True)
             self.start_button.setStyleSheet("color : white")
-            self.MetricsConnector.sensorsconnected.setText(str(len(sensorList)))
+            self.ConnectMetricsConnector.sensorsconnected.setText(str(len(sensorList)))
             self.getpipelinestate()
             self.exportcsv_button.setEnabled(False)
             self.exportcsv_button.setStyleSheet("color : gray")

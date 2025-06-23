@@ -23,7 +23,7 @@ class IMUPlottingManagement():
         self.live_data_window = live_data_window
         self.collect_window = collect_window
         self.live_window_metrics = live_data_window.MetricsConnector
-        self.collect_window_metrics = collect_window.MetricsConnector
+        self.collect_window_metrics = collect_window.ConnectMetricsConnector
         self.packetCount = 0  # Number of packets received from base
         self.pauseFlag = True  # Flag to start/stop collection and plotting (controlled in Base start and stop callbacks)
         self.DataHandler = DataKernel(self.base)  # Data handler for receiving data from base
@@ -34,6 +34,9 @@ class IMUPlottingManagement():
         self.live_window_plot = live_data_window.plotCanvas
         self.collect_window_plot = collect_window.plotCanvas
         self.vis_data = False   # Flag whether vis data window is open or not
+        self.senA_quat = [1, 0, 0, 0]
+        self.senB_quat = [1, 0, 0, 0]
+        self.senC_quat = [1, 0, 0, 0]
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
@@ -45,6 +48,27 @@ class IMUPlottingManagement():
         while self.pauseFlag is False:
             self.DataHandler.processData(self.data_deque) # Get packets of data from the base and append to the queue
 
+            # Extract some variables
+            if len(self.data_deque) >= 2:
+                incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
+                try:
+                    self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs
+                except IndexError:
+                    print("Index Error Occurred: vispyPlot()")
+
+                all_sensor_quats = self.getQuatsfromOutData(self.outData)
+
+                if len(all_sensor_quats) == 1:
+                    self.senA_quat = all_sensor_quats[0]
+                elif len(all_sensor_quats) == 2:
+                    self.senA_quat, self.senB_quat = all_sensor_quats
+                elif len(all_sensor_quats) == 3:
+                    self.senA_quat, self.senB_quat, self.senC_quat = all_sensor_quats
+                else:
+                    print("Warning: Only {(max_index + 1)/2} sensors connected")
+                    continue
+
+                self.updateCollectmetrics()
 
     # TODO: Write STOP somewhere which checks three sensors are connected before running any of this
 
@@ -55,6 +79,7 @@ class IMUPlottingManagement():
 
         while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
             if len(self.data_deque) >= 2:
+                # TODO: Why do we get oldest element? Why not newest? Try popright
                 incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
                 try:
                     self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs
@@ -65,17 +90,17 @@ class IMUPlottingManagement():
 
                 all_sensor_quats = self.getQuatsfromOutData(self.outData)
                 if len(all_sensor_quats) == 1:
-                    s1_quat = all_sensor_quats
+                    senA_quat = all_sensor_quats[0]
                 elif len(all_sensor_quats) == 2:
-                    s1_quat, s2_quat = all_sensor_quats
+                    senA_quat, senB_quat = all_sensor_quats
                 elif len(all_sensor_quats) == 3:
-                    s1_quat, s2_quat, s3_quat = all_sensor_quats
+                    senA_quat, senB_quat, senC_quat = all_sensor_quats
                 else:
                     print("Warning: Only {(max_index + 1)/2} sensors connected")
                     continue
 
                 # Get relative orientation of two sensors
-                # elbow_quat = qmt.qrel(s2_quat, s3_quat)
+                # elbow_quat = qmt.qrel(senB_quat, senC_quat)
                 # elbow_euls = np.rad2deg(qmt.eulerAngles(elbow_quat, axes='zxy'))
 
                 # Express IMU1 ori as Euler angles and plot
@@ -85,11 +110,22 @@ class IMUPlottingManagement():
                 # Plot static numbers
                 self.collect_window_plot.plot_new_data(np.array([0.0, 45.0, 90.0]))
 
-                self.updatemetrics()
 
 
-    def updatemetrics(self):
-        self.live_window_metrics.myMetric.setText(f"{self.my_quat:.2f}")
+    def updateCollectmetrics(self):
+        self.senA_euls = np.rad2deg(qmt.eulerAngles(self.senA_quat, axes='zyx'))
+        self.senB_euls = np.rad2deg(qmt.eulerAngles(self.senB_quat, axes='zyx'))
+        self.senC_euls = np.rad2deg(qmt.eulerAngles(self.senC_quat, axes='zyx'))
+
+        self.collect_window_metrics.senAeul1.setText(f"{self.senA_euls[0]:.0f}°")
+        self.collect_window_metrics.senAeul2.setText(f"{self.senA_euls[1]:.0f}°")
+        self.collect_window_metrics.senAeul3.setText(f"{self.senA_euls[2]:.0f}°")
+        self.collect_window_metrics.senBeul1.setText(f"{self.senB_euls[0]:.0f}°")
+        self.collect_window_metrics.senBeul2.setText(f"{self.senB_euls[1]:.0f}°")
+        self.collect_window_metrics.senBeul3.setText(f"{self.senB_euls[2]:.0f}°")
+        self.collect_window_metrics.senCeul1.setText(f"{self.senC_euls[0]:.0f}°")
+        self.collect_window_metrics.senCeul2.setText(f"{self.senC_euls[1]:.0f}°")
+        self.collect_window_metrics.senCeul3.setText(f"{self.senC_euls[2]:.0f}°")
         self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
 
     def resetmetrics(self):
