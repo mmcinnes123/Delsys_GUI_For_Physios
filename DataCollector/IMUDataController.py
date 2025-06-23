@@ -47,29 +47,18 @@ class IMUPlottingManagement():
             continue
         while self.pauseFlag is False:
             self.DataHandler.processData(self.data_deque) # Get packets of data from the base and append to the queue
+            self.updateCollectMetrics()
 
-            # Extract some variables
+            # Extract values from the deque
             if len(self.data_deque) >= 2:
                 incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
                 try:
-                    self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs
+                    self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs with orientation data
                 except IndexError:
-                    print("Index Error Occurred: vispyPlot()")
+                    print("Index Error Occurred: streaming()")
 
-                all_sensor_quats = self.getQuatsfromOutData(self.outData)
-
-                if len(all_sensor_quats) == 1:
-                    self.senA_quat = all_sensor_quats[0]
-                elif len(all_sensor_quats) == 2:
-                    self.senA_quat, self.senB_quat = all_sensor_quats
-                elif len(all_sensor_quats) == 3:
-                    self.senA_quat, self.senB_quat, self.senC_quat = all_sensor_quats
-                else:
-                    print("Warning: Only {(max_index + 1)/2} sensors connected")
-                    continue
-
+                self.senA_quat, self.senB_quat, self.senC_quat = self.getQuatsfromOutData(self.outData)
                 self.updateSensorCheckMetrics()
-                self.updateCollectMetrics()
 
     # TODO: Write STOP somewhere which checks three sensors are connected before running any of this
 
@@ -112,7 +101,6 @@ class IMUPlottingManagement():
                 self.collect_window_plot.plot_new_data(np.array([0.0, 45.0, 90.0]))
 
 
-
     def updateSensorCheckMetrics(self):
         self.senA_euls = np.rad2deg(qmt.eulerAngles(self.senA_quat, axes='zyx'))
         self.senB_euls = np.rad2deg(qmt.eulerAngles(self.senB_quat, axes='zyx'))
@@ -144,25 +132,31 @@ class IMUPlottingManagement():
         print('Starting streaming thread...')
         self.t1.start()
 
-        self.t2 = threading.Thread(target=self.sensor_data_check)
-        print('Starting sensor_data_check thread...')
-        self.t2.start()
+        # self.t2 = threading.Thread(target=self.sensor_data_check)
+        # print('Starting sensor_data_check thread...')
+        # self.t2.start()
 
 
     def getQuatsfromOutData(self, outData):
+        """ Get quaternions from outData list
+        Returns a list of quaternions, one for each sensor."""
 
         sensor_indices = [(0, 1, 2, 3), (4, 5, 6, 7), (8, 9, 10, 11)]  # Indices for s1, s2, s3
         all_sensor_quats = []
         max_index = len(outData) - 1
 
         for i, indices in enumerate(sensor_indices):
-            if max(indices) <= max_index:
+            if max(indices) <= max_index:   # For each list of sensor indices, check if they are within the range of the outData list
                 try:
                     quat = qmt.normalized(np.array([self.outData[j][0] for j in indices]))
                     all_sensor_quats.append(quat)
                 except IndexError:
-                    print(f'Warning: Only {(max_index + 1)/2} sensors connected')
+                    print(f'WARNING: Issue reading outDat in getQuatsfromOutData()')
                     continue
+            else:
+                print(f'WARNING: Only {(max_index + 1)/4} sensors connected')
+                quat = np.array([1, 0, 0, 0])
+                all_sensor_quats.append(quat)
 
         return all_sensor_quats
 
