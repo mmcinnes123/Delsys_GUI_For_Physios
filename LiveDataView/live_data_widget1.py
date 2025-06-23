@@ -23,7 +23,7 @@ class Ui_LiveWindow(object):
     def setupUi(self, LiveWindow):
         if not LiveWindow.objectName():
             LiveWindow.setObjectName(u"LiveWindow")
-        LiveWindow.resize(1280, 720)
+        LiveWindow.resize(1152, 648)
         self.gridLayout = QGridLayout(LiveWindow)
         self.gridLayout.setObjectName(u"gridLayout")
         self.tabWidget = QTabWidget(LiveWindow)
@@ -78,7 +78,7 @@ class Ui_LiveWindow(object):
 
         self.el_flex_image = QLabel(self.groupBox)
         self.el_flex_image.setObjectName(u"el_flex_image")
-        self.el_flex_image.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
+        self.el_flex_image.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
         self.el_flex_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.el_flex_image, 1, 0, 1, 2)

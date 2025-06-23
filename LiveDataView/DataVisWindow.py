@@ -22,9 +22,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         # Get primary screen's size in pixels
         screen = QGuiApplication.primaryScreen()
         screen_geometry = screen.geometry()
-        screen_width = screen_geometry.width()
-        screen_height = screen_geometry.height()
-        print(screen_width, screen_height)
 
     def update_display(self):
         if hasattr(self.controller.connectWindow.CallbackConnector, 'senA_euls'):
