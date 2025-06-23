@@ -129,7 +129,6 @@ class IMUDataController():
                     print(f'WARNING: Issue reading outDat in getQuatsfromOutData()')
                     continue
             else:
-                print(f'WARNING: Only {(max_index + 1)/4} sensors connected')
                 quat = np.array([1, 0, 0, 0])
                 all_sensor_quats.append(quat)
 

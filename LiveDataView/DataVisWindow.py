@@ -3,6 +3,7 @@ import sys
 
 from PySide6.QtWidgets import *
 from PySide6.QtCore import QTimer
+from PySide6.QtGui import QGuiApplication
 
 from LiveDataView.live_data_widget1 import Ui_LiveWindow
 
@@ -18,9 +19,16 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             self.update_timer.timeout.connect(self.update_display)
             self.update_timer.start(100)  # Update every 100ms
 
+        # Get primary screen's size in pixels
+        screen = QGuiApplication.primaryScreen()
+        screen_geometry = screen.geometry()
+        screen_width = screen_geometry.width()
+        screen_height = screen_geometry.height()
+        print(screen_width, screen_height)
+
     def update_display(self):
         if hasattr(self.controller.connectWindow.CallbackConnector, 'senA_euls'):
-            self.current_angle.setText(f"{self.controller.connectWindow.CallbackConnector.senA_euls[0]:.0f}°")
+            self.el_flex_value.setText(f"{self.controller.connectWindow.CallbackConnector.senA_euls[0]:.0f}°")
 
     def closeEvent(self, event):
         if self.controller:
