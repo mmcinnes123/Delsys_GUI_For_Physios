@@ -201,7 +201,7 @@ class GenericPlot(app.Canvas):
                     randIndex = random.randint(1, len(data_frame[i])-2)
                     data_frame[i] = np.delete(data_frame[i], randIndex)
 
-        #---- Plot according to mode defined in Plotter() in CollectDataWindow.py
+        #---- Plot according to mode defined in Plotter() in ConnectWindow.py
         if self.plot_mode.lower() == 'scrolling':
             self.plot_scrolling_data(data_frame)
         elif self.plot_mode.lower() == 'windowed':

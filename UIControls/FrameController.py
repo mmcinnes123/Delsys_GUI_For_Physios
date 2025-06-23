@@ -1,4 +1,4 @@
-from DataCollector.CollectDataWindow import CollectDataWindow
+from DataCollector.ConnectWindow import ConnectWindow
 from StartMenu.StartWindow import StartWindow
 import sys
 from PySide2.QtWidgets import *
@@ -6,7 +6,7 @@ from PySide2.QtWidgets import *
 class FrameController():
     def __init__(self):
         self.startWindow = StartWindow(self)
-        self.collectWindow = CollectDataWindow(self)
+        self.collectWindow = ConnectWindow(self)
 
         self.startWindow.show()
 

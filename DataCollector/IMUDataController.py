@@ -17,7 +17,7 @@ app.use_app('PySide6')
 
 # Test commit
 
-class IMUPlottingManagement():
+class IMUDataController():
     def __init__(self, live_data_window, collect_window):
         self.base = TrignoBase(self)
         self.live_data_window = live_data_window

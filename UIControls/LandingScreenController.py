@@ -1,13 +1,13 @@
-from DataCollector.CollectDataWindow import CollectDataWindow
+from DataCollector.ConnectWindow import ConnectWindow
 from StartMenu.StartWindow import StartWindow
-from LiveDataView.DataVisWindow import TestWindow
+from LiveDataView.DataVisWindow import DataVisWindow
 
 class LandingScreenController():
     def __init__(self):
         self.startWindow = StartWindow(self)
         # self.liveWindow = LiveDataWindow(self)
-        self.liveWindow = TestWindow(self)
-        self.collectWindow = CollectDataWindow(self)
+        self.liveWindow = DataVisWindow(self)
+        self.connectWindow = ConnectWindow(self)
 
         self.startWindow.show()
 
@@ -15,15 +15,15 @@ class LandingScreenController():
         self.curWidth = 1400
 
     def showStartMenu(self):
-        self.collectWindow.close()
+        self.connectWindow.close()
         self.startWindow.show()
 
     def showCollectData(self):
         self.startWindow.close()
-        self.collectWindow.plot_enabled = True
-        self.collectWindow.connect_callback()
-        self.collectWindow.show()
-        self.collectWindow.scan_callback()  # Automatically scan for sensors when this window opens
+        self.connectWindow.plot_enabled = True
+        self.connectWindow.connect_callback()
+        self.connectWindow.show()
+        self.connectWindow.scan_callback()  # Automatically scan for sensors when this window opens
 
     def showViewLiveData(self):
         self.liveWindow.show()

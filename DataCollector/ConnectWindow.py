@@ -15,11 +15,11 @@ from tkinter import filedialog
 from DataCollector.CollectDataController import *
 from DataCollector.IMUDataController import *
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
-from Plotter.TestPlot import SimplePlot
+from Plotter.SimplePlot import SimplePlot
 
 from Plotter import GenericPlot as gp
 
-class CollectDataWindow(QWidget):
+class ConnectWindow(QWidget):
     plot_enabled = False
 
     def __init__(self, controller):
@@ -47,7 +47,7 @@ class CollectDataWindow(QWidget):
         self.pairing = False
         self.selectedSensor = None
 
-        self.CallbackConnector = IMUPlottingManagement(self.live_data_window, self)
+        self.CallbackConnector = IMUDataController(self.live_data_window, self)
 
 
     # -----------------------------------------------------------------------

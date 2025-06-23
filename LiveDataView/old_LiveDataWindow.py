@@ -8,7 +8,7 @@ from DataCollector.CollectDataController import *
 from DataCollector.IMUMetricsManagement import IMUMetricsManagement
 # from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
 from Plotter import GenericPlot as gp
-from Plotter.TestPlot import SimplePlot
+from Plotter.SimplePlot import SimplePlot
 
 class LiveDataWindow(QWidget):
 
@@ -84,8 +84,8 @@ class LiveDataWindow(QWidget):
     # ---- Callback Functions
 
     def closeEvent(self, event):
-        self.controller.collectWindow.CallbackConnector.vis_data = False
-        self.controller.collectWindow.start_vis_button.setEnabled(True)
-        self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
+        self.controller.connectWindow.CallbackConnector.vis_data = False
+        self.controller.connectWindow.start_vis_button.setEnabled(True)
+        self.controller.connectWindow.start_vis_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
 

@@ -25,6 +25,9 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="2" column="1">
        <widget class="QSpinBox" name="target_spinBox">
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="maximum">
          <number>180</number>
         </property>
@@ -39,7 +42,10 @@
       <item row="2" column="0">
        <widget class="QLabel" name="target_label">
         <property name="text">
-         <string>Target</string>
+         <string>Target:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -48,12 +54,18 @@
         <property name="text">
          <string>Dynamic Max Value</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="latest_max_label">
         <property name="text">
-         <string>Latest Max</string>
+         <string>Latest Max:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
