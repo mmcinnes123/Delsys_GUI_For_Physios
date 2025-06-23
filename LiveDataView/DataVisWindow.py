@@ -1,6 +1,7 @@
 
 import sys
 from PySide6.QtWidgets import *
+from PySide6.QtCore import QTimer
 
 from LiveDataView.live_data_widget1 import Ui_LiveWindow
 
@@ -9,8 +10,18 @@ class TestWindow(QWidget, Ui_LiveWindow):
         super().__init__()
         self.setupUi(self)
         self.controller = controller
-        # self.setWindowTitle("Test Live Window")
 
+        # Create a timer to update the display
+        self.update_timer = QTimer()
+        self.update_timer.timeout.connect(self.update_display)
+        self.update_timer.start(100)  # Update every 100ms
+
+    def update_display(self):
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'senA_euls'):
+            self.current_angle.setText(f"{self.controller.collectWindow.CallbackConnector.senA_euls[0]:.1f}°")
+
+        # some_number = 92
+        # self.current_angle.setText(f"{some_number:.1f}°")
 
     def closeEvent(self, event):
         self.controller.collectWindow.CallbackConnector.vis_data = False
@@ -19,9 +30,10 @@ class TestWindow(QWidget, Ui_LiveWindow):
         event.accept()  # Allow the window to close
 
 if __name__ == "__main__":
+
     app = QApplication(sys.argv)
 
-    window = TestWindow()
+    window = TestWindow(None)
     window.show()
 
     sys.exit(app.exec())
