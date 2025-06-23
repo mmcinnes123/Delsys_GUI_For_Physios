@@ -22,7 +22,7 @@ class IMUPlottingManagement():
         self.base = TrignoBase(self)
         self.live_data_window = live_data_window
         self.collect_window = collect_window
-        self.metrics = live_data_window.MetricsConnector
+        self.live_window_metrics = live_data_window.MetricsConnector
         self.collect_window_metrics = collect_window.MetricsConnector
         self.packetCount = 0  # Number of packets received from base
         self.pauseFlag = True  # Flag to start/stop collection and plotting (controlled in Base start and stop callbacks)
@@ -89,7 +89,7 @@ class IMUPlottingManagement():
 
 
     def updatemetrics(self):
-        self.metrics.myMetric.setText(f"{self.my_quat:.2f}")
+        self.live_window_metrics.myMetric.setText(f"{self.my_quat:.2f}")
         self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
 
     def resetmetrics(self):

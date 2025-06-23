@@ -26,29 +26,20 @@ class CollectDataWindow(QWidget):
         QWidget.__init__(self)
         self.pipelinetext = "Off"
         self.controller = controller
-        self.buttonPanel = self.ButtonPanel()
-        self.plotPanel = None
-        self.collectionLabelPanel = self.CollectionLabelPanel()
         self.live_data_window = controller.liveWindow
+        self.MetricsConnector = CollectionMetricsManagement()
+
+        self.buttonPanel = self.ButtonPanel()
+        self.plotPanel = self.Plotter()
+
+
+        self.metricsPanel = self.MetricPanel()
 
         self.grid = QGridLayout(self)
 
-        self.plotPanel = self.Plotter()     # Add plot panel
         self.grid.addWidget(self.plotPanel, 0, 2)
-
-        self.MetricsConnector = CollectionMetricsManagement()
-        self.collectionLabelPanel.setFixedHeight(275)
-        self.MetricsConnector.collectionmetrics.setFixedHeight(275)
-
-        self.metricspanel = QWidget()
-        self.metricspane = QHBoxLayout()
-        self.metricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.metricspane.addWidget(self.collectionLabelPanel)
-        self.metricspane.addWidget(self.MetricsConnector.collectionmetrics)
-        self.metricspanel.setLayout(self.metricspane)
-        self.metricspanel.setFixedWidth(400)
         self.grid.addWidget(self.buttonPanel, 0, 0)
-        self.grid.addWidget(self.metricspanel, 0, 1)
+        self.grid.addWidget(self.metricsPanel, 0, 1)
 
         self.setStyleSheet("background-color:#3d4c51;")
         self.setLayout(self.grid)
@@ -61,6 +52,20 @@ class CollectDataWindow(QWidget):
 
     # -----------------------------------------------------------------------
     # ---- GUI Components
+
+    def MetricPanel(self):
+        self.metricsPanel = QWidget()
+        self.metricspane = QHBoxLayout()
+        self.metricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.collectionLabelPanel = self.CollectionLabelPanel()
+        self.metricspane.addWidget(self.collectionLabelPanel)
+        self.metricspane.addWidget(self.MetricsConnector.collectionmetrics) # Get metrics panel from CollectionMetricsManagement
+        self.collectionLabelPanel.setFixedHeight(275)
+        self.MetricsConnector.collectionmetrics.setFixedHeight(275)
+        self.metricsPanel.setLayout(self.metricspane)
+        self.metricsPanel.setFixedWidth(400)
+        return self.metricsPanel
+
     def ButtonPanel(self):
         buttonPanel = QWidget()
         buttonPanel.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
