@@ -64,40 +64,16 @@ class IMUDataController():
     def plot_sensor_data_check(self):
 
         if not self.collect_window_plot.is_initialized:
-            self.collect_window_plot.initiateCanvas()  # Make sure the canvas is initialized
+            self.collect_window_plot.initiateCanvas(10000)  # Make sure the canvas is initialized
 
         while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
-            if len(self.data_deque) >= 2:
-                # TODO: Why do we get oldest element? Why not newest? Try popright
-                incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
-                try:
-                    self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs
-                except IndexError:
-                    print("Index Error Occurred: vispyPlot()")
-
-                self.my_quat = self.outData[0][0]
-
-                all_sensor_quats = self.getQuatsfromOutData(self.outData)
-                if len(all_sensor_quats) == 1:
-                    senA_quat = all_sensor_quats[0]
-                elif len(all_sensor_quats) == 2:
-                    senA_quat, senB_quat = all_sensor_quats
-                elif len(all_sensor_quats) == 3:
-                    senA_quat, senB_quat, senC_quat = all_sensor_quats
-                else:
-                    print("Warning: Only {(max_index + 1)/2} sensors connected")
-                    continue
-
-                # Get relative orientation of two sensors
-                # elbow_quat = qmt.qrel(senB_quat, senC_quat)
-                # elbow_euls = np.rad2deg(qmt.eulerAngles(elbow_quat, axes='zxy'))
-
-                # Express IMU1 ori as Euler angles and plot
-                self.s1_eul = np.rad2deg(qmt.eulerAngles(all_sensor_quats[0], axes='zyx'))
-                # self.collect_window_plot.plot_new_data(self.s1_eul)
 
                 # Plot static numbers
-                self.collect_window_plot.plot_new_data(np.array([0.0, 45.0, 90.0]))
+                # self.collect_window_plot.plot_new_data(np.array([0.0, 45.0, 90.0]))
+
+                # Plot dynamic value
+                self.collect_window_plot.plot_new_data(np.rad2deg(qmt.eulerAngles(self.senA_quat, axes='zyx')))
+
 
 
     def updateSensorCheckMetrics(self):
@@ -131,9 +107,9 @@ class IMUDataController():
         print('Starting streaming thread...')
         self.t1.start()
 
-        # self.t2 = threading.Thread(target=self.sensor_data_check)
-        # print('Starting sensor_data_check thread...')
-        # self.t2.start()
+        self.t2 = threading.Thread(target=self.plot_sensor_data_check)
+        print('Starting sensor_data_check thread...')
+        self.t2.start()
 
 
     def getQuatsfromOutData(self, outData):

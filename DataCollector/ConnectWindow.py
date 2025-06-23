@@ -186,7 +186,7 @@ class ConnectWindow(QWidget):
         widget = QWidget()
         widget.setLayout(QVBoxLayout())
 
-        plot_mode = 'windowed'  # Select between 'scrolling' and 'windowed'
+        plot_mode = 'scrolling'  # Select between 'scrolling' and 'windowed'
         pc = SimplePlot(plot_mode)
         pc.native.objectName = 'vispyCanvas'
         pc.native.parent = self

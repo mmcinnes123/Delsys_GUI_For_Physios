@@ -1,6 +1,5 @@
 
 import sys
-from curses.ascii import controlnames
 
 from PySide6.QtWidgets import *
 from PySide6.QtCore import QTimer
