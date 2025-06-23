@@ -68,11 +68,12 @@ class IMUPlottingManagement():
                     print("Warning: Only {(max_index + 1)/2} sensors connected")
                     continue
 
-                self.updateCollectmetrics()
+                self.updateSensorCheckMetrics()
+                self.updateCollectMetrics()
 
     # TODO: Write STOP somewhere which checks three sensors are connected before running any of this
 
-    def sensor_data_check(self):
+    def plot_sensor_data_check(self):
 
         if not self.collect_window_plot.is_initialized:
             self.collect_window_plot.initiateCanvas()  # Make sure the canvas is initialized
@@ -112,7 +113,7 @@ class IMUPlottingManagement():
 
 
 
-    def updateCollectmetrics(self):
+    def updateSensorCheckMetrics(self):
         self.senA_euls = np.rad2deg(qmt.eulerAngles(self.senA_quat, axes='zyx'))
         self.senB_euls = np.rad2deg(qmt.eulerAngles(self.senB_quat, axes='zyx'))
         self.senC_euls = np.rad2deg(qmt.eulerAngles(self.senC_quat, axes='zyx'))
@@ -126,6 +127,8 @@ class IMUPlottingManagement():
         self.collect_window_metrics.senCeul1.setText(f"{self.senC_euls[0]:.0f}°")
         self.collect_window_metrics.senCeul2.setText(f"{self.senC_euls[1]:.0f}°")
         self.collect_window_metrics.senCeul3.setText(f"{self.senC_euls[2]:.0f}°")
+
+    def updateCollectMetrics(self):
         self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
 
     def resetmetrics(self):

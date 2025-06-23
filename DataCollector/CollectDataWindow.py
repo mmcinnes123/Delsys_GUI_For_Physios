@@ -53,6 +53,17 @@ class CollectDataWindow(QWidget):
     # -----------------------------------------------------------------------
     # ---- GUI Components
 
+    def MetricsPanel(self):
+        self.metricsPanel = QWidget()
+        self.metricspane = QVBoxLayout()
+        self.connectMetricsPanel = self.ConnectMetricPanel()
+        self.testMetricPanel = self.TestMetricsPanel()
+        self.metricspane.addWidget(self.connectMetricsPanel)
+        self.metricspane.addWidget(self.testMetricPanel)
+        self.metricsPanel.setLayout(self.metricspane)
+        self.metricsPanel.setFixedWidth(400)
+        return self.metricsPanel
+
     def ConnectMetricPanel(self):
         self.connectMetricsPanel = QWidget()
         self.connectmetricspane = QHBoxLayout()
@@ -65,17 +76,6 @@ class CollectDataWindow(QWidget):
         self.connectMetricsPanel.setLayout(self.connectmetricspane)
         self.connectMetricsPanel.setFixedWidth(400)
         return self.connectMetricsPanel
-
-    def MetricsPanel(self):
-        self.metricsPanel = QWidget()
-        self.metricspane = QVBoxLayout()
-        self.connectMetricsPanel = self.ConnectMetricPanel()
-        self.testMetricPanel = self.TestMetricsPanel()
-        self.metricspane.addWidget(self.connectMetricsPanel)
-        self.metricspane.addWidget(self.testMetricPanel)
-        self.metricsPanel.setLayout(self.metricspane)
-        self.metricsPanel.setFixedWidth(400)
-        return self.metricsPanel
 
     def TestMetricsPanel(self):
         self.testMetricsPanel = QWidget()

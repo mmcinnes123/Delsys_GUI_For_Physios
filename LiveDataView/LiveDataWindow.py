@@ -44,6 +44,9 @@ class LiveDataWindow(QWidget):
         #             ├── collectionLabelPanel
         #             └── MetricsConnector.collectionmetrics
 
+    # -----------------------------------------------------------------------
+    # ---- GUI Components
+
     def Plotter(self):
         widget = QWidget()
         widget.setLayout(QVBoxLayout())
@@ -77,6 +80,8 @@ class LiveDataWindow(QWidget):
 
         return collectionLabelPanel
 
+    # -----------------------------------------------------------------------
+    # ---- Callback Functions
 
     def closeEvent(self, event):
         self.controller.collectWindow.CallbackConnector.vis_data = False
