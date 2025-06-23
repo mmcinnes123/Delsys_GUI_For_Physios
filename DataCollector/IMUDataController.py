@@ -22,7 +22,7 @@ class IMUPlottingManagement():
         self.base = TrignoBase(self)
         self.live_data_window = live_data_window
         self.collect_window = collect_window
-        self.live_window_metrics = live_data_window.MetricsConnector
+        # self.live_window_metrics = live_data_window.MetricsConnector
         self.collect_window_metrics = collect_window.ConnectMetricsConnector
         self.packetCount = 0  # Number of packets received from base
         self.pauseFlag = True  # Flag to start/stop collection and plotting (controlled in Base start and stop callbacks)
@@ -31,7 +31,7 @@ class IMUPlottingManagement():
         self.outData = [[0]]
         self.Index = None
         self.newTransform = None
-        self.live_window_plot = live_data_window.plotCanvas
+        # self.live_window_plot = live_data_window.plotCanvas
         self.collect_window_plot = collect_window.plotCanvas
         self.vis_data = False   # Flag whether vis data window is open or not
         self.senA_quat = [1, 0, 0, 0]
@@ -60,7 +60,6 @@ class IMUPlottingManagement():
                 self.senA_quat, self.senB_quat, self.senC_quat = self.getQuatsfromOutData(self.outData)
                 self.updateSensorCheckMetrics()
 
-    # TODO: Write STOP somewhere which checks three sensors are connected before running any of this
 
     def plot_sensor_data_check(self):
 

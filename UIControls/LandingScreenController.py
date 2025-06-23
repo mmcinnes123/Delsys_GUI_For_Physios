@@ -1,12 +1,12 @@
 from DataCollector.CollectDataWindow import CollectDataWindow
 from StartMenu.StartWindow import StartWindow
-from LiveDataView.LiveDataWindow import LiveDataWindow
-
+from LiveDataView.DataVisWindow import TestWindow
 
 class LandingScreenController():
     def __init__(self):
         self.startWindow = StartWindow(self)
-        self.liveWindow = LiveDataWindow(self)
+        # self.liveWindow = LiveDataWindow(self)
+        self.liveWindow = TestWindow(self)
         self.collectWindow = CollectDataWindow(self)
 
         self.startWindow.show()

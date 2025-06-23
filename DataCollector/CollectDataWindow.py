@@ -147,8 +147,8 @@ class CollectDataWindow(QWidget):
         self.start_vis_button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         self.start_vis_button.objectName = 'ShowLive'
         self.start_vis_button.clicked.connect(self.start_vis_callback)
-        self.start_vis_button.setStyleSheet('QPushButton {color: grey;}')
-        self.start_vis_button.setEnabled(False)
+        self.start_vis_button.setStyleSheet('QPushButton {color: white;}')
+        self.start_vis_button.setEnabled(True)
         self.start_vis_button.setFixedHeight(50)
         buttonLayout.addWidget(self.start_vis_button)
 
