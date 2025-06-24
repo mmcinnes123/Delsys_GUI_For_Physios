@@ -13,15 +13,15 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         self.setupUi(self)
         self.controller = controller
 
-        # Set button functionalities
-        self.el_flex_reset_pushButton.clicked.connect(self.reset_el_flex_max_buttonCallback)
-
-        # Update correct image folder dir
-        self.el_flex_image.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-
-
-        # Create a timer to update the display
         if self.controller:  # Don't run if just testing UI
+
+            # Update correct image folder dir
+            self.el_flex_image.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
+
+            # Set button functionalities
+            self.el_flex_reset_pushButton.clicked.connect(self.reset_el_flex_max_buttonCallback)
+
+            # Create a timer to update the display
             self.update_timer = QTimer()
             self.update_timer.timeout.connect(self.update_display)
             self.update_timer.start(100)  # Update every 100ms

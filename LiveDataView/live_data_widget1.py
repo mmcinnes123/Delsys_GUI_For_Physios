@@ -67,7 +67,9 @@ class Ui_LiveWindow(object):
 
         self.el_flex_max_label = QLabel(self.groupBox)
         self.el_flex_max_label.setObjectName(u"el_flex_max_label")
-        self.el_flex_max_label.setFont(font)
+        font1 = QFont()
+        font1.setPointSize(18)
+        self.el_flex_max_label.setFont(font1)
         self.el_flex_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_2.addWidget(self.el_flex_max_label, 3, 0, 1, 1)
@@ -80,15 +82,15 @@ class Ui_LiveWindow(object):
 
         self.el_flex_max_value = QLabel(self.groupBox)
         self.el_flex_max_value.setObjectName(u"el_flex_max_value")
-        self.el_flex_max_value.setFont(font)
+        self.el_flex_max_value.setFont(font1)
 
         self.gridLayout_2.addWidget(self.el_flex_max_value, 3, 1, 1, 1)
 
         self.el_flex_value = QLabel(self.groupBox)
         self.el_flex_value.setObjectName(u"el_flex_value")
-        font1 = QFont()
-        font1.setPointSize(14)
-        self.el_flex_value.setFont(font1)
+        font2 = QFont()
+        font2.setPointSize(26)
+        self.el_flex_value.setFont(font2)
         self.el_flex_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.el_flex_value, 0, 0, 1, 2)
@@ -136,9 +138,9 @@ class Ui_LiveWindow(object):
         self.groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Flexion", None))
         self.el_flex_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.el_flex_image.setText("")
-        self.el_flex_max_label.setText(QCoreApplication.translate("LiveWindow", u"Current Max:", None))
+        self.el_flex_max_label.setText(QCoreApplication.translate("LiveWindow", u"Max:", None))
         self.el_flex_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
-        self.el_flex_max_value.setText(QCoreApplication.translate("LiveWindow", u"Dynamic Max Value", None))
+        self.el_flex_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
         self.el_flex_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("LiveWindow", u"Extension", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("LiveWindow", u"Pronation", None))
