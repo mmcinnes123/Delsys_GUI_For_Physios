@@ -30,9 +30,10 @@ class DataKernel():
             #     print(f'outArr[4][0]: {outArr[4][0]}') # The first element of the list (i.e., the array with 2 values of that variable (packet of 2)).
             #     print(f'outArr[4][0][0]: {outArr[4][0][0]}')  # The first value of the array (i.e., the first value of the packet of 2).
 
-            for i in range(len(outArr)):
-                self.allcollectiondata[i].extend(outArr[i][0].tolist()) # This appends the whole packet of each channel to the list
-                # TODO: Consider getting rid of this step (above) so memory isn't being used to save data
+            # Currently disabled since we don't need to store the data
+            # for i in range(len(outArr)):
+                # self.allcollectiondata[i].extend(outArr[i][0].tolist()) # This appends the whole packet of each channel to the list
+
             try:
                 for i in range(len(outArr[0])):
                     if np.asarray(outArr[0]).ndim == 1:     # If outArr is None

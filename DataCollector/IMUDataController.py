@@ -37,7 +37,7 @@ class IMUDataController():
         self.senA_quat = [1, 0, 0, 0]
         self.senB_quat = [1, 0, 0, 0]
         self.senC_quat = [1, 0, 0, 0]
-        self.senA_eul1_max = 0
+        self.senA_eul3_max = 0
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
@@ -92,8 +92,8 @@ class IMUDataController():
         self.collect_window_metrics.senCeul2.setText(f"{self.senC_euls[1]:.0f}°")
         self.collect_window_metrics.senCeul3.setText(f"{self.senC_euls[2]:.0f}°")
 
-        if self.senA_euls[0] > self.senA_eul1_max:
-            self.senA_eul1_max = self.senA_euls[0]
+        if self.senA_euls[2] > self.senA_eul3_max:
+            self.senA_eul3_max = self.senA_euls[2]
 
 
     def updateCollectMetrics(self):
