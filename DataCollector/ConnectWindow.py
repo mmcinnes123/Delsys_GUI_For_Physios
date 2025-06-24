@@ -28,6 +28,14 @@ class ConnectWindow(QWidget):
         self.controller = controller
         self.ConnectMetricsConnector = CollectionMetricsManagement()
 
+        self.setStyleSheet(
+            "QWidget { background-color: #3d4c51; } "
+            ".QLabel { font-size: 12pt; } "
+            ".QPushButton { font-size: 12pt; } "
+            ".QListWidget { font-size: 12pt; } "
+            ".QComboBox { font-size: 12pt; }"
+        )
+
         self.buttonPanel = self.ButtonPanel()
         self.plotPanel = self.Plotter()
 
@@ -40,7 +48,6 @@ class ConnectWindow(QWidget):
         self.grid.addWidget(self.buttonPanel, 0, 0)
         self.grid.addWidget(self.metricsPanel, 0, 1)
 
-        self.setStyleSheet("background-color:#3d4c51;")
         self.setLayout(self.grid)
         self.setWindowTitle("Collect Data GUI")
         self.pairing = False

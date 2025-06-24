@@ -10,7 +10,13 @@ class StartWindow(QWidget):
         QWidget.__init__(self)
         self.controller = controller
         grid = QGridLayout()
-        self.setStyleSheet("background-color:#3d4c51;")
+        self.setStyleSheet(
+            "QWidget { background-color: #3d4c51; } "
+            ".QLabel { font-size: 12pt; } "
+            ".QPushButton { font-size: 12pt; } "
+            ".QListWidget { font-size: 12pt; } "
+            ".QComboBox { font-size: 12pt; }"
+        )
         self.setWindowTitle("Start Menu")
 
         imageBox = QVBoxLayout()
