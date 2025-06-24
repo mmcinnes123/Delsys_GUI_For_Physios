@@ -7,6 +7,8 @@ from PySide6.QtGui import QPixmap
 
 from LiveDataView.live_data_widget1 import Ui_LiveWindow
 
+# TEst comment
+
 class DataVisWindow(QWidget, Ui_LiveWindow):
     def __init__(self, controller):
         super().__init__()
