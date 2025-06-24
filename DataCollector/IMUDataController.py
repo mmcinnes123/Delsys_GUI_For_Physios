@@ -18,9 +18,9 @@ app.use_app('PySide6')
 # Test commit
 
 class IMUDataController():
-    def __init__(self, live_data_window, collect_window):
+    def __init__(self, collect_window):
         self.base = TrignoBase(self)
-        self.live_data_window = live_data_window
+        # self.live_data_window = live_data_window
         self.collect_window = collect_window
         # self.live_window_metrics = live_data_window.MetricsConnector
         self.collect_window_metrics = collect_window.ConnectMetricsConnector
@@ -37,6 +37,7 @@ class IMUDataController():
         self.senA_quat = [1, 0, 0, 0]
         self.senB_quat = [1, 0, 0, 0]
         self.senC_quat = [1, 0, 0, 0]
+        self.senA_eul1_max = 0
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
@@ -90,6 +91,10 @@ class IMUDataController():
         self.collect_window_metrics.senCeul1.setText(f"{self.senC_euls[0]:.0f}°")
         self.collect_window_metrics.senCeul2.setText(f"{self.senC_euls[1]:.0f}°")
         self.collect_window_metrics.senCeul3.setText(f"{self.senC_euls[2]:.0f}°")
+
+        if self.senA_euls[0] > self.senA_eul1_max:
+            self.senA_eul1_max = self.senA_euls[0]
+
 
     def updateCollectMetrics(self):
         self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))

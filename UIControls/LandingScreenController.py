@@ -5,9 +5,8 @@ from LiveDataView.DataVisWindow import DataVisWindow
 class LandingScreenController():
     def __init__(self):
         self.startWindow = StartWindow(self)
-        # self.liveWindow = LiveDataWindow(self)
-        self.liveWindow = DataVisWindow(self)
         self.connectWindow = ConnectWindow(self)
+        self.liveWindow = DataVisWindow(self)
 
         self.startWindow.show()
 

@@ -26,7 +26,6 @@ class ConnectWindow(QWidget):
         QWidget.__init__(self)
         self.pipelinetext = "Off"
         self.controller = controller
-        self.live_data_window = controller.liveWindow
         self.ConnectMetricsConnector = CollectionMetricsManagement()
 
         self.buttonPanel = self.ButtonPanel()
@@ -47,7 +46,7 @@ class ConnectWindow(QWidget):
         self.pairing = False
         self.selectedSensor = None
 
-        self.CallbackConnector = IMUDataController(self.live_data_window, self)
+        self.CallbackConnector = IMUDataController(self)
 
 
     # -----------------------------------------------------------------------

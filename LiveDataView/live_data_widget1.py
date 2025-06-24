@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QSizePolicy, QSpinBox, QTabWidget,
-    QWidget)
+    QLabel, QPushButton, QSizePolicy, QSpacerItem,
+    QSpinBox, QTabWidget, QWidget)
 
 class Ui_LiveWindow(object):
     def setupUi(self, LiveWindow):
@@ -43,7 +43,46 @@ class Ui_LiveWindow(object):
         self.el_flex_target_label.setFont(font)
         self.el_flex_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.gridLayout_2.addWidget(self.el_flex_target_label, 3, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.el_flex_target_label, 6, 0, 1, 1)
+
+        self.el_flex_image = QLabel(self.groupBox)
+        self.el_flex_image.setObjectName(u"el_flex_image")
+        self.el_flex_image.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
+        self.el_flex_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.el_flex_image, 1, 0, 1, 2)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer, 5, 0, 1, 1)
+
+        self.el_flex_target_spinBox = QSpinBox(self.groupBox)
+        self.el_flex_target_spinBox.setObjectName(u"el_flex_target_spinBox")
+        self.el_flex_target_spinBox.setFont(font)
+        self.el_flex_target_spinBox.setMaximum(180)
+        self.el_flex_target_spinBox.setSingleStep(10)
+        self.el_flex_target_spinBox.setValue(150)
+
+        self.gridLayout_2.addWidget(self.el_flex_target_spinBox, 6, 1, 1, 1)
+
+        self.el_flex_max_label = QLabel(self.groupBox)
+        self.el_flex_max_label.setObjectName(u"el_flex_max_label")
+        self.el_flex_max_label.setFont(font)
+        self.el_flex_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_2.addWidget(self.el_flex_max_label, 3, 0, 1, 1)
+
+        self.el_flex_reset_pushButton = QPushButton(self.groupBox)
+        self.el_flex_reset_pushButton.setObjectName(u"el_flex_reset_pushButton")
+        self.el_flex_reset_pushButton.setFont(font)
+
+        self.gridLayout_2.addWidget(self.el_flex_reset_pushButton, 4, 0, 1, 2)
+
+        self.el_flex_max_value = QLabel(self.groupBox)
+        self.el_flex_max_value.setObjectName(u"el_flex_max_value")
+        self.el_flex_max_value.setFont(font)
+
+        self.gridLayout_2.addWidget(self.el_flex_max_value, 3, 1, 1, 1)
 
         self.el_flex_value = QLabel(self.groupBox)
         self.el_flex_value.setObjectName(u"el_flex_value")
@@ -54,34 +93,9 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_2.addWidget(self.el_flex_value, 0, 0, 1, 2)
 
-        self.el_flex_target_spinBox = QSpinBox(self.groupBox)
-        self.el_flex_target_spinBox.setObjectName(u"el_flex_target_spinBox")
-        self.el_flex_target_spinBox.setFont(font)
-        self.el_flex_target_spinBox.setMaximum(180)
-        self.el_flex_target_spinBox.setSingleStep(10)
-        self.el_flex_target_spinBox.setValue(150)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_2.addWidget(self.el_flex_target_spinBox, 3, 1, 1, 1)
-
-        self.el_flex_max_label = QLabel(self.groupBox)
-        self.el_flex_max_label.setObjectName(u"el_flex_max_label")
-        self.el_flex_max_label.setFont(font)
-        self.el_flex_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout_2.addWidget(self.el_flex_max_label, 2, 0, 1, 1)
-
-        self.el_flex_max_value = QLabel(self.groupBox)
-        self.el_flex_max_value.setObjectName(u"el_flex_max_value")
-        self.el_flex_max_value.setFont(font)
-
-        self.gridLayout_2.addWidget(self.el_flex_max_value, 2, 1, 1, 1)
-
-        self.el_flex_image = QLabel(self.groupBox)
-        self.el_flex_image.setObjectName(u"el_flex_image")
-        self.el_flex_image.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-        self.el_flex_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.el_flex_image, 1, 0, 1, 2)
+        self.gridLayout_2.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
 
 
         self.horizontalLayout.addWidget(self.groupBox)
@@ -121,10 +135,11 @@ class Ui_LiveWindow(object):
         LiveWindow.setWindowTitle(QCoreApplication.translate("LiveWindow", u"Form", None))
         self.groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Flexion", None))
         self.el_flex_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
-        self.el_flex_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
-        self.el_flex_max_label.setText(QCoreApplication.translate("LiveWindow", u"Current Max:", None))
-        self.el_flex_max_value.setText(QCoreApplication.translate("LiveWindow", u"Dynamic Max Value", None))
         self.el_flex_image.setText("")
+        self.el_flex_max_label.setText(QCoreApplication.translate("LiveWindow", u"Current Max:", None))
+        self.el_flex_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
+        self.el_flex_max_value.setText(QCoreApplication.translate("LiveWindow", u"Dynamic Max Value", None))
+        self.el_flex_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("LiveWindow", u"Extension", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("LiveWindow", u"Pronation", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("LiveWindow", u"Supination", None))
