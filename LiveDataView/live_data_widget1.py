@@ -28,18 +28,22 @@ class Ui_LiveWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.tabWidget = QTabWidget(LiveWindow)
         self.tabWidget.setObjectName(u"tabWidget")
+        font = QFont()
+        font.setPointSize(12)
+        self.tabWidget.setFont(font)
         self.tab1 = QWidget()
         self.tab1.setObjectName(u"tab1")
         self.horizontalLayout = QHBoxLayout(self.tab1)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.groupBox = QGroupBox(self.tab1)
         self.groupBox.setObjectName(u"groupBox")
+        font1 = QFont()
+        font1.setPointSize(16)
+        self.groupBox.setFont(font1)
         self.gridLayout_2 = QGridLayout(self.groupBox)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.el_flex_target_label = QLabel(self.groupBox)
         self.el_flex_target_label.setObjectName(u"el_flex_target_label")
-        font = QFont()
-        font.setPointSize(12)
         self.el_flex_target_label.setFont(font)
         self.el_flex_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
@@ -67,9 +71,9 @@ class Ui_LiveWindow(object):
 
         self.el_flex_max_label = QLabel(self.groupBox)
         self.el_flex_max_label.setObjectName(u"el_flex_max_label")
-        font1 = QFont()
-        font1.setPointSize(18)
-        self.el_flex_max_label.setFont(font1)
+        font2 = QFont()
+        font2.setPointSize(18)
+        self.el_flex_max_label.setFont(font2)
         self.el_flex_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_2.addWidget(self.el_flex_max_label, 3, 0, 1, 1)
@@ -82,15 +86,15 @@ class Ui_LiveWindow(object):
 
         self.el_flex_max_value = QLabel(self.groupBox)
         self.el_flex_max_value.setObjectName(u"el_flex_max_value")
-        self.el_flex_max_value.setFont(font1)
+        self.el_flex_max_value.setFont(font2)
 
         self.gridLayout_2.addWidget(self.el_flex_max_value, 3, 1, 1, 1)
 
         self.el_flex_value = QLabel(self.groupBox)
         self.el_flex_value.setObjectName(u"el_flex_value")
-        font2 = QFont()
-        font2.setPointSize(26)
-        self.el_flex_value.setFont(font2)
+        font3 = QFont()
+        font3.setPointSize(26)
+        self.el_flex_value.setFont(font3)
         self.el_flex_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.el_flex_value, 0, 0, 1, 2)
@@ -104,16 +108,19 @@ class Ui_LiveWindow(object):
 
         self.groupBox_2 = QGroupBox(self.tab1)
         self.groupBox_2.setObjectName(u"groupBox_2")
+        self.groupBox_2.setFont(font1)
 
         self.horizontalLayout.addWidget(self.groupBox_2)
 
         self.groupBox_3 = QGroupBox(self.tab1)
         self.groupBox_3.setObjectName(u"groupBox_3")
+        self.groupBox_3.setFont(font1)
 
         self.horizontalLayout.addWidget(self.groupBox_3)
 
         self.groupBox_4 = QGroupBox(self.tab1)
         self.groupBox_4.setObjectName(u"groupBox_4")
+        self.groupBox_4.setFont(font1)
 
         self.horizontalLayout.addWidget(self.groupBox_4)
 

@@ -55,7 +55,6 @@ class ConnectWindow(QWidget):
 
         self.CallbackConnector = IMUDataController(self)
 
-
     # -----------------------------------------------------------------------
     # ---- GUI Components
 
@@ -239,17 +238,17 @@ class ConnectWindow(QWidget):
         testLabelPanel = QWidget()
         testlabelsLayout = QVBoxLayout()
 
-        senAeul1label = QLabel('Sensor A Yaw:')
+        senAeul1label = QLabel('Sensor 1 Yaw:')
         senAeul1label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senAeul1label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senAeul1label)
 
-        senAeul2label = QLabel('Sensor A Roll:')
+        senAeul2label = QLabel('Sensor 1 Roll:')
         senAeul2label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senAeul2label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senAeul2label)
 
-        senAeul3label = QLabel('Sensor A Pitch:')
+        senAeul3label = QLabel('Sensor 1 Pitch:')
         senAeul3label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senAeul3label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senAeul3label)
@@ -260,17 +259,17 @@ class ConnectWindow(QWidget):
         line1.setStyleSheet("background-color: white")
         testlabelsLayout.addWidget(line1)
 
-        senBeul1label = QLabel('Sensor B Yaw:')
+        senBeul1label = QLabel('Sensor 2 Yaw:')
         senBeul1label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senBeul1label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senBeul1label)
 
-        senBeul2label = QLabel('Sensor B Roll:')
+        senBeul2label = QLabel('Sensor 2 Roll:')
         senBeul2label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senBeul2label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senBeul2label)
 
-        senBeul3label = QLabel('Sensor B Pitch:')
+        senBeul3label = QLabel('Sensor 2 Pitch:')
         senBeul3label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senBeul3label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senBeul3label)
@@ -281,17 +280,17 @@ class ConnectWindow(QWidget):
         line1.setStyleSheet("background-color: white")
         testlabelsLayout.addWidget(line1)
 
-        senCeul1label = QLabel('Sensor C Yaw:')
+        senCeul1label = QLabel('Sensor 3 Yaw:')
         senCeul1label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senCeul1label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senCeul1label)
 
-        senCeul2label = QLabel('Sensor C Roll:')
+        senCeul2label = QLabel('Sensor 3 Roll:')
         senCeul2label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senCeul2label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senCeul2label)
 
-        senCeul3label = QLabel('Sensor C Pitch:')
+        senCeul3label = QLabel('Sensor 3 Pitch:')
         senCeul3label.setAlignment(Qt.AlignCenter | Qt.AlignRight)
         senCeul3label.setStyleSheet("color:white")
         testlabelsLayout.addWidget(senCeul3label)
@@ -420,7 +419,11 @@ class ConnectWindow(QWidget):
             self.exportcsv_button.setEnabled(False)
             self.exportcsv_button.setStyleSheet("color : gray")
 
-            self.autosetsensorMode_callback()
+            # Also, automatically set the sensors mode for all sensors and check the status
+            self.autosetsensorMode_callback(sensorList)
+
+            # Run this to get more info about connected sensors and channels
+            # self.get_sensor_and_channel_status()
 
     def set_sensor_list_box(self, sensorList):
         self.SensorListBox.clear()
@@ -481,7 +484,7 @@ class ConnectWindow(QWidget):
 
     def sensorMode_callback(self):
 
-        # See original repo to see how this used to work with a drop down of available sensor modes
+        """ NO LONGER USED - "See original repo to see how this used to work with a drop down of available sensor modes"""
 
         # Get the current selected sensor
         current_selected = self.SensorListBox.currentRow()
@@ -504,24 +507,49 @@ class ConnectWindow(QWidget):
             print(f"\nMode for sensor #{self.selectedSensor} set to:")
             print('\n   ', curMode)
 
-    def autosetsensorMode_callback(self):
+
+    def autosetsensorMode_callback(self, all_scanned_sensors):
 
         # Set to this mode which has four EMG channels and 4 Orientation (q_w, q_x, q_y, q_z)
         selMode = 'EMG RMS x4 (222Hz, 100ms win), OR 20 bits (74Hz), +/-5.5mV, 20-450Hz'
 
         # Iterate through each sensor
-        total_sensors = self.SensorListBox.count()
-        for sensor_idx in range(total_sensors):
+        for sensorObj in all_scanned_sensors:
 
-            self.CallbackConnector.base.setSampleMode(sensor_idx, selMode)
+            # Getting sensor pair and sticker number:
+            pairNumber = sensorObj.PairNumber
+            stickerNumber = pairNumber + 1
+
+            self.CallbackConnector.base.setSampleMode(pairNumber, selMode)
 
             # Verify each sensor's mode
-            curMode = self.CallbackConnector.base.getCurMode(sensor_idx)
-            print(f"\nMode for sensor #{sensor_idx} set to:")
-            print('\n   ', curMode)
+            curMode = self.CallbackConnector.base.getCurMode(pairNumber)
+            print(f"Mode for sensor sticker no. {stickerNumber} (pair number: ({pairNumber})) set to:")
+            print(curMode, '\n')
 
         # After setting all sensors, update pipeline state
         self.getpipelinestate()
+
+    def get_sensor_and_channel_status(self):
+
+        print('\nSUMMARY: Sensors connected: ')
+
+        all_scanned_sensors = self.CallbackConnector.base.TrigBase.GetScannedSensorsFound()
+
+        for sensor in all_scanned_sensors:
+
+            print(f'Sensor Sticker No: {sensor.PairNumber + 1}'
+                  f'\n Name: {sensor.FriendlyName}'
+                  f'\n Mode: {sensor.Configuration.ModeString}'
+                  f'\n Channels: {len(sensor.TrignoChannels)}')
+
+            # Save the sensor number and channel IDs for later use
+            for channel in sensor.TrignoChannels:
+                print(f"   Channel name: {channel.Name} "
+                      f"Channel type: {channel.Type} "
+                      f"Channel id: {channel.Id} "
+                      f"Channel sample rate: {channel.SampleRate}")
+
 
     def print_available_sensor_modes(self):
         """

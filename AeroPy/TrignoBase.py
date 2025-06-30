@@ -53,6 +53,7 @@ class TrignoBase():
 
     def Scan_Callback(self):
         """Callback to tell the base to scan for any available sensors"""
+
         try:
             f = self.TrigBase.ScanSensors().Result
         except Exception as e:
@@ -62,9 +63,9 @@ class TrignoBase():
         self.all_scanned_sensors = self.TrigBase.GetScannedSensorsFound()
         print("Sensors Found:\n")
         for sensor in self.all_scanned_sensors:
-            print("(" + str(sensor.PairNumber) + ") " +
-                sensor.FriendlyName + "\n" +
-                sensor.Configuration.ModeString + "\n")
+            sensorStickerNumber = str(sensor.PairNumber + 1)
+            print("(" + sensorStickerNumber + ") " +
+                sensor.FriendlyName + "\n")
 
         self.SensorCount = len(self.all_scanned_sensors)
         for i in range(self.SensorCount):
@@ -79,7 +80,7 @@ class TrignoBase():
         self.stop_trigger = stop_trigger
 
         configured = self.ConfigureCollectionOutput()
-        print(f'ORI channels: {self.oriChannelsIdx}')
+        print(f'Sensor Ori Channels: {self.sensorOriChannels}')
 
         if configured:
             #(Optional) To get YT data output pass 'True' to Start method
@@ -118,17 +119,28 @@ class TrignoBase():
                 self.oriChannelsIdx = []
                 globalChannelIdx = 0
                 self.channel_guids = []
+                self.sensorOriChannels = {}
+                self.connectedSensorStickerNos = []
 
                 for i in range(self.SensorCount):
 
+                    ori_channel_idx = []
+
                     selectedSensor = self.TrigBase.GetSensorObject(i)
-                    print("(" + str(selectedSensor.PairNumber) + ") " + str(selectedSensor.FriendlyName))
+                    # print("(" + str(selectedSensor.PairNumber) + ") " + str(selectedSensor.FriendlyName))
+
+                    sensorStickerNumber = str(selectedSensor.PairNumber + 1)
+                    self.connectedSensorStickerNos.append(sensorStickerNumber)
+
+                    print(f'Sensor Sticker No: {selectedSensor.PairNumber + 1}'
+                          f'\n Name: {selectedSensor.FriendlyName}'
+                          f'\n Mode: {selectedSensor.Configuration.ModeString}'
+                          f'\n Channels: {len(selectedSensor.TrignoChannels)}')
 
                     # CSV Export Config
                     self.csv_writer.appendSensorHeader(selectedSensor)
 
                     if len(selectedSensor.TrignoChannels) > 0:
-                        print("--Channels")
 
                         for channel in range(len(selectedSensor.TrignoChannels)):
                             ch_object = selectedSensor.TrignoChannels[channel]
@@ -144,6 +156,17 @@ class TrignoBase():
                                 self.channel_guids.append(ch_guid)
                                 globalChannelIdx += 1
 
+                                if ch_type == 'ORIENTATION':
+                                    ori_channel_idx.append(globalChannelIdx - 1)
+
+                                # ---- Plot EMG Channels
+                                if ch_type == 'EMG':
+                                    self.emgChannelsIdx.append(globalChannelIdx - 1)
+
+                                # ---- Exclude non-EMG channels from plots
+                                else:
+                                    pass
+
                                 #CSV Export Config
                                 if not self.collection_data_handler.streamYTData:
                                     self.csv_writer.appendChannelHeader(ch_object)
@@ -155,8 +178,6 @@ class TrignoBase():
                                         self.csv_writer.appendSensorHeaderSeperator()
                                     elif channel > 0 & channel != len(selectedSensor.TrignoChannels):
                                         self.csv_writer.appendYTSensorHeaderSeperator()
-
-
 
                             #NOTE: The self.channel_guids list is used to parse select channels during live data streaming in DataManager.py
                             #      this example will add all available channels to this list (above)
@@ -171,9 +192,8 @@ class TrignoBase():
                                         self.csv_writer.h1_sensors.append(",")
                                     globalChannelIdx += 1
 
-
                             sample_rate = round(selectedSensor.TrignoChannels[channel].SampleRate, 3)
-                            print("----" + selectedSensor.TrignoChannels[channel].Name + " (" + str(sample_rate) + " Hz) " + str(selectedSensor.TrignoChannels[channel].Id))
+                            # print("----" + selectedSensor.TrignoChannels[channel].Name + " (" + str(sample_rate) + " Hz) " + str(selectedSensor.TrignoChannels[channel].Id))
                             self.channelcount += 1
                             self.channelobjects.append(channel)
                             self.collection_data_handler.DataHandler.allcollectiondata.append([])
@@ -181,21 +201,16 @@ class TrignoBase():
                             # NOTE: Plotting/Data Output: This demo does not plot non-EMG channel types such as
                             # accelerometer, gyroscope, magnetometer, and others. However, the data from channels
                             # that are excluded from plots are still available via output from PollData()
+                            #
+                            # if ch_type == 'ORIENTATION':
+                            #     self.oriChannelsIdx.append(globalChannelIdx-1)
 
-                            # ---- Plot EMG Channels
-                            if ch_type == 'EMG':
-                                self.emgChannelsIdx.append(globalChannelIdx-1)
-                                self.plotCount += 1
+                    # Save the sensor number and channel IDs for later use
+                    self.sensorOriChannels[sensorStickerNumber] = ori_channel_idx
 
-                            if ch_type == 'ORIENTATION':
-                                self.oriChannelsIdx.append(globalChannelIdx-1)
-
-
-                            # ---- Exclude non-EMG channels from plots
-                            else:
-                                pass
 
                 return True
+            return None
         else:
             return False
 
@@ -228,5 +243,6 @@ class TrignoBase():
         self.TrigBase.SetSampleMode(curSensor, setMode)
         mode = self.getCurMode(curSensor)
         sensor = self.TrigBase.GetSensorObject(curSensor)
+        stickerNumber = str(sensor.PairNumber + 1)
         if mode == setMode:
-            print("(" + str(sensor.PairNumber) + ") " + str(sensor.FriendlyName) +" Mode Change Successful")
+            print("\n(" + stickerNumber + ") " + str(sensor.FriendlyName) +" Mode Change Successful")

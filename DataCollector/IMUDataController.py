@@ -24,26 +24,32 @@ class IMUDataController():
         self.collect_window = collect_window
         # self.live_window_metrics = live_data_window.MetricsConnector
         self.collect_window_metrics = collect_window.ConnectMetricsConnector
-        self.packetCount = 0  # Number of packets received from base
         self.pauseFlag = True  # Flag to start/stop collection and plotting (controlled in Base start and stop callbacks)
         self.DataHandler = DataKernel(self.base)  # Data handler for receiving data from base
         self.base.DataHandler = self.DataHandler
-        self.outData = [[0]]
         self.Index = None
         self.newTransform = None
         # self.live_window_plot = live_data_window.plotCanvas
         self.collect_window_plot = collect_window.plotCanvas
         self.vis_data = False   # Flag whether vis data window is open or not
-        self.senA_quat = [1, 0, 0, 0]
-        self.senB_quat = [1, 0, 0, 0]
-        self.senC_quat = [1, 0, 0, 0]
-        self.senA_eul3_max = 0
+
+        self.packetCount = 0  # Number of packets received from base
+        self.outData = [[0]]
+        self.sen1_quat = [1, 0, 0, 0]
+        self.sen2_quat = [1, 0, 0, 0]
+        self.sen3_quat = [1, 0, 0, 0]
+        self.sen1_eul3_max = 0
+        self.conf_sensorOriChannels = {}
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
 
     def streaming(self):
         """This is the data processing thread"""
+
+        # This is a dict which holds the channels indexs associated with each sensor ( e.g. {'1', [0, 1, 2, 3]} )
+        self.conf_sensorOriChannels = self.base.sensorOriChannels
+
         while self.pauseFlag is True:   # Wait for base start callback
             continue
         while self.pauseFlag is False:
@@ -53,13 +59,15 @@ class IMUDataController():
             # Extract values from the deque
             if len(self.data_deque) >= 2:
                 incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
-                try:
-                    self.outData = list(np.asarray(incData, dtype='object')[tuple([self.base.oriChannelsIdx])]) # Gets the elements of incData that matches channel IDs with orientation data
-                except IndexError:
-                    print("Index Error Occurred: streaming()")
 
-                self.senA_quat, self.senB_quat, self.senC_quat = self.getQuatsfromOutData(self.outData)
-                self.updateSensorCheckMetrics()
+                if all(str(i) in self.conf_sensorOriChannels for i in ['1', '2', '3']):
+                    self.sen1_quat = self.get_qmt_quat_from_incData(incData, '1')
+                    self.sen2_quat = self.get_qmt_quat_from_incData(incData, '2')
+                    self.sen3_quat = self.get_qmt_quat_from_incData(incData, '3')
+                    self.updateSensorCheckMetrics()
+
+                else:
+                    print('Not all of Sensor 1, 2, and 3 are connected.')
 
 
     def plot_sensor_data_check(self):
@@ -73,27 +81,28 @@ class IMUDataController():
                 # self.collect_window_plot.plot_new_data(np.array([0.0, 45.0, 90.0]))
 
                 # Plot dynamic value
-                self.collect_window_plot.plot_new_data(np.rad2deg(qmt.eulerAngles(self.senA_quat, axes='zyx')))
+                if '1' in self.base.connectedSensorStickerNos:
+                    self.collect_window_plot.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx')))
 
 
 
     def updateSensorCheckMetrics(self):
-        self.senA_euls = np.rad2deg(qmt.eulerAngles(self.senA_quat, axes='zyx'))
-        self.senB_euls = np.rad2deg(qmt.eulerAngles(self.senB_quat, axes='zyx'))
-        self.senC_euls = np.rad2deg(qmt.eulerAngles(self.senC_quat, axes='zyx'))
+        self.sen1_euls = np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx'))
+        self.sen2_euls = np.rad2deg(qmt.eulerAngles(self.sen2_quat, axes='zyx'))
+        self.sen3_euls = np.rad2deg(qmt.eulerAngles(self.sen3_quat, axes='zyx'))
 
-        self.collect_window_metrics.senAeul1.setText(f"{self.senA_euls[0]:.0f}°")
-        self.collect_window_metrics.senAeul2.setText(f"{self.senA_euls[1]:.0f}°")
-        self.collect_window_metrics.senAeul3.setText(f"{self.senA_euls[2]:.0f}°")
-        self.collect_window_metrics.senBeul1.setText(f"{self.senB_euls[0]:.0f}°")
-        self.collect_window_metrics.senBeul2.setText(f"{self.senB_euls[1]:.0f}°")
-        self.collect_window_metrics.senBeul3.setText(f"{self.senB_euls[2]:.0f}°")
-        self.collect_window_metrics.senCeul1.setText(f"{self.senC_euls[0]:.0f}°")
-        self.collect_window_metrics.senCeul2.setText(f"{self.senC_euls[1]:.0f}°")
-        self.collect_window_metrics.senCeul3.setText(f"{self.senC_euls[2]:.0f}°")
+        self.collect_window_metrics.sen1eul1.setText(f"{self.sen1_euls[0]:.0f}°")
+        self.collect_window_metrics.sen1eul2.setText(f"{self.sen1_euls[1]:.0f}°")
+        self.collect_window_metrics.sen1eul3.setText(f"{self.sen1_euls[2]:.0f}°")
+        self.collect_window_metrics.sen2eul1.setText(f"{self.sen2_euls[0]:.0f}°")
+        self.collect_window_metrics.sen2eul2.setText(f"{self.sen2_euls[1]:.0f}°")
+        self.collect_window_metrics.sen2eul3.setText(f"{self.sen2_euls[2]:.0f}°")
+        self.collect_window_metrics.sen3eul1.setText(f"{self.sen3_euls[0]:.0f}°")
+        self.collect_window_metrics.sen3eul2.setText(f"{self.sen3_euls[1]:.0f}°")
+        self.collect_window_metrics.sen3eul3.setText(f"{self.sen3_euls[2]:.0f}°")
 
-        if self.senA_euls[2] > self.senA_eul3_max:
-            self.senA_eul3_max = self.senA_euls[2]
+        if self.sen1_euls[2] > self.sen1_eul3_max:
+            self.sen1_eul3_max = self.sen1_euls[2]
 
 
     def updateCollectMetrics(self):
@@ -116,26 +125,9 @@ class IMUDataController():
         print('Starting sensor_data_check thread...')
         self.t2.start()
 
-
-    def getQuatsfromOutData(self, outData):
-        """ Get quaternions from outData list
-        Returns a list of quaternions, one for each sensor."""
-
-        sensor_indices = [(0, 1, 2, 3), (4, 5, 6, 7), (8, 9, 10, 11)]  # Indices for s1, s2, s3
-        all_sensor_quats = []
-        max_index = len(outData) - 1
-
-        for i, indices in enumerate(sensor_indices):
-            if max(indices) <= max_index:   # For each list of sensor indices, check if they are within the range of the outData list
-                try:
-                    quat = qmt.normalized(np.array([self.outData[j][0] for j in indices]))
-                    all_sensor_quats.append(quat)
-                except IndexError:
-                    print(f'WARNING: Issue reading outDat in getQuatsfromOutData()')
-                    continue
-            else:
-                quat = np.array([1, 0, 0, 0])
-                all_sensor_quats.append(quat)
-
-        return all_sensor_quats
-
+    def get_qmt_quat_from_incData(self, incData, senLabel):
+        # Gets the elements of incData that matches channel Idx with each sensors orientation data
+        outData = list(np.asarray(incData, dtype='object')[tuple([self.conf_sensorOriChannels[senLabel]])])
+        # Get the four elements of the quaternion
+        quat = qmt.normalized(np.array([outData[j][0] for j in [0, 1, 2, 3]]))
+        return quat
