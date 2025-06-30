@@ -19,6 +19,8 @@ from Plotter.SimplePlot import SimplePlot
 
 from Plotter import GenericPlot as gp
 
+# TODO Change Connnect to Collect
+
 class ConnectWindow(QWidget):
     plot_enabled = False
 
@@ -192,16 +194,43 @@ class ConnectWindow(QWidget):
         widget.setLayout(QVBoxLayout())
 
         plot_mode = 'scrolling'  # Select between 'scrolling' and 'windowed'
-        pc = SimplePlot(plot_mode)
-        pc.native.objectName = 'vispyCanvas'
-        pc.native.parent = self
-        label = QLabel("My Test Window Plotter")
+
+        label = QLabel("Sensor 1:")
         label.setStyleSheet('.QLabel { font-size: 8pt;}')
         label.setFixedHeight(20)
-        label.setAlignment(Qt.AlignmentFlag.AlignRight)
-        widget.layout().addWidget(pc.native)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         widget.layout().addWidget(label)
-        self.plotCanvas = pc
+
+        pc1 = SimplePlot(plot_mode)
+        pc1.native.objectName = 'vispyCanvas'
+        pc1.native.parent = self
+        widget.layout().addWidget(pc1.native)
+
+        label = QLabel("Sensor 2:")
+        label.setStyleSheet('.QLabel { font-size: 8pt;}')
+        label.setFixedHeight(20)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        widget.layout().addWidget(label)
+
+        pc2 = SimplePlot(plot_mode)
+        pc2.native.objectName = 'vispyCanvas'
+        pc2.native.parent = self
+        widget.layout().addWidget(pc2.native)
+
+        label = QLabel("Sensor 3:")
+        label.setStyleSheet('.QLabel { font-size: 8pt;}')
+        label.setFixedHeight(20)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        widget.layout().addWidget(label)
+
+        pc3 = SimplePlot(plot_mode)
+        pc3.native.objectName = 'vispyCanvas'
+        pc3.native.parent = self
+        widget.layout().addWidget(pc3.native)
+
+        self.plotCanvas1 = pc1
+        self.plotCanvas2 = pc2
+        self.plotCanvas3 = pc3
 
         return widget
 

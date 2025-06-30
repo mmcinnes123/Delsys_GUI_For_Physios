@@ -29,8 +29,10 @@ class IMUDataController():
         self.base.DataHandler = self.DataHandler
         self.Index = None
         self.newTransform = None
-        # self.live_window_plot = live_data_window.plotCanvas
-        self.collect_window_plot = collect_window.plotCanvas
+        # self.live_window_plot = live_data_window.plotCanvas1
+        self.collect_window_plot1 = collect_window.plotCanvas1
+        self.collect_window_plot2 = collect_window.plotCanvas2
+        self.collect_window_plot3 = collect_window.plotCanvas3
         self.vis_data = False   # Flag whether vis data window is open or not
 
         self.packetCount = 0  # Number of packets received from base
@@ -47,8 +49,7 @@ class IMUDataController():
     def streaming(self):
         """This is the data processing thread"""
 
-        # This is a dict which holds the channels indexs associated with each sensor ( e.g. {'1', [0, 1, 2, 3]} )
-        self.conf_sensorOriChannels = self.base.sensorOriChannels
+
 
         while self.pauseFlag is True:   # Wait for base start callback
             continue
@@ -69,22 +70,40 @@ class IMUDataController():
                 else:
                     print('Not all of Sensor 1, 2, and 3 are connected.')
 
+    # # TODO: Make sure plots stop when data vis starts and restart again when data vis stops
 
-    def plot_sensor_data_check(self):
+    def plot_sensor1_data_check(self):
 
-        if not self.collect_window_plot.is_initialized:
-            self.collect_window_plot.initiateCanvas(10000)  # Make sure the canvas is initialized
+        if not self.collect_window_plot1.is_initialized:
+            self.collect_window_plot1.initiateCanvas(10000)  # Make sure the canvas is initialized
 
         while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
 
-                # Plot static numbers
-                # self.collect_window_plot.plot_new_data(np.array([0.0, 45.0, 90.0]))
+                # Plot dynamic value
+                if '1' in self.conf_sensorOriChannels:
+                    self.collect_window_plot1.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx')))
+
+    def plot_sensor2_data_check(self):
+
+        if not self.collect_window_plot2.is_initialized:
+            self.collect_window_plot2.initiateCanvas(10000)  # Make sure the canvas is initialized
+
+        while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
 
                 # Plot dynamic value
-                if '1' in self.base.connectedSensorStickerNos:
-                    self.collect_window_plot.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx')))
+                if '2' in self.conf_sensorOriChannels:
+                    self.collect_window_plot2.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen2_quat, axes='zyx')))
 
+    def plot_sensor3_data_check(self):
 
+        if not self.collect_window_plot3.is_initialized:
+            self.collect_window_plot3.initiateCanvas(10000)  # Make sure the canvas is initialized
+
+        while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
+
+                # Plot dynamic value
+                if '3' in self.conf_sensorOriChannels:
+                    self.collect_window_plot3.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen3_quat, axes='zyx')))
 
     def updateSensorCheckMetrics(self):
         self.sen1_euls = np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx'))
@@ -113,6 +132,10 @@ class IMUDataController():
         self.collect_window_metrics.totalchannels.setText(str(self.base.channelcount))  # Reset collect data window metrics
 
     def threadManager(self, start_trigger, stop_trigger):
+
+        # This is a dict which holds the channels indexs associated with each sensor ( e.g. {'1', [0, 1, 2, 3]} )
+        self.conf_sensorOriChannels = self.base.sensorOriChannels
+
         """Handles the threads for the DataCollector gui"""
         self.data_deque = deque()     # Create a new, empty double-ended queue
 
@@ -121,9 +144,17 @@ class IMUDataController():
         print('Starting streaming thread...')
         self.t1.start()
 
-        self.t2 = threading.Thread(target=self.plot_sensor_data_check)
+        self.t2 = threading.Thread(target=self.plot_sensor1_data_check)
         print('Starting sensor_data_check thread...')
         self.t2.start()
+
+        self.t3 = threading.Thread(target=self.plot_sensor2_data_check)
+        print('Starting sensor_data_check thread...')
+        self.t3.start()
+
+        self.t4 = threading.Thread(target=self.plot_sensor3_data_check)
+        print('Starting sensor_data_check thread...')
+        self.t4.start()
 
     def get_qmt_quat_from_incData(self, incData, senLabel):
         # Gets the elements of incData that matches channel Idx with each sensors orientation data
