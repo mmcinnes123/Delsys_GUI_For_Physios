@@ -57,7 +57,7 @@ class IMUDataController():
             self.DataHandler.processData(self.data_deque) # Get packets of data from the base and append to the queue
             self.updateCollectMetrics()
 
-            # Extract values from the deque
+            # Extract quaternion values from the deque
             if len(self.data_deque) >= 2:
                 incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
 
@@ -67,11 +67,12 @@ class IMUDataController():
                     self.sen3_quat = self.get_qmt_quat_from_incData(incData, '3')
                     self.updateSensorCheckMetrics()
 
+                    # Get joint angles for sensor orientation data
+
+
                 else:
                     print('Not all of Sensor 1, 2, and 3 are connected.')
 
-    # TODO: Take plot initialisation out of threads?
-    # # TODO: Make sure plots stop when data vis starts and restart again when data vis stops
 
     def plot_sensor1_data_check(self):
 
@@ -115,7 +116,6 @@ class IMUDataController():
 
             time.sleep(0.1)  # Add small delay to prevent CPU hogging
 
-
     def updateSensorCheckMetrics(self):
         self.sen1_euls = np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx'))
         self.sen2_euls = np.rad2deg(qmt.eulerAngles(self.sen2_quat, axes='zyx'))
@@ -144,11 +144,11 @@ class IMUDataController():
 
     def threadManager(self, start_trigger, stop_trigger):
 
-        # This is a dict which holds the channels indexs associated with each sensor ( e.g. {'1', [0, 1, 2, 3]} )
-        self.conf_sensorOriChannels = self.base.sensorOriChannels
-
         """Handles the threads for the DataCollector gui"""
         self.data_deque = deque()     # Create a new, empty double-ended queue
+
+        # This is a dict which holds the channels indexs associated with each sensor ( e.g. {'1', [0, 1, 2, 3]} )
+        self.conf_sensorOriChannels = self.base.sensorOriChannels
 
         # Initialise plots
         self.collect_window_plot1.initiateCanvas(10000)  # Make sure the canvas is initialized
@@ -171,6 +171,9 @@ class IMUDataController():
         self.t4 = threading.Thread(target=self.plot_sensor3_data_check)
         print('Starting plot_sensor3_data_check thread...')
         self.t4.start()
+
+    # -----------------------------------------------------------------------
+    # ---- Orientation/Kinematic Functions
 
     def get_qmt_quat_from_incData(self, incData, senLabel):
         # Gets the elements of incData that matches channel Idx with each sensors orientation data
