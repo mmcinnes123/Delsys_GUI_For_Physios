@@ -33,7 +33,7 @@ class IMUDataController():
         self.collect_window_plot2 = collect_window.plotCanvas2
         self.collect_window_plot3 = collect_window.plotCanvas3
 
-        self.vis_data = False   # Flags stop/start of data visualisation, set to True when data vis window is opened
+        self.vis_data = False   # Flags stop/start of data visualisation, set to True when data vis window is opened, and false when closed
         self.pauseFlag = True  # Flags start/stop of data collection. Set to false during base config, true during stop callback
 
         self.packetCount = 0  # Number of packets received from base
@@ -70,6 +70,7 @@ class IMUDataController():
                 else:
                     print('Not all of Sensor 1, 2, and 3 are connected.')
 
+    # TODO: Take plot initialisation out of threads?
     # # TODO: Make sure plots stop when data vis starts and restart again when data vis stops
 
     def plot_sensor1_data_check(self):
@@ -77,7 +78,10 @@ class IMUDataController():
         if not self.collect_window_plot1.is_initialized:
             self.collect_window_plot1.initiateCanvas(10000)  # Make sure the canvas is initialized
 
-        while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
+        while self.pauseFlag is True:   # Wait for base start callback
+            continue
+
+        while self.pauseFlag is False and self.vis_data is False:    # This thread (while loop) should stop when vis data window is closed
 
                 # Plot dynamic value
                 if '1' in self.conf_sensorOriChannels:
