@@ -75,44 +75,46 @@ class IMUDataController():
 
     def plot_sensor1_data_check(self):
 
-        if not self.collect_window_plot1.is_initialized:
-            self.collect_window_plot1.initiateCanvas(10000)  # Make sure the canvas is initialized
-
         while self.pauseFlag is True:   # Wait for base start callback
+            time.sleep(0.1)
             continue
 
-        while self.pauseFlag is False:
+        while self.pauseFlag is False:  # Keep this thread running until base stop callback is called
 
-            while self.vis_dataFlag is False:    # This thread (while loop) should stop when vis data window is closed
-
-                # Plot dynamic value
-                if '1' in self.conf_sensorOriChannels:
+            while self.vis_dataFlag is False and self.pauseFlag is False:   # Plot sensor data only when data vis window is not open
+                if '1' in self.conf_sensorOriChannels:  # Plot IMU PRY data if it exists in the data channels
                     self.collect_window_plot1.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx')))
 
             time.sleep(0.1)  # Add small delay to prevent CPU hogging
-            continue
 
     def plot_sensor2_data_check(self):
 
-        if not self.collect_window_plot2.is_initialized:
-            self.collect_window_plot2.initiateCanvas(10000)  # Make sure the canvas is initialized
+        while self.pauseFlag is True:  # Wait for base start callback
+            time.sleep(0.1)
+            continue
 
-        while self.vis_dataFlag is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
+        while self.pauseFlag is False:  # Keep this thread running until base stop callback is called
 
-                # Plot dynamic value
-                if '2' in self.conf_sensorOriChannels:
+            while self.vis_dataFlag is False and self.pauseFlag is False:  # Plot sensor data only when data vis window is not open
+                if '2' in self.conf_sensorOriChannels:  # Plot IMU PRY data if it exists in the data channels
                     self.collect_window_plot2.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen2_quat, axes='zyx')))
+
+            time.sleep(0.1)  # Add small delay to prevent CPU hogging
 
     def plot_sensor3_data_check(self):
 
-        if not self.collect_window_plot3.is_initialized:
-            self.collect_window_plot3.initiateCanvas(10000)  # Make sure the canvas is initialized
+        while self.pauseFlag is True:  # Wait for base start callback
+            time.sleep(0.1)
+            continue
 
-        while self.vis_dataFlag is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
+        while self.pauseFlag is False:  # Keep this thread running until base stop callback is called
 
-                # Plot dynamic value
-                if '3' in self.conf_sensorOriChannels:
+            while self.vis_dataFlag is False and self.pauseFlag is False:  # Plot sensor data only when data vis window is not open
+                if '3' in self.conf_sensorOriChannels:  # Plot IMU PRY data if it exists in the data channels
                     self.collect_window_plot3.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen3_quat, axes='zyx')))
+
+            time.sleep(0.1)  # Add small delay to prevent CPU hogging
+
 
     def updateSensorCheckMetrics(self):
         self.sen1_euls = np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx'))
@@ -148,21 +150,26 @@ class IMUDataController():
         """Handles the threads for the DataCollector gui"""
         self.data_deque = deque()     # Create a new, empty double-ended queue
 
+        # Initialise plots
+        self.collect_window_plot1.initiateCanvas(10000)  # Make sure the canvas is initialized
+        self.collect_window_plot2.initiateCanvas(10000)  # Make sure the canvas is initialized
+        self.collect_window_plot3.initiateCanvas(10000)  # Make sure the canvas is initialized
+
         # Start standard data stream (only channel data, no time values)
         self.t1 = threading.Thread(target=self.streaming)
         print('Starting streaming thread...')
         self.t1.start()
 
         self.t2 = threading.Thread(target=self.plot_sensor1_data_check)
-        print('Starting sensor_data_check thread...')
+        print('Starting plot_sensor1_data_check thread...')
         self.t2.start()
 
         self.t3 = threading.Thread(target=self.plot_sensor2_data_check)
-        print('Starting sensor_data_check thread...')
+        print('Starting plot_sensor2_data_check thread...')
         self.t3.start()
 
         self.t4 = threading.Thread(target=self.plot_sensor3_data_check)
-        print('Starting sensor_data_check thread...')
+        print('Starting plot_sensor3_data_check thread...')
         self.t4.start()
 
     def get_qmt_quat_from_incData(self, incData, senLabel):
