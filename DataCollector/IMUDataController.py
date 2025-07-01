@@ -42,9 +42,10 @@ class IMUDataController():
         self.sen2_quat = [1, 0, 0, 0]
         self.sen3_quat = [1, 0, 0, 0]
         self.sen1_eul3_max = 0
-        self.el_FEmax = 0
-        self.el_CAmax = 0
-        self.el_PSmax = 0
+        self.el_flex_max = 0
+        self.el_ext_max = 90
+        self.el_pro_max = 0
+        self.el_sup_max = 0
         self.conf_sensorOriChannels = {}
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
@@ -213,13 +214,16 @@ class IMUDataController():
 
     def update_max_joint_angle_values(self):
 
-        if self.el_FE > self.el_FEmax:
-            self.el_FEmax = self.el_FE
+        if self.el_FE > self.el_flex_max:
+            self.el_flex_max = self.el_FE
 
-        if self.el_CA > self.el_CAmax:
-            self.el_CAmax = self.el_CA
+        if self.el_FE < self.el_ext_max:
+            self.el_ext_max = self.el_FE
 
-        if self.el_PS > self.el_PSmax:
-            self.el_PSmax = self.el_PS
+        if self.el_PS > self.el_pro_max:
+            self.el_pro_max = self.el_PS
+
+        if self.el_PS < self.el_sup_max:
+            self.el_sup_max = self.el_PS
 
 
