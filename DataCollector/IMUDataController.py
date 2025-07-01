@@ -33,7 +33,7 @@ class IMUDataController():
         self.collect_window_plot2 = collect_window.plotCanvas2
         self.collect_window_plot3 = collect_window.plotCanvas3
 
-        self.vis_data = False   # Flags stop/start of data visualisation, set to True when data vis window is opened, and false when closed
+        self.vis_dataFlag = False   # Flags stop/start of data visualisation, set to True when data vis window is opened, and false when closed
         self.pauseFlag = True  # Flags start/stop of data collection. Set to false during base config, true during stop callback
 
         self.packetCount = 0  # Number of packets received from base
@@ -81,18 +81,23 @@ class IMUDataController():
         while self.pauseFlag is True:   # Wait for base start callback
             continue
 
-        while self.pauseFlag is False and self.vis_data is False:    # This thread (while loop) should stop when vis data window is closed
+        while self.pauseFlag is False:
+
+            while self.vis_dataFlag is False:    # This thread (while loop) should stop when vis data window is closed
 
                 # Plot dynamic value
                 if '1' in self.conf_sensorOriChannels:
                     self.collect_window_plot1.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx')))
+
+            time.sleep(0.1)  # Add small delay to prevent CPU hogging
+            continue
 
     def plot_sensor2_data_check(self):
 
         if not self.collect_window_plot2.is_initialized:
             self.collect_window_plot2.initiateCanvas(10000)  # Make sure the canvas is initialized
 
-        while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
+        while self.vis_dataFlag is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
 
                 # Plot dynamic value
                 if '2' in self.conf_sensorOriChannels:
@@ -103,7 +108,7 @@ class IMUDataController():
         if not self.collect_window_plot3.is_initialized:
             self.collect_window_plot3.initiateCanvas(10000)  # Make sure the canvas is initialized
 
-        while self.vis_data is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
+        while self.vis_dataFlag is False and self.pauseFlag is False:    # This thread (while loop) should stop when vis data window is closed
 
                 # Plot dynamic value
                 if '3' in self.conf_sensorOriChannels:

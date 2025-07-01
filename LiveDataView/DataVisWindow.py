@@ -40,7 +40,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
     def closeEvent(self, event):
         if self.controller:
-            self.controller.collectWindow.CallbackConnector.vis_data = False
+            self.controller.collectWindow.CallbackConnector.vis_dataFlag = False
             self.controller.collectWindow.start_vis_button.setEnabled(True)
             self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close

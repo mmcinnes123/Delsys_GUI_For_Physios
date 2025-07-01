@@ -498,7 +498,7 @@ class CollectWindow(QWidget):
     def start_vis_callback(self):
         self.start_vis_button.setEnabled(False)
         self.start_vis_button.setStyleSheet("color : gray")
-        self.CallbackConnector.vis_data = True
+        self.CallbackConnector.vis_dataFlag = True
         self.controller.showViewLiveData()  # Open live data view
 
     def exportcsv_callback(self):

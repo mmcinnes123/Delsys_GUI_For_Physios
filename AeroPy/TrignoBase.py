@@ -217,6 +217,7 @@ class TrignoBase():
     def Stop_Callback(self):
         """Callback to stop the data stream"""
         self.collection_data_handler.pauseFlag = True
+        print('Set Pause Flag to True')
         self.TrigBase.Stop()
         print("Data Collection Complete")
         self.csv_writer.data = self.collection_data_handler.DataHandler.allcollectiondata
