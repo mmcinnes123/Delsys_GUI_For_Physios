@@ -30,13 +30,13 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     # ---- Callback Functions
 
     def update_display(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'sen1_euls'):
-            self.el_flex_value.setText(f"{self.controller.collectWindow.CallbackConnector.sen1_euls[2]:.0f}°")
-            self.el_flex_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sen1_eul3_max:.0f}°")
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'el_FE'):
+            self.el_flex_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_FE:.0f}°")
+            self.el_flex_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_FEmax:.0f}°")
 
     def reset_el_flex_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'sen1_eul3_max'):
-            self.controller.collectWindow.CallbackConnector.sen1_eul3_max = 0
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'el_FEmax'):
+            self.controller.collectWindow.CallbackConnector.el_FEmax = 0
 
     def closeEvent(self, event):
         if self.controller:

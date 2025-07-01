@@ -42,6 +42,9 @@ class IMUDataController():
         self.sen2_quat = [1, 0, 0, 0]
         self.sen3_quat = [1, 0, 0, 0]
         self.sen1_eul3_max = 0
+        self.el_FEmax = 0
+        self.el_CAmax = 0
+        self.el_PSmax = 0
         self.conf_sensorOriChannels = {}
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
@@ -67,8 +70,16 @@ class IMUDataController():
                     self.sen3_quat = self.get_qmt_quat_from_incData(incData, '3')
                     self.updateSensorCheckMetrics()
 
-                    # Get joint angles for sensor orientation data
+                    # Get body segment frames from sensor orientation data based on manual unit alignment
+                    self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
+                    self.humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
+                    self.forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
 
+                    # Get joint angles from body segment frames
+                    self.el_FE, self.el_CA, self.el_PS = self.get_elbow_angles_from_body_frames(self.humerus_quat, self.forerarm_quat)
+
+                    # Update max value
+                    self.update_max_joint_angle_values()
 
                 else:
                     print('Not all of Sensor 1, 2, and 3 are connected.')
@@ -131,9 +142,6 @@ class IMUDataController():
         self.collect_window_metrics.sen3eul2.setText(f"{self.sen3_euls[1]:.0f}°")
         self.collect_window_metrics.sen3eul3.setText(f"{self.sen3_euls[2]:.0f}°")
 
-        if self.sen1_euls[2] > self.sen1_eul3_max:
-            self.sen1_eul3_max = self.sen1_euls[2]
-
 
     def updateCollectMetrics(self):
         self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
@@ -180,4 +188,38 @@ class IMUDataController():
         outData = list(np.asarray(incData, dtype='object')[tuple([self.conf_sensorOriChannels[senLabel]])])
         # Get the four elements of the quaternion
         quat = qmt.normalized(np.array([outData[j][0] for j in [0, 1, 2, 3]]))
+        # TODO: Make sure normalis function beign used right (just needs to accoutn for when outData is None/nan
         return quat
+
+    def get_body_frames_from_sensor_frame(self, sensor_quat, body_name):
+
+        # Transformation matrics to transform sensor local frames to match ISB body frames (specific to choice of placement)
+        thorax_trans_quat = qmt.quatFromRotMat([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
+        humerus_trans_quat = qmt.quatFromRotMat([[-1, 0, 0], [0, -1, 0], [0, 0, 1]])
+        forearm_trans_quat = qmt.quatFromRotMat([[0, 0, -1], [0, -1, 0], [-1, 0, 0]])
+        trans_quat = {'thorax': thorax_trans_quat, 'humerus': humerus_trans_quat, 'forearm': forearm_trans_quat}[body_name]
+
+        body_quat = qmt.qmult(sensor_quat, trans_quat)
+
+        return body_quat
+
+    def get_elbow_angles_from_body_frames(self, humerus_quat, forearm_quat):
+
+        elbow_joint = qmt.qmult(qmt.qinv(humerus_quat), forearm_quat)
+
+        elbow_euls = np.rad2deg(qmt.eulerAngles(elbow_joint, axes='zxy'))
+
+        return elbow_euls
+
+    def update_max_joint_angle_values(self):
+
+        if self.el_FE > self.el_FEmax:
+            self.el_FEmax = self.el_FE
+
+        if self.el_CA > self.el_CAmax:
+            self.el_CAmax = self.el_CA
+
+        if self.el_PS > self.el_PSmax:
+            self.el_PSmax = self.el_PS
+
+
