@@ -19,9 +19,8 @@ from Plotter.SimplePlot import SimplePlot
 
 from Plotter import GenericPlot as gp
 
-# TODO Change Connnect to Collect
 
-class ConnectWindow(QWidget):
+class CollectWindow(QWidget):
     plot_enabled = False
 
     def __init__(self, controller):

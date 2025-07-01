@@ -30,19 +30,19 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     # ---- Callback Functions
 
     def update_display(self):
-        if hasattr(self.controller.connectWindow.CallbackConnector, 'senA_euls'):
-            self.el_flex_value.setText(f"{self.controller.connectWindow.CallbackConnector.senA_euls[2]:.0f}°")
-            self.el_flex_max_value.setText(f"{self.controller.connectWindow.CallbackConnector.senA_eul3_max:.0f}°")
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'senA_euls'):
+            self.el_flex_value.setText(f"{self.controller.collectWindow.CallbackConnector.senA_euls[2]:.0f}°")
+            self.el_flex_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.senA_eul3_max:.0f}°")
 
     def reset_el_flex_max_buttonCallback(self):
-        if hasattr(self.controller.connectWindow.CallbackConnector, 'senA_eul3_max'):
-            self.controller.connectWindow.CallbackConnector.senA_eul3_max = 0
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'senA_eul3_max'):
+            self.controller.collectWindow.CallbackConnector.senA_eul3_max = 0
 
     def closeEvent(self, event):
         if self.controller:
-            self.controller.connectWindow.CallbackConnector.vis_data = False
-            self.controller.connectWindow.start_vis_button.setEnabled(True)
-            self.controller.connectWindow.start_vis_button.setStyleSheet("color : white")
+            self.controller.collectWindow.CallbackConnector.vis_data = False
+            self.controller.collectWindow.start_vis_button.setEnabled(True)
+            self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
 
 

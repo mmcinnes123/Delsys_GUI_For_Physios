@@ -24,7 +24,6 @@ class IMUDataController():
         self.collect_window = collect_window
         # self.live_window_metrics = live_data_window.MetricsConnector
         self.collect_window_metrics = collect_window.ConnectMetricsConnector
-        self.pauseFlag = True  # Flag to start/stop collection and plotting (controlled in Base start and stop callbacks)
         self.DataHandler = DataKernel(self.base)  # Data handler for receiving data from base
         self.base.DataHandler = self.DataHandler
         self.Index = None
@@ -33,7 +32,9 @@ class IMUDataController():
         self.collect_window_plot1 = collect_window.plotCanvas1
         self.collect_window_plot2 = collect_window.plotCanvas2
         self.collect_window_plot3 = collect_window.plotCanvas3
-        self.vis_data = False   # Flag whether vis data window is open or not
+
+        self.vis_data = False   # Flags stop/start of data visualisation, set to True when data vis window is opened
+        self.pauseFlag = True  # Flags start/stop of data collection. Set to false during base config, true during stop callback
 
         self.packetCount = 0  # Number of packets received from base
         self.outData = [[0]]
@@ -49,10 +50,9 @@ class IMUDataController():
     def streaming(self):
         """This is the data processing thread"""
 
-
-
         while self.pauseFlag is True:   # Wait for base start callback
             continue
+
         while self.pauseFlag is False:
             self.DataHandler.processData(self.data_deque) # Get packets of data from the base and append to the queue
             self.updateCollectMetrics()
