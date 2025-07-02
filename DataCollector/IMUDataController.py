@@ -67,18 +67,26 @@ class IMUDataController():
                 self.incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
 
     def getSensorData(self):
-        """ This thread gets the sensor orientation data from the deque"""
+        """ This thread gets the sensor orientation data from the incData
+        and gets joint angle data when data vis window is open."""
 
         while self.pauseFlag is True:  # Wait for base start callback
             continue
 
         while self.pauseFlag is False:
             if self.incData is not None:
+
+                # Get the sensor orientation data from the incData
                 if all(str(i) in self.conf_sensorOriChannels for i in ['1', '2', '3']):
                     self.sen1_quat = self.get_qmt_quat_from_incData('1')
                     self.sen2_quat = self.get_qmt_quat_from_incData('2')
                     self.sen3_quat = self.get_qmt_quat_from_incData('3')
                     self.updateSensorCheckMetrics()
+                else:
+                    print('Not all of Sensor 1, 2, and 3 are connected.')
+
+                # Get the joint angle info from sensor orientations
+                if self.vis_dataFlag is True:
 
                     # Get body segment frames from sensor orientation data based on manual unit alignment
                     self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
@@ -91,8 +99,7 @@ class IMUDataController():
                     # Update max value
                     self.update_max_joint_angle_values()
 
-                else:
-                    print('Not all of Sensor 1, 2, and 3 are connected.')
+            time.sleep(0.01)
 
 
     def plot_sensor1_data_check(self):
