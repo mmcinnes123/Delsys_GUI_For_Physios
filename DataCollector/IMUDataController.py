@@ -37,6 +37,7 @@ class IMUDataController():
         self.pauseFlag = True  # Flags start/stop of data collection. Set to false during base config, true during stop callback
 
         self.packetCount = 0  # Number of packets received from base
+        self.incData = None
         self.outData = [[0]]
         self.sen1_quat = [1, 0, 0, 0]
         self.sen2_quat = [1, 0, 0, 0]
@@ -52,7 +53,7 @@ class IMUDataController():
 
 
     def streaming(self):
-        """This is the data processing thread"""
+        """This thread gets the data from the base and appends it to the deque"""
 
         while self.pauseFlag is True:   # Wait for base start callback
             continue
@@ -63,12 +64,20 @@ class IMUDataController():
 
             # Extract quaternion values from the deque
             if len(self.data_deque) >= 2:
-                incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
+                self.incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
 
+    def getSensorData(self):
+        """ This thread gets the sensor orientation data from the deque"""
+
+        while self.pauseFlag is True:  # Wait for base start callback
+            continue
+
+        while self.pauseFlag is False:
+            if self.incData is not None:
                 if all(str(i) in self.conf_sensorOriChannels for i in ['1', '2', '3']):
-                    self.sen1_quat = self.get_qmt_quat_from_incData(incData, '1')
-                    self.sen2_quat = self.get_qmt_quat_from_incData(incData, '2')
-                    self.sen3_quat = self.get_qmt_quat_from_incData(incData, '3')
+                    self.sen1_quat = self.get_qmt_quat_from_incData(self.incData, '1')
+                    self.sen2_quat = self.get_qmt_quat_from_incData(self.incData, '2')
+                    self.sen3_quat = self.get_qmt_quat_from_incData(self.incData, '3')
                     self.updateSensorCheckMetrics()
 
                     # Get body segment frames from sensor orientation data based on manual unit alignment
@@ -168,6 +177,10 @@ class IMUDataController():
         self.t1 = threading.Thread(target=self.streaming)
         print('Starting streaming thread...')
         self.t1.start()
+
+        self.t5 = threading.Thread(target=self.getSensorData)
+        print('Starting getSensorData thread...')
+        self.t5.start()
 
         self.t2 = threading.Thread(target=self.plot_sensor1_data_check)
         print('Starting plot_sensor1_data_check thread...')
