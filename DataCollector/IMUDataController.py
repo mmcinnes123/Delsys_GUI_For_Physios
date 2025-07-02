@@ -117,7 +117,7 @@ class IMUDataController():
                 if '1' in self.conf_sensorOriChannels:  # Plot IMU PRY data if it exists in the data channels
                     self.collect_window_plot1.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx')))
 
-            time.sleep(0.1)  # Add small delay to prevent CPU hogging
+            time.sleep(0.01)  # Add small delay to prevent CPU hogging
 
     def plot_sensor2_data_check(self):
 
@@ -131,7 +131,7 @@ class IMUDataController():
                 if '2' in self.conf_sensorOriChannels:  # Plot IMU PRY data if it exists in the data channels
                     self.collect_window_plot2.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen2_quat, axes='zyx')))
 
-            time.sleep(0.1)  # Add small delay to prevent CPU hogging
+            time.sleep(0.01)  # Add small delay to prevent CPU hogging
 
     def plot_sensor3_data_check(self):
 
@@ -145,7 +145,7 @@ class IMUDataController():
                 if '3' in self.conf_sensorOriChannels:  # Plot IMU PRY data if it exists in the data channels
                     self.collect_window_plot3.plot_new_data(np.rad2deg(qmt.eulerAngles(self.sen3_quat, axes='zyx')))
 
-            time.sleep(0.1)  # Add small delay to prevent CPU hogging
+            time.sleep(0.01)  # Add small delay to prevent CPU hogging
 
     # -----------------------------------------------------------------------
     # ---- Update Functions
