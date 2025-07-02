@@ -90,17 +90,7 @@ class IMUDataController():
 
                 # Get the joint angle info from sensor orientations
                 if self.vis_dataFlag is True:
-    # TODO: Turn below into one method
-                    # Get body segment frames from sensor orientation data based on manual unit alignment
-                    self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
-                    self.humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
-                    self.forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
-
-                    # Get joint angles from body segment frames
-                    self.el_FE, self.el_CA, self.el_PS = self.get_elbow_angles_from_body_frames(self.humerus_quat, self.forerarm_quat)
-
-                    # Update max value
-                    self.update_max_joint_angle_values()
+                    self.getJointAngles()
 
             time.sleep(0.01)
 
@@ -216,13 +206,30 @@ class IMUDataController():
     # -----------------------------------------------------------------------
     # ---- Orientation/Kinematic Functions
 
+    def getJointAngles(self):
+        """ Updates joint angles and max joint angles from sensor orientation data."""
+
+        # Get body segment frames from sensor orientation data based on manual unit alignment
+        self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
+        self.humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
+        self.forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
+
+        # Get joint angles from body segment frames
+        self.el_FE, self.el_CA, self.el_PS = self.get_elbow_angles_from_body_frames(self.humerus_quat, self.forerarm_quat)
+
+        # Update max value
+        self.update_max_joint_angle_values()
+
     def get_qmt_quat_from_incData(self, senLabel):
+
         # Gets the elements of incData that matches channel Idx with each sensors orientation data
         outData = list(np.asarray(self.incData, dtype='object')[tuple([self.conf_sensorOriChannels[senLabel]])])
+
         # Get the four elements of the quaternion
-        quat = qmt.normalized(np.array([outData[j][0] for j in [0, 1, 2, 3]]))
-        # TODO: Make sure normalis function beign used right (just needs to accoutn for when outData is None/nan
-        return quat
+        quat = np.array([outData[j][0] for j in [0, 1, 2, 3]])
+        quat_norm = qmt.normalized(quat)
+
+        return quat_norm
 
     def get_body_frames_from_sensor_frame(self, sensor_quat, body_name):
 
