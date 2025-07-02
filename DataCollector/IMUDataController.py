@@ -47,6 +47,11 @@ class IMUDataController():
         self.el_ext_max = 90
         self.el_pro_max = 0
         self.el_sup_max = 0
+        self.sh_flex_max = 0
+        self.sh_ext_max = 0
+        self.sh_abd_max = 0
+        self.sh_introt_max = 0
+        self.sh_extrot_max = 0
         self.conf_sensorOriChannels = {}
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
@@ -217,6 +222,12 @@ class IMUDataController():
         # Get joint angles from body segment frames
         self.el_FE, self.el_CA, self.el_PS = self.get_elbow_angles_from_body_frames(self.humerus_quat, self.forerarm_quat)
 
+        self.sh_AB, self.sh_FE, self.sh_IE = self.get_shoulder_angles_from_body_frames(self.thorax_quat, self.humerus_quat)
+
+        # Discount shoulder int/ext rotation if elevation increases:
+        if self.sh_AB > 45 or self.sh_FE > 45:
+            self.el_PS = None
+
         # Update max value
         self.update_max_joint_angle_values()
 
@@ -251,6 +262,23 @@ class IMUDataController():
 
         return elbow_euls
 
+    def get_shoulder_angles_from_body_frames(self, thorax_quat, humerus_quat):
+
+        shoulder_joint = qmt.qmult(qmt.qinv(thorax_quat), humerus_quat)
+
+        # Get Euler angles for elevation angle
+        shoulder_eulsISB = np.rad2deg(qmt.eulerAngles(shoulder_joint), axes='yxy')
+
+        sh_AB = shoulder_eulsISB[1]   # This doesnt encounter gimbal lock
+        sh_FE = shoulder_eulsISB[1]   # This doesnt encounter gimbal lock
+
+        # Get Euler angles for rotation
+        shoudler_eulsYXZ = np.rad2deg(qmt.eulerAngles(shoulder_joint), axes='yxz')
+
+        sh_IE = shoudler_eulsYXZ[0]     # This encounters gimbal lock when elevation is near 90
+
+        return sh_AB, sh_FE, sh_IE
+
     def update_max_joint_angle_values(self):
 
         if self.el_FE > self.el_flex_max:
@@ -265,4 +293,17 @@ class IMUDataController():
         if self.el_PS < self.el_sup_max:
             self.el_sup_max = self.el_PS
 
+        if self.sh_FE > self.sh_flex_max:
+            self.sh_flex_max = self.sh_FE
 
+        if self.sh_AB > self.sh_abd_max:
+            self.sh_abd_max = self.sh_AB
+
+        # if self.sh_FE < self.sh_ext_max:
+        #     self.sh_ext_max = self.sh_FE
+
+        if self.sh_IE > self.sh_introt_max:
+            self.sh_introt_max = self.sh_IE
+
+        if self.sh_IE < self.sh_extrot_max:
+            self.sh_extrot_max = self.sh_IE
