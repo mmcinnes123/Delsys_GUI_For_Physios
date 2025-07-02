@@ -15,7 +15,7 @@ clr.AddReference("System.Collections")
 
 app.use_app('PySide6')
 
-# Test commit
+# TODO: Tidy this file into sections
 
 class IMUDataController():
     def __init__(self, collect_window):
@@ -51,6 +51,8 @@ class IMUDataController():
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
+    # -----------------------------------------------------------------------
+    # ---- Threads
 
     def streaming(self):
         """This thread gets the data from the base and appends it to the deque"""
@@ -66,8 +68,9 @@ class IMUDataController():
             if len(self.data_deque) >= 2:
                 self.incData = self.data_deque.popleft()  # Returns the oldest element in the deque and removes it from data_deque
 
-    def getSensorData(self):
-        """ This thread gets the sensor orientation data from the incData
+    def processData(self):
+        """ This thread processes the data.
+        It gets the sensor orientation data from the incData
         and gets joint angle data when data vis window is open."""
 
         while self.pauseFlag is True:  # Wait for base start callback
@@ -87,7 +90,7 @@ class IMUDataController():
 
                 # Get the joint angle info from sensor orientations
                 if self.vis_dataFlag is True:
-
+    # TODO: Turn below into one method
                     # Get body segment frames from sensor orientation data based on manual unit alignment
                     self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
                     self.humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
@@ -101,7 +104,7 @@ class IMUDataController():
 
             time.sleep(0.01)
 
-
+    # ---- Sensor data plotting threads
     def plot_sensor1_data_check(self):
 
         while self.pauseFlag is True:   # Wait for base start callback
@@ -144,6 +147,9 @@ class IMUDataController():
 
             time.sleep(0.1)  # Add small delay to prevent CPU hogging
 
+    # -----------------------------------------------------------------------
+    # ---- Update Functions
+
     def updateSensorCheckMetrics(self):
         self.sen1_euls = np.rad2deg(qmt.eulerAngles(self.sen1_quat, axes='zyx'))
         self.sen2_euls = np.rad2deg(qmt.eulerAngles(self.sen2_quat, axes='zyx'))
@@ -163,13 +169,18 @@ class IMUDataController():
     def updateCollectMetrics(self):
         self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
 
+
     def resetmetrics(self):
         self.collect_window_metrics.framescollected.setText("0")  # Reset collect data window metrics
         self.collect_window_metrics.totalchannels.setText(str(self.base.channelcount))  # Reset collect data window metrics
 
-    def threadManager(self, start_trigger, stop_trigger):
 
-        """Handles the threads for the DataCollector gui"""
+    # -----------------------------------------------------------------------
+    # ---- Thread manager
+
+    def threadManager(self, start_trigger, stop_trigger):
+        """Handles the threads for collecting and plotting data."""
+
         self.data_deque = deque()     # Create a new, empty double-ended queue
 
         # This is a dict which holds the channels indexs associated with each sensor ( e.g. {'1', [0, 1, 2, 3]} )
@@ -180,13 +191,14 @@ class IMUDataController():
         self.collect_window_plot2.initiateCanvas(10000)  # Make sure the canvas is initialized
         self.collect_window_plot3.initiateCanvas(10000)  # Make sure the canvas is initialized
 
-        # Start standard data stream (only channel data, no time values)
+        # Threads
+
         self.t1 = threading.Thread(target=self.streaming)
         print('Starting streaming thread...')
         self.t1.start()
 
-        self.t5 = threading.Thread(target=self.getSensorData)
-        print('Starting getSensorData thread...')
+        self.t5 = threading.Thread(target=self.processData)
+        print('Starting processData thread...')
         self.t5.start()
 
         self.t2 = threading.Thread(target=self.plot_sensor1_data_check)
