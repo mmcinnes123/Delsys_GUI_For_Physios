@@ -75,9 +75,9 @@ class IMUDataController():
         while self.pauseFlag is False:
             if self.incData is not None:
                 if all(str(i) in self.conf_sensorOriChannels for i in ['1', '2', '3']):
-                    self.sen1_quat = self.get_qmt_quat_from_incData(self.incData, '1')
-                    self.sen2_quat = self.get_qmt_quat_from_incData(self.incData, '2')
-                    self.sen3_quat = self.get_qmt_quat_from_incData(self.incData, '3')
+                    self.sen1_quat = self.get_qmt_quat_from_incData('1')
+                    self.sen2_quat = self.get_qmt_quat_from_incData('2')
+                    self.sen3_quat = self.get_qmt_quat_from_incData('3')
                     self.updateSensorCheckMetrics()
 
                     # Get body segment frames from sensor orientation data based on manual unit alignment
@@ -197,9 +197,9 @@ class IMUDataController():
     # -----------------------------------------------------------------------
     # ---- Orientation/Kinematic Functions
 
-    def get_qmt_quat_from_incData(self, incData, senLabel):
+    def get_qmt_quat_from_incData(self, senLabel):
         # Gets the elements of incData that matches channel Idx with each sensors orientation data
-        outData = list(np.asarray(incData, dtype='object')[tuple([self.conf_sensorOriChannels[senLabel]])])
+        outData = list(np.asarray(self.incData, dtype='object')[tuple([self.conf_sensorOriChannels[senLabel]])])
         # Get the four elements of the quaternion
         quat = qmt.normalized(np.array([outData[j][0] for j in [0, 1, 2, 3]]))
         # TODO: Make sure normalis function beign used right (just needs to accoutn for when outData is None/nan
