@@ -14,24 +14,12 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         super().__init__()
         self.setupUi(self)
         self.controller = controller
-
         self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
 
-        self.sh_flex_ani_widget = LineAngleWidget(QPixmap(join(self.image_folder, "GUI_ElbowFlex.png")))
-        self.gridLayout_12.addWidget(self.sh_flex_ani_widget, 1, 0, 1, 2)
-        self.sh_flex_ani_widget.setMinimumSize(200, 100)
+        # Add image and line widget to each groupBox
+        self.setup_joint_animations()
 
         if self.controller:  # Don't run if just testing UI
-
-            # Update correct image folder dir
-            self.el_flex_image.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-            self.el_flex_image_2.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-            self.el_flex_image_4.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-            self.el_flex_image_5.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-            self.el_flex_image_9.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-            self.el_flex_image_10.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-            # self.el_flex_image_11.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-            self.el_flex_image_12.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
 
             # Set button functionalities
             self.el_flex_reset_pushButton.clicked.connect(self.reset_el_flex_max_buttonCallback)
@@ -52,22 +40,23 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     # ---- Callback Functions
 
     def update_display(self):
-
         # Define joint mapping: (attribute_name, value_widget, max_value_widget)
         joint_mapping = {
-            'el_flex': (self.el_flex_value, self.el_flex_max_value, self.el_flex_groupBox),
-            'el_ext': (self.el_ext_value, self.el_ext_max_value, self.el_ext_groupBox),
-            'el_pro': (self.el_pro_value, self.el_pro_max_value, self.el_pro_groupBox),
-            'el_sup': (self.el_sup_value, self.el_sup_max_value, self.el_sup_groupBox),
-            'sh_flex': (self.sh_flex_value, self.sh_flex_max_value, self.sh_flex_groupBox),
-            'sh_abd': (self.sh_abd_value, self.sh_abd_max_value, self.sh_abd_groupBox),
-            'sh_introt': (self.sh_introt_value, self.sh_introt_max_value, self.sh_introt_groupBox),
-            'sh_extrot': (self.sh_extrot_value, self.sh_extrot_max_value, self.sh_extrot_groupBox)
+            'el_flex': (self.el_flex_value, self.el_flex_max_value, self.el_flex_groupBox, self.el_flex_ani_widget),
+            'el_ext': (self.el_ext_value, self.el_ext_max_value, self.el_ext_groupBox, self.el_ext_ani_widget),
+            'el_pro': (self.el_pro_value, self.el_pro_max_value, self.el_pro_groupBox, self.el_pro_ani_widget),
+            'el_sup': (self.el_sup_value, self.el_sup_max_value, self.el_sup_groupBox, self.el_sup_ani_widget),
+            'sh_flex': (self.sh_flex_value, self.sh_flex_max_value, self.sh_flex_groupBox, self.sh_flex_ani_widget),
+            'sh_abd': (self.sh_abd_value, self.sh_abd_max_value, self.sh_abd_groupBox, self.sh_abd_ani_widget),
+            'sh_introt': (self.sh_introt_value, self.sh_introt_max_value, self.sh_introt_groupBox,
+                          self.sh_introt_ani_widget),
+            'sh_extrot': (self.sh_extrot_value, self.sh_extrot_max_value, self.sh_extrot_groupBox,
+                          self.sh_extrot_ani_widget)
         }
 
         connector = self.controller.collectWindow.CallbackConnector
 
-        for joint_name, (value_widget, max_widget, groupbox) in joint_mapping.items():
+        for joint_name, (value_widget, max_widget, groupbox, ani_widget) in joint_mapping.items():
             if hasattr(connector, joint_name):
                 joint_value = getattr(connector, joint_name)
                 max_value = getattr(connector, f"{joint_name}_max")
@@ -75,20 +64,16 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                 if joint_value is not None:
                     value_widget.setText(f"{joint_value:.0f}°")
                     self.toggle_groupbox_state(groupbox, True)  # Enable groupbox
+                    ani_widget.set_angle(joint_value)  # Update the animation angle
                 else:
                     value_widget.setText("-°")
                     self.toggle_groupbox_state(groupbox, False)  # Disable groupbox
+                    ani_widget.set_angle(0)  # Reset animation to 0 when no value
 
                 if max_value is not None:
                     max_widget.setText(f"{max_value:.0f}°")
                 else:
                     max_widget.setText("-°")
-
-        # Update the animated line angle
-        # angle = 0
-        if hasattr(connector, 'sh_flex') and connector.sh_flex is not None:
-            angle = connector.sh_flex
-            self.sh_flex_ani_widget.set_angle(angle)
 
     def closeEvent(self, event):
         if self.controller:
@@ -131,6 +116,42 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     def reset_sh_extrot_max_buttonCallback(self):
         if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
             self.controller.collectWindow.CallbackConnector.sh_extrot_max = self.controller.collectWindow.CallbackConnector.sh_IE
+
+    # --- Other functions
+
+    def setup_joint_animations(self):
+        """
+        Sets up animation widgets for all joint angles by adding LineAngleWidgets
+        to their respective groupBoxes.
+        """
+        # Dictionary mapping groupBox attributes to their corresponding image files
+        joint_mappings = {
+            'sh_flex_groupBox': "GUI_el_flex.png",
+            'sh_abd_groupBox': "GUI_el_flex.png",
+            'sh_introt_groupBox': "GUI_el_flex.png",
+            'sh_extrot_groupBox': "GUI_el_flex.png",
+            'el_flex_groupBox': "GUI_el_flex.png",
+            'el_ext_groupBox': "GUI_el_flex.png",
+            'el_pro_groupBox': "GUI_el_flex.png",
+            'el_sup_groupBox': "GUI_el_flex.png"
+        }
+
+        # Add image and line widget to each groupBox
+        for groupBox_name, image_name in joint_mappings.items():
+            # Get the groupBox object
+            groupBox = getattr(self, groupBox_name)
+
+            # Get the pre-existing layout
+            layout = groupBox.layout()
+
+            # Create widget name (remove '_groupBox' and add '_ani_widget')
+            widget_name = groupBox_name.replace('_groupBox', '_ani_widget')
+
+            # Create and add the widget
+            widget = LineAngleWidget(QPixmap(join(self.image_folder, image_name)))
+            setattr(self, widget_name, widget)  # Store widget as class attribute
+            layout.addWidget(widget, 1, 0, 1, 2)
+            widget.setMinimumSize(200, 100)
 
 
     def toggle_groupbox_state(self, groupbox, enabled=True):
