@@ -5,6 +5,7 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPixmap
 
+from MarzCode.Test2 import LineAngleWidget
 from LiveDataView.live_data_widget1 import Ui_LiveWindow
 
 class DataVisWindow(QWidget, Ui_LiveWindow):
@@ -12,6 +13,14 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         super().__init__()
         self.setupUi(self)
         self.controller = controller
+
+        self.sh_flex_ani_widget = LineAngleWidget()
+        self.gridLayout_12.addWidget(self.sh_flex_ani_widget, 1, 0, 1, 2)
+        self.sh_flex_ani_widget.setMinimumSize(200, 100)
+
+        # Update the animated line angle
+        angle = 150
+        self.sh_flex_ani_widget.set_angle(angle)
 
         if self.controller:  # Don't run if just testing UI
 
@@ -22,7 +31,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             self.el_flex_image_5.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
             self.el_flex_image_9.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
             self.el_flex_image_10.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
-            self.el_flex_image_11.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
+            # self.el_flex_image_11.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
             self.el_flex_image_12.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
 
             # Set button functionalities
@@ -44,6 +53,11 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     # ---- Callback Functions
 
     def update_display(self):
+
+        # # Update the animated line angle
+        # angle = 150
+        # self.sh_flex_ani_widget.set_angle(angle)
+
         if hasattr(self.controller.collectWindow.CallbackConnector, 'el_FE'):
             # Update flexion value and max value
             self.el_flex_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_FE:.0f}°")
@@ -64,6 +78,8 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             # Update shoulder flexion value and max value
             self.sh_flex_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_FE:.0f}°")
             self.sh_flex_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_flex_max:.0f}°")
+
+
 
         if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_AB'):
             # Update shoulder abduction value and max value
@@ -120,6 +136,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     def reset_sh_extrot_max_buttonCallback(self):
         if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
             self.controller.collectWindow.CallbackConnector.sh_extrot_max = self.controller.collectWindow.CallbackConnector.sh_IE
+
 
 if __name__ == "__main__":
 
