@@ -315,7 +315,8 @@ class IMUDataController():
 
         # This measure of shoulder int/ext is only free of gimbal lock when elevation is low
         if self.sh_EA > 45:
-            self.sh_IE = None
+            self.sh_introt = None
+            self.sh_extrot = None
 
 
     def update_max_joint_angle_values(self):
