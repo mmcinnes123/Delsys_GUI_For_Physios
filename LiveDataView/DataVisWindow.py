@@ -1,5 +1,6 @@
 
 import sys
+from os.path import join
 
 from PySide6.QtWidgets import *
 from PySide6.QtCore import QTimer
@@ -14,7 +15,9 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         self.setupUi(self)
         self.controller = controller
 
-        self.sh_flex_ani_widget = LineAngleWidget()
+        self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
+
+        self.sh_flex_ani_widget = LineAngleWidget(QPixmap(join(self.image_folder, "GUI_ElbowFlex.png")))
         self.gridLayout_12.addWidget(self.sh_flex_ani_widget, 1, 0, 1, 2)
         self.sh_flex_ani_widget.setMinimumSize(200, 100)
 

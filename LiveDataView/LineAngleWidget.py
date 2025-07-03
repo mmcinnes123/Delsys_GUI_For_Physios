@@ -15,10 +15,14 @@ class LineAngleWidget(QWidget):
     A widget that draws a single red line whose angle (in degrees)
     is controlled via set_angle(). The left end of the line is fixed.
     """
-    def __init__(self, parent=None):
+    def __init__(self, pixmap, parent=None):
         super().__init__(parent)
+        self._pix = pixmap
+        if self._pix.isNull():
+            print("Warning: Pixmap failed to load!")
         self._angle = 0.0                      # in degrees
         self._pen   = QPen(Qt.red, 4, Qt.SolidLine, Qt.RoundCap)
+        self.setAttribute(Qt.WA_TranslucentBackground)  # lets the image show through
 
     @Slot(float)
     def set_angle(self, angle_deg: float):
@@ -27,6 +31,7 @@ class LineAngleWidget(QWidget):
         self.update()
 
     def paintEvent(self, event):
+
         w, h = self.width(), self.height()
         anchor_x = w // 2                          # margin from left
         anchor_y = h // 2                      # vertically centered
@@ -35,6 +40,17 @@ class LineAngleWidget(QWidget):
 
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
+
+        # Scale pixmap to fit widget size while maintaining aspect ratio
+        scaled_pixmap = self._pix.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+        # Calculate position to center the pixmap
+        x = (w - scaled_pixmap.width()) // 2
+        y = (h - scaled_pixmap.height()) // 2
+
+        # --- 1. draw the background image ---
+        painter.drawPixmap(x, y, scaled_pixmap)
+
         painter.translate(anchor_x, anchor_y)
         painter.rotate(-self._angle)           # rotate CCW by default
         painter.setPen(self._pen)
