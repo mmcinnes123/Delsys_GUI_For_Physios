@@ -20,12 +20,20 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             self.el_flex_image_2.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
             self.el_flex_image_4.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
             self.el_flex_image_5.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
+            self.el_flex_image_9.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
+            self.el_flex_image_10.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
+            self.el_flex_image_11.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
+            self.el_flex_image_12.setPixmap(QPixmap(u"./Images/GUI_ElbowFlex.png"))
 
             # Set button functionalities
             self.el_flex_reset_pushButton.clicked.connect(self.reset_el_flex_max_buttonCallback)
             self.el_ext_reset_pushButton.clicked.connect(self.reset_el_ext_max_buttonCallback)
             self.el_pro_reset_pushButton.clicked.connect(self.reset_el_pro_max_buttonCallback)
             self.el_sup_reset_pushButton.clicked.connect(self.reset_el_sup_max_buttonCallback)
+            self.sh_flex_reset_pushButton.clicked.connect(self.reset_sh_flex_max_buttonCallback)
+            self.sh_abd_reset_pushButton.clicked.connect(self.reset_sh_abd_max_buttonCallback)
+            self.sh_introt_reset_pushButton.clicked.connect(self.reset_sh_introt_max_buttonCallback)
+            self.sh_extrot_reset_pushButton.clicked.connect(self.reset_sh_extrot_max_buttonCallback)
 
             # Create a timer to update the display
             self.update_timer = QTimer()
@@ -45,12 +53,31 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             self.el_ext_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_ext_max:.0f}°")
 
         if hasattr(self.controller.collectWindow.CallbackConnector, 'el_PS'):
-            # Update flexion value and max value
+            # Update pronation value and max value
             self.el_pro_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_PS:.0f}°")
             self.el_pro_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_pro_max:.0f}°")
-            # Update extension value and max value
+            # Update supination value and max value
             self.el_sup_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_PS:.0f}°")
             self.el_sup_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_sup_max:.0f}°")
+
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_FE'):
+            # Update shoulder flexion value and max value
+            self.sh_flex_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_FE:.0f}°")
+            self.sh_flex_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_flex_max:.0f}°")
+
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_AB'):
+            # Update shoulder abduction value and max value
+            self.sh_abd_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_AB:.0f}°")
+            self.sh_abd_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_abd_max:.0f}°")
+
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
+            # Update shoulder internal rotation value and max value
+            self.sh_introt_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_IE:.0f}°")
+            self.sh_introt_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_introt_max:.0f}°")
+            # Update shoulder external rotation value and max value
+            self.sh_extrot_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_IE:.0f}°")
+            self.sh_extrot_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_extrot_max:.0f}°")
+
 
     def closeEvent(self, event):
         if self.controller:
@@ -77,6 +104,22 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     def reset_el_sup_max_buttonCallback(self):
         if hasattr(self.controller.collectWindow.CallbackConnector, 'el_PS'):
             self.controller.collectWindow.CallbackConnector.el_sup_max = self.controller.collectWindow.CallbackConnector.el_PS
+
+    def reset_sh_flex_max_buttonCallback(self):
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_FE'):
+            self.controller.collectWindow.CallbackConnector.sh_flex_max = self.controller.collectWindow.CallbackConnector.sh_FE
+
+    def reset_sh_abd_max_buttonCallback(self):
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_AB'):
+            self.controller.collectWindow.CallbackConnector.sh_abd_max = self.controller.collectWindow.CallbackConnector.sh_AB
+
+    def reset_sh_introt_max_buttonCallback(self):
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
+            self.controller.collectWindow.CallbackConnector.sh_introt_max = self.controller.collectWindow.CallbackConnector.sh_IE
+
+    def reset_sh_extrot_max_buttonCallback(self):
+        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
+            self.controller.collectWindow.CallbackConnector.sh_extrot_max = self.controller.collectWindow.CallbackConnector.sh_IE
 
 if __name__ == "__main__":
 
