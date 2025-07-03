@@ -24,7 +24,7 @@ class Ui_LiveWindow(object):
     def setupUi(self, LiveWindow):
         if not LiveWindow.objectName():
             LiveWindow.setObjectName(u"LiveWindow")
-        LiveWindow.resize(1152, 648)
+        LiveWindow.resize(1158, 661)
         self.gridLayout = QGridLayout(LiveWindow)
         self.gridLayout.setObjectName(u"gridLayout")
         self.tabWidget = QTabWidget(LiveWindow)
@@ -36,21 +36,21 @@ class Ui_LiveWindow(object):
         self.tab1.setObjectName(u"tab1")
         self.horizontalLayout = QHBoxLayout(self.tab1)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.groupBox = QGroupBox(self.tab1)
-        self.groupBox.setObjectName(u"groupBox")
+        self.el_flex_groupBox = QGroupBox(self.tab1)
+        self.el_flex_groupBox.setObjectName(u"el_flex_groupBox")
         font1 = QFont()
         font1.setPointSize(16)
-        self.groupBox.setFont(font1)
-        self.gridLayout_2 = QGridLayout(self.groupBox)
+        self.el_flex_groupBox.setFont(font1)
+        self.gridLayout_2 = QGridLayout(self.el_flex_groupBox)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.el_flex_target_label = QLabel(self.groupBox)
+        self.el_flex_target_label = QLabel(self.el_flex_groupBox)
         self.el_flex_target_label.setObjectName(u"el_flex_target_label")
         self.el_flex_target_label.setFont(font)
         self.el_flex_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_2.addWidget(self.el_flex_target_label, 6, 0, 1, 1)
 
-        self.el_flex_image = QLabel(self.groupBox)
+        self.el_flex_image = QLabel(self.el_flex_groupBox)
         self.el_flex_image.setObjectName(u"el_flex_image")
         self.el_flex_image.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
         self.el_flex_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -61,7 +61,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_2.addItem(self.verticalSpacer, 5, 0, 1, 1)
 
-        self.el_flex_target_spinBox = QSpinBox(self.groupBox)
+        self.el_flex_target_spinBox = QSpinBox(self.el_flex_groupBox)
         self.el_flex_target_spinBox.setObjectName(u"el_flex_target_spinBox")
         self.el_flex_target_spinBox.setFont(font)
         self.el_flex_target_spinBox.setMaximum(180)
@@ -70,7 +70,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_2.addWidget(self.el_flex_target_spinBox, 6, 1, 1, 1)
 
-        self.el_flex_max_label = QLabel(self.groupBox)
+        self.el_flex_max_label = QLabel(self.el_flex_groupBox)
         self.el_flex_max_label.setObjectName(u"el_flex_max_label")
         font2 = QFont()
         font2.setPointSize(18)
@@ -79,19 +79,19 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_2.addWidget(self.el_flex_max_label, 3, 0, 1, 1)
 
-        self.el_flex_reset_pushButton = QPushButton(self.groupBox)
+        self.el_flex_reset_pushButton = QPushButton(self.el_flex_groupBox)
         self.el_flex_reset_pushButton.setObjectName(u"el_flex_reset_pushButton")
         self.el_flex_reset_pushButton.setFont(font)
 
         self.gridLayout_2.addWidget(self.el_flex_reset_pushButton, 4, 0, 1, 2)
 
-        self.el_flex_max_value = QLabel(self.groupBox)
+        self.el_flex_max_value = QLabel(self.el_flex_groupBox)
         self.el_flex_max_value.setObjectName(u"el_flex_max_value")
         self.el_flex_max_value.setFont(font2)
 
         self.gridLayout_2.addWidget(self.el_flex_max_value, 3, 1, 1, 1)
 
-        self.el_flex_value = QLabel(self.groupBox)
+        self.el_flex_value = QLabel(self.el_flex_groupBox)
         self.el_flex_value.setObjectName(u"el_flex_value")
         font3 = QFont()
         font3.setPointSize(26)
@@ -105,21 +105,21 @@ class Ui_LiveWindow(object):
         self.gridLayout_2.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
 
 
-        self.horizontalLayout.addWidget(self.groupBox)
+        self.horizontalLayout.addWidget(self.el_flex_groupBox)
 
-        self.groupBox_5 = QGroupBox(self.tab1)
-        self.groupBox_5.setObjectName(u"groupBox_5")
-        self.groupBox_5.setFont(font1)
-        self.gridLayout_3 = QGridLayout(self.groupBox_5)
+        self.el_ext_groupBox = QGroupBox(self.tab1)
+        self.el_ext_groupBox.setObjectName(u"el_ext_groupBox")
+        self.el_ext_groupBox.setFont(font1)
+        self.gridLayout_3 = QGridLayout(self.el_ext_groupBox)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.el_ext_target_label = QLabel(self.groupBox_5)
+        self.el_ext_target_label = QLabel(self.el_ext_groupBox)
         self.el_ext_target_label.setObjectName(u"el_ext_target_label")
         self.el_ext_target_label.setFont(font)
         self.el_ext_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_3.addWidget(self.el_ext_target_label, 6, 0, 1, 1)
 
-        self.el_flex_image_2 = QLabel(self.groupBox_5)
+        self.el_flex_image_2 = QLabel(self.el_ext_groupBox)
         self.el_flex_image_2.setObjectName(u"el_flex_image_2")
         self.el_flex_image_2.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
         self.el_flex_image_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -130,7 +130,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_3.addItem(self.verticalSpacer_3, 5, 0, 1, 1)
 
-        self.el_ext_target_spinBox = QSpinBox(self.groupBox_5)
+        self.el_ext_target_spinBox = QSpinBox(self.el_ext_groupBox)
         self.el_ext_target_spinBox.setObjectName(u"el_ext_target_spinBox")
         self.el_ext_target_spinBox.setFont(font)
         self.el_ext_target_spinBox.setMaximum(180)
@@ -139,26 +139,26 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_3.addWidget(self.el_ext_target_spinBox, 6, 1, 1, 1)
 
-        self.el_ext_max_label = QLabel(self.groupBox_5)
+        self.el_ext_max_label = QLabel(self.el_ext_groupBox)
         self.el_ext_max_label.setObjectName(u"el_ext_max_label")
         self.el_ext_max_label.setFont(font2)
         self.el_ext_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_3.addWidget(self.el_ext_max_label, 3, 0, 1, 1)
 
-        self.el_ext_reset_pushButton = QPushButton(self.groupBox_5)
+        self.el_ext_reset_pushButton = QPushButton(self.el_ext_groupBox)
         self.el_ext_reset_pushButton.setObjectName(u"el_ext_reset_pushButton")
         self.el_ext_reset_pushButton.setFont(font)
 
         self.gridLayout_3.addWidget(self.el_ext_reset_pushButton, 4, 0, 1, 2)
 
-        self.el_ext_max_value = QLabel(self.groupBox_5)
+        self.el_ext_max_value = QLabel(self.el_ext_groupBox)
         self.el_ext_max_value.setObjectName(u"el_ext_max_value")
         self.el_ext_max_value.setFont(font2)
 
         self.gridLayout_3.addWidget(self.el_ext_max_value, 3, 1, 1, 1)
 
-        self.el_ext_value = QLabel(self.groupBox_5)
+        self.el_ext_value = QLabel(self.el_ext_groupBox)
         self.el_ext_value.setObjectName(u"el_ext_value")
         self.el_ext_value.setFont(font3)
         self.el_ext_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -170,21 +170,21 @@ class Ui_LiveWindow(object):
         self.gridLayout_3.addItem(self.verticalSpacer_4, 2, 0, 1, 1)
 
 
-        self.horizontalLayout.addWidget(self.groupBox_5)
+        self.horizontalLayout.addWidget(self.el_ext_groupBox)
 
-        self.groupBox_6 = QGroupBox(self.tab1)
-        self.groupBox_6.setObjectName(u"groupBox_6")
-        self.groupBox_6.setFont(font1)
-        self.gridLayout_5 = QGridLayout(self.groupBox_6)
+        self.el_pro_groupBox = QGroupBox(self.tab1)
+        self.el_pro_groupBox.setObjectName(u"el_pro_groupBox")
+        self.el_pro_groupBox.setFont(font1)
+        self.gridLayout_5 = QGridLayout(self.el_pro_groupBox)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.el_pro_target_label = QLabel(self.groupBox_6)
+        self.el_pro_target_label = QLabel(self.el_pro_groupBox)
         self.el_pro_target_label.setObjectName(u"el_pro_target_label")
         self.el_pro_target_label.setFont(font)
         self.el_pro_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_5.addWidget(self.el_pro_target_label, 6, 0, 1, 1)
 
-        self.el_flex_image_4 = QLabel(self.groupBox_6)
+        self.el_flex_image_4 = QLabel(self.el_pro_groupBox)
         self.el_flex_image_4.setObjectName(u"el_flex_image_4")
         self.el_flex_image_4.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
         self.el_flex_image_4.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -195,7 +195,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_5.addItem(self.verticalSpacer_7, 5, 0, 1, 1)
 
-        self.el_pro_target_spinBox = QSpinBox(self.groupBox_6)
+        self.el_pro_target_spinBox = QSpinBox(self.el_pro_groupBox)
         self.el_pro_target_spinBox.setObjectName(u"el_pro_target_spinBox")
         self.el_pro_target_spinBox.setFont(font)
         self.el_pro_target_spinBox.setMaximum(180)
@@ -204,26 +204,26 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_5.addWidget(self.el_pro_target_spinBox, 6, 1, 1, 1)
 
-        self.el_pro_max_label = QLabel(self.groupBox_6)
+        self.el_pro_max_label = QLabel(self.el_pro_groupBox)
         self.el_pro_max_label.setObjectName(u"el_pro_max_label")
         self.el_pro_max_label.setFont(font2)
         self.el_pro_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_5.addWidget(self.el_pro_max_label, 3, 0, 1, 1)
 
-        self.el_pro_reset_pushButton = QPushButton(self.groupBox_6)
+        self.el_pro_reset_pushButton = QPushButton(self.el_pro_groupBox)
         self.el_pro_reset_pushButton.setObjectName(u"el_pro_reset_pushButton")
         self.el_pro_reset_pushButton.setFont(font)
 
         self.gridLayout_5.addWidget(self.el_pro_reset_pushButton, 4, 0, 1, 2)
 
-        self.el_pro_max_value = QLabel(self.groupBox_6)
+        self.el_pro_max_value = QLabel(self.el_pro_groupBox)
         self.el_pro_max_value.setObjectName(u"el_pro_max_value")
         self.el_pro_max_value.setFont(font2)
 
         self.gridLayout_5.addWidget(self.el_pro_max_value, 3, 1, 1, 1)
 
-        self.el_pro_value = QLabel(self.groupBox_6)
+        self.el_pro_value = QLabel(self.el_pro_groupBox)
         self.el_pro_value.setObjectName(u"el_pro_value")
         self.el_pro_value.setFont(font3)
         self.el_pro_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -235,21 +235,21 @@ class Ui_LiveWindow(object):
         self.gridLayout_5.addItem(self.verticalSpacer_8, 2, 0, 1, 1)
 
 
-        self.horizontalLayout.addWidget(self.groupBox_6)
+        self.horizontalLayout.addWidget(self.el_pro_groupBox)
 
-        self.groupBox_7 = QGroupBox(self.tab1)
-        self.groupBox_7.setObjectName(u"groupBox_7")
-        self.groupBox_7.setFont(font1)
-        self.gridLayout_6 = QGridLayout(self.groupBox_7)
+        self.el_sup_groupBox = QGroupBox(self.tab1)
+        self.el_sup_groupBox.setObjectName(u"el_sup_groupBox")
+        self.el_sup_groupBox.setFont(font1)
+        self.gridLayout_6 = QGridLayout(self.el_sup_groupBox)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.el_sup_target_label = QLabel(self.groupBox_7)
+        self.el_sup_target_label = QLabel(self.el_sup_groupBox)
         self.el_sup_target_label.setObjectName(u"el_sup_target_label")
         self.el_sup_target_label.setFont(font)
         self.el_sup_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_6.addWidget(self.el_sup_target_label, 6, 0, 1, 1)
 
-        self.el_flex_image_5 = QLabel(self.groupBox_7)
+        self.el_flex_image_5 = QLabel(self.el_sup_groupBox)
         self.el_flex_image_5.setObjectName(u"el_flex_image_5")
         self.el_flex_image_5.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
         self.el_flex_image_5.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -260,7 +260,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_6.addItem(self.verticalSpacer_9, 5, 0, 1, 1)
 
-        self.el_sup_target_spinBox = QSpinBox(self.groupBox_7)
+        self.el_sup_target_spinBox = QSpinBox(self.el_sup_groupBox)
         self.el_sup_target_spinBox.setObjectName(u"el_sup_target_spinBox")
         self.el_sup_target_spinBox.setFont(font)
         self.el_sup_target_spinBox.setMaximum(180)
@@ -269,26 +269,26 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_6.addWidget(self.el_sup_target_spinBox, 6, 1, 1, 1)
 
-        self.el_sup_max_label = QLabel(self.groupBox_7)
+        self.el_sup_max_label = QLabel(self.el_sup_groupBox)
         self.el_sup_max_label.setObjectName(u"el_sup_max_label")
         self.el_sup_max_label.setFont(font2)
         self.el_sup_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_6.addWidget(self.el_sup_max_label, 3, 0, 1, 1)
 
-        self.el_sup_reset_pushButton = QPushButton(self.groupBox_7)
+        self.el_sup_reset_pushButton = QPushButton(self.el_sup_groupBox)
         self.el_sup_reset_pushButton.setObjectName(u"el_sup_reset_pushButton")
         self.el_sup_reset_pushButton.setFont(font)
 
         self.gridLayout_6.addWidget(self.el_sup_reset_pushButton, 4, 0, 1, 2)
 
-        self.el_sup_max_value = QLabel(self.groupBox_7)
+        self.el_sup_max_value = QLabel(self.el_sup_groupBox)
         self.el_sup_max_value.setObjectName(u"el_sup_max_value")
         self.el_sup_max_value.setFont(font2)
 
         self.gridLayout_6.addWidget(self.el_sup_max_value, 3, 1, 1, 1)
 
-        self.el_sup_value = QLabel(self.groupBox_7)
+        self.el_sup_value = QLabel(self.el_sup_groupBox)
         self.el_sup_value.setObjectName(u"el_sup_value")
         self.el_sup_value.setFont(font3)
         self.el_sup_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -300,25 +300,25 @@ class Ui_LiveWindow(object):
         self.gridLayout_6.addItem(self.verticalSpacer_10, 2, 0, 1, 1)
 
 
-        self.horizontalLayout.addWidget(self.groupBox_7)
+        self.horizontalLayout.addWidget(self.el_sup_groupBox)
 
         self.tabWidget.addTab(self.tab1, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        self.groupBox_11 = QGroupBox(self.tab_2)
-        self.groupBox_11.setObjectName(u"groupBox_11")
-        self.groupBox_11.setGeometry(QRect(282, 10, 273, 578))
-        self.groupBox_11.setFont(font1)
-        self.gridLayout_10 = QGridLayout(self.groupBox_11)
+        self.sh_abd_groupBox = QGroupBox(self.tab_2)
+        self.sh_abd_groupBox.setObjectName(u"sh_abd_groupBox")
+        self.sh_abd_groupBox.setGeometry(QRect(282, 10, 273, 578))
+        self.sh_abd_groupBox.setFont(font1)
+        self.gridLayout_10 = QGridLayout(self.sh_abd_groupBox)
         self.gridLayout_10.setObjectName(u"gridLayout_10")
-        self.sh_abd_target_label = QLabel(self.groupBox_11)
+        self.sh_abd_target_label = QLabel(self.sh_abd_groupBox)
         self.sh_abd_target_label.setObjectName(u"sh_abd_target_label")
         self.sh_abd_target_label.setFont(font)
         self.sh_abd_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_10.addWidget(self.sh_abd_target_label, 6, 0, 1, 1)
 
-        self.el_flex_image_9 = QLabel(self.groupBox_11)
+        self.el_flex_image_9 = QLabel(self.sh_abd_groupBox)
         self.el_flex_image_9.setObjectName(u"el_flex_image_9")
         self.el_flex_image_9.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
         self.el_flex_image_9.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -329,7 +329,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_10.addItem(self.verticalSpacer_17, 5, 0, 1, 1)
 
-        self.el_ext_target_spinBox_3 = QSpinBox(self.groupBox_11)
+        self.el_ext_target_spinBox_3 = QSpinBox(self.sh_abd_groupBox)
         self.el_ext_target_spinBox_3.setObjectName(u"el_ext_target_spinBox_3")
         self.el_ext_target_spinBox_3.setFont(font)
         self.el_ext_target_spinBox_3.setMaximum(180)
@@ -338,26 +338,26 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_10.addWidget(self.el_ext_target_spinBox_3, 6, 1, 1, 1)
 
-        self.sh_abd_max_label = QLabel(self.groupBox_11)
+        self.sh_abd_max_label = QLabel(self.sh_abd_groupBox)
         self.sh_abd_max_label.setObjectName(u"sh_abd_max_label")
         self.sh_abd_max_label.setFont(font2)
         self.sh_abd_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_10.addWidget(self.sh_abd_max_label, 3, 0, 1, 1)
 
-        self.sh_abd_reset_pushButton = QPushButton(self.groupBox_11)
+        self.sh_abd_reset_pushButton = QPushButton(self.sh_abd_groupBox)
         self.sh_abd_reset_pushButton.setObjectName(u"sh_abd_reset_pushButton")
         self.sh_abd_reset_pushButton.setFont(font)
 
         self.gridLayout_10.addWidget(self.sh_abd_reset_pushButton, 4, 0, 1, 2)
 
-        self.sh_abd_max_value = QLabel(self.groupBox_11)
+        self.sh_abd_max_value = QLabel(self.sh_abd_groupBox)
         self.sh_abd_max_value.setObjectName(u"sh_abd_max_value")
         self.sh_abd_max_value.setFont(font2)
 
         self.gridLayout_10.addWidget(self.sh_abd_max_value, 3, 1, 1, 1)
 
-        self.sh_abd_value = QLabel(self.groupBox_11)
+        self.sh_abd_value = QLabel(self.sh_abd_groupBox)
         self.sh_abd_value.setObjectName(u"sh_abd_value")
         self.sh_abd_value.setFont(font3)
         self.sh_abd_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -368,20 +368,20 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_10.addItem(self.verticalSpacer_18, 2, 0, 1, 1)
 
-        self.groupBox_12 = QGroupBox(self.tab_2)
-        self.groupBox_12.setObjectName(u"groupBox_12")
-        self.groupBox_12.setGeometry(QRect(561, 10, 273, 578))
-        self.groupBox_12.setFont(font1)
-        self.gridLayout_11 = QGridLayout(self.groupBox_12)
+        self.sh_introt_groupBox = QGroupBox(self.tab_2)
+        self.sh_introt_groupBox.setObjectName(u"sh_introt_groupBox")
+        self.sh_introt_groupBox.setGeometry(QRect(561, 10, 273, 578))
+        self.sh_introt_groupBox.setFont(font1)
+        self.gridLayout_11 = QGridLayout(self.sh_introt_groupBox)
         self.gridLayout_11.setObjectName(u"gridLayout_11")
-        self.sh_introt_target_label = QLabel(self.groupBox_12)
+        self.sh_introt_target_label = QLabel(self.sh_introt_groupBox)
         self.sh_introt_target_label.setObjectName(u"sh_introt_target_label")
         self.sh_introt_target_label.setFont(font)
         self.sh_introt_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_11.addWidget(self.sh_introt_target_label, 6, 0, 1, 1)
 
-        self.el_flex_image_10 = QLabel(self.groupBox_12)
+        self.el_flex_image_10 = QLabel(self.sh_introt_groupBox)
         self.el_flex_image_10.setObjectName(u"el_flex_image_10")
         self.el_flex_image_10.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
         self.el_flex_image_10.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -392,7 +392,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_11.addItem(self.verticalSpacer_19, 5, 0, 1, 1)
 
-        self.sh_introt_target_spinBox = QSpinBox(self.groupBox_12)
+        self.sh_introt_target_spinBox = QSpinBox(self.sh_introt_groupBox)
         self.sh_introt_target_spinBox.setObjectName(u"sh_introt_target_spinBox")
         self.sh_introt_target_spinBox.setFont(font)
         self.sh_introt_target_spinBox.setMaximum(180)
@@ -401,26 +401,26 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_11.addWidget(self.sh_introt_target_spinBox, 6, 1, 1, 1)
 
-        self.sh_introt_max_label = QLabel(self.groupBox_12)
+        self.sh_introt_max_label = QLabel(self.sh_introt_groupBox)
         self.sh_introt_max_label.setObjectName(u"sh_introt_max_label")
         self.sh_introt_max_label.setFont(font2)
         self.sh_introt_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_11.addWidget(self.sh_introt_max_label, 3, 0, 1, 1)
 
-        self.sh_introt_reset_pushButton = QPushButton(self.groupBox_12)
+        self.sh_introt_reset_pushButton = QPushButton(self.sh_introt_groupBox)
         self.sh_introt_reset_pushButton.setObjectName(u"sh_introt_reset_pushButton")
         self.sh_introt_reset_pushButton.setFont(font)
 
         self.gridLayout_11.addWidget(self.sh_introt_reset_pushButton, 4, 0, 1, 2)
 
-        self.sh_introt_max_value = QLabel(self.groupBox_12)
+        self.sh_introt_max_value = QLabel(self.sh_introt_groupBox)
         self.sh_introt_max_value.setObjectName(u"sh_introt_max_value")
         self.sh_introt_max_value.setFont(font2)
 
         self.gridLayout_11.addWidget(self.sh_introt_max_value, 3, 1, 1, 1)
 
-        self.sh_introt_value = QLabel(self.groupBox_12)
+        self.sh_introt_value = QLabel(self.sh_introt_groupBox)
         self.sh_introt_value.setObjectName(u"sh_introt_value")
         self.sh_introt_value.setFont(font3)
         self.sh_introt_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -431,13 +431,13 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_11.addItem(self.verticalSpacer_20, 2, 0, 1, 1)
 
-        self.groupBox_3 = QGroupBox(self.tab_2)
-        self.groupBox_3.setObjectName(u"groupBox_3")
-        self.groupBox_3.setGeometry(QRect(3, 10, 273, 578))
-        self.groupBox_3.setFont(font1)
-        self.gridLayout_12 = QGridLayout(self.groupBox_3)
+        self.sh_flex_groupBox = QGroupBox(self.tab_2)
+        self.sh_flex_groupBox.setObjectName(u"sh_flex_groupBox")
+        self.sh_flex_groupBox.setGeometry(QRect(3, 10, 273, 578))
+        self.sh_flex_groupBox.setFont(font1)
+        self.gridLayout_12 = QGridLayout(self.sh_flex_groupBox)
         self.gridLayout_12.setObjectName(u"gridLayout_12")
-        self.sh_flex_target_spinBox = QSpinBox(self.groupBox_3)
+        self.sh_flex_target_spinBox = QSpinBox(self.sh_flex_groupBox)
         self.sh_flex_target_spinBox.setObjectName(u"sh_flex_target_spinBox")
         self.sh_flex_target_spinBox.setFont(font)
         self.sh_flex_target_spinBox.setMaximum(180)
@@ -446,7 +446,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_12.addWidget(self.sh_flex_target_spinBox, 5, 1, 1, 1)
 
-        self.sh_flex_max_label = QLabel(self.groupBox_3)
+        self.sh_flex_max_label = QLabel(self.sh_flex_groupBox)
         self.sh_flex_max_label.setObjectName(u"sh_flex_max_label")
         self.sh_flex_max_label.setFont(font2)
         self.sh_flex_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
@@ -457,7 +457,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_12.addItem(self.verticalSpacer_22, 1, 0, 1, 1)
 
-        self.sh_flex_target_label = QLabel(self.groupBox_3)
+        self.sh_flex_target_label = QLabel(self.sh_flex_groupBox)
         self.sh_flex_target_label.setObjectName(u"sh_flex_target_label")
         self.sh_flex_target_label.setFont(font)
         self.sh_flex_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
@@ -468,39 +468,39 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_12.addItem(self.verticalSpacer_21, 4, 0, 1, 1)
 
-        self.sh_flex_reset_pushButton = QPushButton(self.groupBox_3)
+        self.sh_flex_reset_pushButton = QPushButton(self.sh_flex_groupBox)
         self.sh_flex_reset_pushButton.setObjectName(u"sh_flex_reset_pushButton")
         self.sh_flex_reset_pushButton.setFont(font)
 
         self.gridLayout_12.addWidget(self.sh_flex_reset_pushButton, 3, 0, 1, 2)
 
-        self.sh_flex_value = QLabel(self.groupBox_3)
+        self.sh_flex_value = QLabel(self.sh_flex_groupBox)
         self.sh_flex_value.setObjectName(u"sh_flex_value")
         self.sh_flex_value.setFont(font3)
         self.sh_flex_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_12.addWidget(self.sh_flex_value, 0, 0, 1, 2)
 
-        self.sh_flex_max_value = QLabel(self.groupBox_3)
+        self.sh_flex_max_value = QLabel(self.sh_flex_groupBox)
         self.sh_flex_max_value.setObjectName(u"sh_flex_max_value")
         self.sh_flex_max_value.setFont(font2)
 
         self.gridLayout_12.addWidget(self.sh_flex_max_value, 2, 1, 1, 1)
 
-        self.groupBox_13 = QGroupBox(self.tab_2)
-        self.groupBox_13.setObjectName(u"groupBox_13")
-        self.groupBox_13.setGeometry(QRect(840, 10, 273, 578))
-        self.groupBox_13.setFont(font1)
-        self.gridLayout_13 = QGridLayout(self.groupBox_13)
+        self.sh_extrot_groupBox = QGroupBox(self.tab_2)
+        self.sh_extrot_groupBox.setObjectName(u"sh_extrot_groupBox")
+        self.sh_extrot_groupBox.setGeometry(QRect(840, 10, 273, 578))
+        self.sh_extrot_groupBox.setFont(font1)
+        self.gridLayout_13 = QGridLayout(self.sh_extrot_groupBox)
         self.gridLayout_13.setObjectName(u"gridLayout_13")
-        self.sh_extrot_target_label = QLabel(self.groupBox_13)
+        self.sh_extrot_target_label = QLabel(self.sh_extrot_groupBox)
         self.sh_extrot_target_label.setObjectName(u"sh_extrot_target_label")
         self.sh_extrot_target_label.setFont(font)
         self.sh_extrot_target_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_13.addWidget(self.sh_extrot_target_label, 6, 0, 1, 1)
 
-        self.el_flex_image_12 = QLabel(self.groupBox_13)
+        self.el_flex_image_12 = QLabel(self.sh_extrot_groupBox)
         self.el_flex_image_12.setObjectName(u"el_flex_image_12")
         self.el_flex_image_12.setPixmap(QPixmap(u"../Images/GUI_ElbowFlex.png"))
         self.el_flex_image_12.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -511,7 +511,7 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_13.addItem(self.verticalSpacer_23, 5, 0, 1, 1)
 
-        self.sh_extrot_target_spinBox = QSpinBox(self.groupBox_13)
+        self.sh_extrot_target_spinBox = QSpinBox(self.sh_extrot_groupBox)
         self.sh_extrot_target_spinBox.setObjectName(u"sh_extrot_target_spinBox")
         self.sh_extrot_target_spinBox.setFont(font)
         self.sh_extrot_target_spinBox.setMaximum(180)
@@ -520,26 +520,26 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_13.addWidget(self.sh_extrot_target_spinBox, 6, 1, 1, 1)
 
-        self.sh_extrot_max_label = QLabel(self.groupBox_13)
+        self.sh_extrot_max_label = QLabel(self.sh_extrot_groupBox)
         self.sh_extrot_max_label.setObjectName(u"sh_extrot_max_label")
         self.sh_extrot_max_label.setFont(font2)
         self.sh_extrot_max_label.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.gridLayout_13.addWidget(self.sh_extrot_max_label, 3, 0, 1, 1)
 
-        self.sh_extrot_reset_pushButton = QPushButton(self.groupBox_13)
+        self.sh_extrot_reset_pushButton = QPushButton(self.sh_extrot_groupBox)
         self.sh_extrot_reset_pushButton.setObjectName(u"sh_extrot_reset_pushButton")
         self.sh_extrot_reset_pushButton.setFont(font)
 
         self.gridLayout_13.addWidget(self.sh_extrot_reset_pushButton, 4, 0, 1, 2)
 
-        self.sh_extrot_max_value = QLabel(self.groupBox_13)
+        self.sh_extrot_max_value = QLabel(self.sh_extrot_groupBox)
         self.sh_extrot_max_value.setObjectName(u"sh_extrot_max_value")
         self.sh_extrot_max_value.setFont(font2)
 
         self.gridLayout_13.addWidget(self.sh_extrot_max_value, 3, 1, 1, 1)
 
-        self.sh_extrot_value = QLabel(self.groupBox_13)
+        self.sh_extrot_value = QLabel(self.sh_extrot_groupBox)
         self.sh_extrot_value.setObjectName(u"sh_extrot_value")
         self.sh_extrot_value.setFont(font3)
         self.sh_extrot_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -564,7 +564,7 @@ class Ui_LiveWindow(object):
 
         self.retranslateUi(LiveWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(LiveWindow)
@@ -572,28 +572,28 @@ class Ui_LiveWindow(object):
 
     def retranslateUi(self, LiveWindow):
         LiveWindow.setWindowTitle(QCoreApplication.translate("LiveWindow", u"Form", None))
-        self.groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Flexion", None))
+        self.el_flex_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Flexion", None))
         self.el_flex_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.el_flex_image.setText("")
         self.el_flex_max_label.setText(QCoreApplication.translate("LiveWindow", u"Max:", None))
         self.el_flex_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
         self.el_flex_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
         self.el_flex_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
-        self.groupBox_5.setTitle(QCoreApplication.translate("LiveWindow", u"Extension", None))
+        self.el_ext_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Extension", None))
         self.el_ext_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.el_flex_image_2.setText("")
         self.el_ext_max_label.setText(QCoreApplication.translate("LiveWindow", u"Min:", None))
         self.el_ext_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
         self.el_ext_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
         self.el_ext_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
-        self.groupBox_6.setTitle(QCoreApplication.translate("LiveWindow", u"Pronation", None))
+        self.el_pro_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Pronation", None))
         self.el_pro_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.el_flex_image_4.setText("")
         self.el_pro_max_label.setText(QCoreApplication.translate("LiveWindow", u"Max:", None))
         self.el_pro_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
         self.el_pro_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
         self.el_pro_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
-        self.groupBox_7.setTitle(QCoreApplication.translate("LiveWindow", u"Supination", None))
+        self.el_sup_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Supination", None))
         self.el_sup_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.el_flex_image_5.setText("")
         self.el_sup_max_label.setText(QCoreApplication.translate("LiveWindow", u"Min:", None))
@@ -601,30 +601,30 @@ class Ui_LiveWindow(object):
         self.el_sup_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
         self.el_sup_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1), QCoreApplication.translate("LiveWindow", u"Elbow", None))
-        self.groupBox_11.setTitle(QCoreApplication.translate("LiveWindow", u"Abduction", None))
+        self.sh_abd_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Abduction", None))
         self.sh_abd_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.el_flex_image_9.setText("")
-        self.sh_abd_max_label.setText(QCoreApplication.translate("LiveWindow", u"Min:", None))
+        self.sh_abd_max_label.setText(QCoreApplication.translate("LiveWindow", u"Max:", None))
         self.sh_abd_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
         self.sh_abd_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
         self.sh_abd_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
-        self.groupBox_12.setTitle(QCoreApplication.translate("LiveWindow", u"Internal Rotation", None))
+        self.sh_introt_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Internal Rotation", None))
         self.sh_introt_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.el_flex_image_10.setText("")
         self.sh_introt_max_label.setText(QCoreApplication.translate("LiveWindow", u"Max:", None))
         self.sh_introt_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
         self.sh_introt_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
         self.sh_introt_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
-        self.groupBox_3.setTitle(QCoreApplication.translate("LiveWindow", u"Flexion", None))
+        self.sh_flex_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Flexion", None))
         self.sh_flex_max_label.setText(QCoreApplication.translate("LiveWindow", u"Max:", None))
         self.sh_flex_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.sh_flex_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
         self.sh_flex_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
         self.sh_flex_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
-        self.groupBox_13.setTitle(QCoreApplication.translate("LiveWindow", u"External Rotation", None))
+        self.sh_extrot_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"External Rotation", None))
         self.sh_extrot_target_label.setText(QCoreApplication.translate("LiveWindow", u"Target:", None))
         self.el_flex_image_12.setText("")
-        self.sh_extrot_max_label.setText(QCoreApplication.translate("LiveWindow", u"Min:", None))
+        self.sh_extrot_max_label.setText(QCoreApplication.translate("LiveWindow", u"Max:", None))
         self.sh_extrot_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))
         self.sh_extrot_max_value.setText(QCoreApplication.translate("LiveWindow", u"MaxVal", None))
         self.sh_extrot_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))

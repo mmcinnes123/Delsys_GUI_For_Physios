@@ -5,7 +5,7 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPixmap
 
-from MarzCode.Test2 import LineAngleWidget
+from LiveDataView.LineAngleWidget import LineAngleWidget
 from LiveDataView.live_data_widget1 import Ui_LiveWindow
 
 class DataVisWindow(QWidget, Ui_LiveWindow):
@@ -54,82 +54,37 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
     def update_display(self):
 
-        # # Update the animated line angle
-        # angle = 150
-        # self.sh_flex_ani_widget.set_angle(angle)
-        # TODO: Update all the joint DoFs to be joint angles
-        # Make sure max values are corect in other file
-        #
-
         # Define joint mapping: (attribute_name, value_widget, max_value_widget)
         joint_mapping = {
-            'el_flex': (self.el_flex_value, self.el_flex_max_value),
-            'el_ext': (self.el_ext_value, self.el_ext_max_value),
-            'el_pro': (self.el_pro_value, self.el_pro_max_value),
-            'el_sup': (self.el_sup_value, self.el_sup_max_value),
-            'sh_flex': (self.sh_flex_value, self.sh_flex_max_value),
-            'sh_abd': (self.sh_abd_value, self.sh_abd_max_value),
-            'sh_introt': (self.sh_introt_value, self.sh_introt_max_value),
-            'sh_extrot': (self.sh_extrot_value, self.sh_extrot_max_value)
+            'el_flex': (self.el_flex_value, self.el_flex_max_value, self.el_flex_groupBox),
+            'el_ext': (self.el_ext_value, self.el_ext_max_value, self.el_ext_groupBox),
+            'el_pro': (self.el_pro_value, self.el_pro_max_value, self.el_pro_groupBox),
+            'el_sup': (self.el_sup_value, self.el_sup_max_value, self.el_sup_groupBox),
+            'sh_flex': (self.sh_flex_value, self.sh_flex_max_value, self.sh_flex_groupBox),
+            'sh_abd': (self.sh_abd_value, self.sh_abd_max_value, self.sh_abd_groupBox),
+            'sh_introt': (self.sh_introt_value, self.sh_introt_max_value, self.sh_introt_groupBox),
+            'sh_extrot': (self.sh_extrot_value, self.sh_extrot_max_value, self.sh_extrot_groupBox)
         }
 
         connector = self.controller.collectWindow.CallbackConnector
 
-        for joint_name, (value_widget, max_widget) in joint_mapping.items():
+        for joint_name, (value_widget, max_widget, groupbox) in joint_mapping.items():
             if hasattr(connector, joint_name):
                 joint_value = getattr(connector, joint_name)
                 max_value = getattr(connector, f"{joint_name}_max")
 
                 if joint_value is not None:
                     value_widget.setText(f"{joint_value:.0f}°")
+                    self.toggle_groupbox_state(groupbox, True)  # Enable groupbox
                 else:
                     value_widget.setText("-°")
+                    self.toggle_groupbox_state(groupbox, False)  # Disable groupbox
 
                 if max_value is not None:
                     max_widget.setText(f"{max_value:.0f}°")
                 else:
                     max_widget.setText("-°")
 
-        # if hasattr(self.controller.collectWindow.CallbackConnector, 'el_flex'):
-        #     if self.controller.collectWindow.CallbackConnector.el_flex is not None:
-        #     # Update flexion value and max value
-        #         self.el_flex_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_flex:.0f}°")
-        #     else:
-        #         self.el_flex_value.setText(f"-°")
-        #     self.el_flex_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_flex_max:.0f}°")
-        #
-        # # Update extension value and max value
-        #     self.el_ext_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_ext:.0f}°")
-        #     self.el_ext_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_ext_max:.0f}°")
-        #
-        # if hasattr(self.controller.collectWindow.CallbackConnector, 'el_PS'):
-        #     # Update pronation value and max value
-        #     self.el_pro_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_PS:.0f}°")
-        #     self.el_pro_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_pro_max:.0f}°")
-        #     # Update supination value and max value
-        #     self.el_sup_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_PS:.0f}°")
-        #     self.el_sup_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.el_sup_max:.0f}°")
-        #
-        # if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_FE'):
-        #     # Update shoulder flexion value and max value
-        #     self.sh_flex_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_FE:.0f}°")
-        #     self.sh_flex_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_flex_max:.0f}°")
-        #
-        #
-        #
-        # if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_AB'):
-        #     # Update shoulder abduction value and max value
-        #     self.sh_abd_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_AB:.0f}°")
-        #     self.sh_abd_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_abd_max:.0f}°")
-        #
-        # if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
-        #     # Update shoulder internal rotation value and max value
-        #     self.sh_introt_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_IE:.0f}°")
-        #     self.sh_introt_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_introt_max:.0f}°")
-        #     # Update shoulder external rotation value and max value
-        #     self.sh_extrot_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_IE:.0f}°")
-        #     self.sh_extrot_max_value.setText(f"{self.controller.collectWindow.CallbackConnector.sh_extrot_max:.0f}°")
-        #
 
     def closeEvent(self, event):
         if self.controller:
@@ -172,6 +127,23 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     def reset_sh_extrot_max_buttonCallback(self):
         if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
             self.controller.collectWindow.CallbackConnector.sh_extrot_max = self.controller.collectWindow.CallbackConnector.sh_IE
+
+
+    def toggle_groupbox_state(self, groupbox, enabled=True):
+
+        if enabled:
+            # Reset to default style (black text)
+            groupbox.setStyleSheet("")
+        else:
+            # Grey out the text
+            groupbox.setStyleSheet("""
+                QGroupBox * {
+                    color: gray;
+                }
+                QGroupBox::title {
+                    color: gray;
+                }
+            """)
 
 
 if __name__ == "__main__":
