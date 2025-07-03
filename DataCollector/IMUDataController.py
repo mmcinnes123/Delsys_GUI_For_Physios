@@ -42,13 +42,11 @@ class IMUDataController():
         self.sen1_quat = [1, 0, 0, 0]
         self.sen2_quat = [1, 0, 0, 0]
         self.sen3_quat = [1, 0, 0, 0]
-        self.sen1_eul3_max = 0
         self.el_flex_max = 0
         self.el_ext_max = 90
         self.el_pro_max = 0
         self.el_sup_max = 0
         self.sh_flex_max = 0
-        self.sh_ext_max = 0
         self.sh_abd_max = 0
         self.sh_introt_max = 0
         self.sh_extrot_max = 0
@@ -220,13 +218,45 @@ class IMUDataController():
         self.forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
 
         # Get joint angles from body segment frames
-        self.el_FE, self.el_CA, self.el_PS = self.get_elbow_angles_from_body_frames(self.humerus_quat, self.forerarm_quat)
+        self.el_FE, self.el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(self.humerus_quat, self.forerarm_quat)
 
-        self.sh_AB, self.sh_FE, self.sh_IE = self.get_shoulder_angles_from_body_frames(self.thorax_quat, self.humerus_quat)
+        self.sh_EA, self.sh_IE, self.sh_PoE = self.get_shoulder_angles_from_body_frames(self.thorax_quat, self.humerus_quat)
 
-        # Discount shoulder int/ext rotation if elevation increases:
-        if self.sh_AB > 45 or self.sh_FE > 45:
-            self.el_PS = None
+        # Get joint angles from joint DoFs
+        self.el_flex = self.el_FE
+        self.el_ext = self.el_FE
+        self.el_pro = self.el_PS - 90    # Adjust this to match clinical definition of PS
+        self.el_sup = self.el_PS - 90    # Adjust this to match clinical definition of PS
+
+        self.sh_abd = self.sh_EA
+        self.sh_flex = self.sh_EA
+        self.sh_introt = self.sh_IE
+        self.sh_extrot = self.sh_IE
+
+        # Apply constraints to discount certain angles in certain positions
+
+        # We are either in flexion (above 90) or extension (below 90)
+        if self.el_FE > 90:
+            self.el_ext = None
+        if self.el_FE <= 90:
+            self.el_flex = None
+
+        # We are either in pronation (above 0) or supination (below 0)
+        if self.el_PS > 0:
+            self.el_sup = None
+        if self.el_PS <= 0:
+            self.el_pro = None
+
+        # We are either in internal (above 0) or external rotation (below 0)
+        if self.sh_IE < 0:
+            self.sh_introt = None
+        if self.sh_IE >= 0:
+            self.sh_extrot = None
+
+        # This measure of shoulder int/ext is only free of gimbal lock when elevation is low
+        if self.sh_EA > 45:
+            self.sh_IE = None  # TODO: Handle None in DataVis
+
 
         # Update max value
         self.update_max_joint_angle_values()
@@ -254,56 +284,56 @@ class IMUDataController():
 
         return body_quat
 
-    def get_elbow_angles_from_body_frames(self, humerus_quat, forearm_quat):
+    def get_elbow_DoFs_from_body_frames(self, humerus_quat, forearm_quat):
 
         elbow_joint = qmt.qmult(qmt.qinv(humerus_quat), forearm_quat)
 
-        elbow_euls = np.rad2deg(qmt.eulerAngles(elbow_joint, axes='zxy'))
+        FE_ISB, CA_ISB, PS_ISB = np.rad2deg(qmt.eulerAngles(elbow_joint, axes='zxy'))   # Get joint eulers matching ISB definitions
 
-        return elbow_euls
+
+        return FE_ISB, CA_ISB, PS_ISB
 
     def get_shoulder_angles_from_body_frames(self, thorax_quat, humerus_quat):
 
         shoulder_joint = qmt.qmult(qmt.qinv(thorax_quat), humerus_quat)
 
         # Get Euler angles for elevation angle
-        shoulder_eulsISB = np.rad2deg(qmt.eulerAngles(shoulder_joint), axes='yxy')
+        shoulder_eulsISB = np.rad2deg(qmt.eulerAngles(shoulder_joint, axes='yxy'))
 
-        sh_AB = shoulder_eulsISB[1]   # This doesnt encounter gimbal lock
-        sh_FE = shoulder_eulsISB[1]   # This doesnt encounter gimbal lock
+        sh_EA = shoulder_eulsISB[1]   # Shoudler elevation angle (This doesnt encounter gimbal lock)
+        sh_PoE = shoulder_eulsISB[0]    # Shoulder plane of elevation (Encounters gimbal lock when sh_EA is near 0)
 
-        # Get Euler angles for rotation
-        shoudler_eulsYXZ = np.rad2deg(qmt.eulerAngles(shoulder_joint), axes='yxz')
-
+        # Get shoulder rotation from different Euler angle set
+        shoudler_eulsYXZ = np.rad2deg(qmt.eulerAngles(shoulder_joint, axes='yxz'))
         sh_IE = shoudler_eulsYXZ[0]     # This encounters gimbal lock when elevation is near 90
 
-        return sh_AB, sh_FE, sh_IE
+        return sh_EA, sh_IE, sh_PoE
 
     def update_max_joint_angle_values(self):
 
-        if self.el_FE > self.el_flex_max:
-            self.el_flex_max = self.el_FE
+        if self.el_flex > self.el_flex_max:
+            self.el_flex_max = self.el_flex
 
-        if self.el_FE < self.el_ext_max:
-            self.el_ext_max = self.el_FE
+        if self.el_ext < self.el_ext_max:
+            self.el_ext_max = self.el_ext
 
-        if self.el_PS > self.el_pro_max:
-            self.el_pro_max = self.el_PS
+        if self.el_pro > self.el_pro_max:
+            self.el_pro_max = self.el_pro
 
-        if self.el_PS < self.el_sup_max:
-            self.el_sup_max = self.el_PS
+        if self.el_sup < self.el_sup_max:
+            self.el_sup_max = self.el_sup
 
-        if self.sh_FE > self.sh_flex_max:
-            self.sh_flex_max = self.sh_FE
+        if self.sh_flex > self.sh_flex_max:
+            self.sh_flex_max = self.sh_flex
 
-        if self.sh_AB > self.sh_abd_max:
-            self.sh_abd_max = self.sh_AB
+        if self.sh_abd > self.sh_abd_max:
+            self.sh_abd_max = self.sh_abd
 
         # if self.sh_FE < self.sh_ext_max:
         #     self.sh_ext_max = self.sh_FE
 
-        if self.sh_IE > self.sh_introt_max:
-            self.sh_introt_max = self.sh_IE
+        if self.sh_introt > self.sh_introt_max:
+            self.sh_introt_max = self.sh_introt
 
-        if self.sh_IE < self.sh_extrot_max:
-            self.sh_extrot_max = self.sh_IE
+        if self.sh_extrot < self.sh_extrot_max:
+            self.sh_extrot_max = self.sh_extrot
