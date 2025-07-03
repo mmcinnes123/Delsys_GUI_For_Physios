@@ -18,10 +18,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         self.gridLayout_12.addWidget(self.sh_flex_ani_widget, 1, 0, 1, 2)
         self.sh_flex_ani_widget.setMinimumSize(200, 100)
 
-        # Update the animated line angle
-        angle = 150
-        self.sh_flex_ani_widget.set_angle(angle)
-
         if self.controller:  # Don't run if just testing UI
 
             # Update correct image folder dir
@@ -85,6 +81,11 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                 else:
                     max_widget.setText("-°")
 
+        # Update the animated line angle
+        # angle = 0
+        if hasattr(connector, 'sh_flex') and connector.sh_flex is not None:
+            angle = connector.sh_flex
+            self.sh_flex_ani_widget.set_angle(angle)
 
     def closeEvent(self, event):
         if self.controller:

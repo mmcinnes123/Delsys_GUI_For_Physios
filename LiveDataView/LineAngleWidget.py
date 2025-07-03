@@ -31,7 +31,7 @@ class LineAngleWidget(QWidget):
         anchor_x = w // 2                          # margin from left
         anchor_y = h // 2                      # vertically centered
 
-        line_length = 0.5 * w                  # 80% of width
+        line_length = 0.2 * w                  # 80% of width
 
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
@@ -40,7 +40,7 @@ class LineAngleWidget(QWidget):
         painter.setPen(self._pen)
 
         # Draw line from fixed anchor (0,0) to right
-        painter.drawLine(0, 0, line_length, 0)
+        painter.drawLine(0, 0, 0, line_length)
 
         painter.end()
 
