@@ -132,49 +132,65 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                 'image': "GUI_el_flex.png",
                 'anchor_x': 0.3,
                 'anchor_y': 0.5,
-                'line_length': 0.3
+                'line_length': 0.3,
+                'rotation_dir': -1,
+                'extra_rotation': 0
             },
             'sh_abd_groupBox': {
                 'image': "GUI_el_flex.png",
                 'anchor_x': 0.4,
                 'anchor_y': 0.6,
-                'line_length': 0.25
+                'line_length': 0.25,
+                'rotation_dir': -1,
+                'extra_rotation': 0
             },
             'sh_introt_groupBox': {
                 'image': "GUI_el_flex.png",
                 'anchor_x': 0.5,
                 'anchor_y': 0.5,
-                'line_length': 0.2
+                'line_length': 0.2,
+                'rotation_dir': -1,
+                'extra_rotation': 0
             },
             'sh_extrot_groupBox': {
                 'image': "GUI_el_flex.png",
                 'anchor_x': 0.5,
                 'anchor_y': 0.5,
-                'line_length': 0.2
+                'line_length': 0.2,
+                'rotation_dir': -1,
+                'extra_rotation': 0
             },
             'el_flex_groupBox': {
                 'image': "el_flex_image.png",
                 'anchor_x': 0.34,
                 'anchor_y': 0.62,
-                'line_length': 0.35
+                'line_length': 0.35,
+                'rotation_dir': -1,
+                'extra_rotation': 0
             },
             'el_ext_groupBox': {
-                'image': "GUI_el_flex.png",
-                'anchor_x': 0.5,
-                'anchor_y': 0.5,
-                'line_length': 0.2
+                'image': "el_ext_image.png",
+                'anchor_x': 0.34,
+                'anchor_y': 0.62,
+                'line_length': 0.35,
+                'rotation_dir': -1,
+                'extra_rotation': 0
             },
             'el_pro_groupBox': {
-                'image': "GUI_el_flex.png",
-                'anchor_x': 0.5,
-                'anchor_y': 0.5,
-                'line_length': 0.2
+                'image': "el_pro_image.png",
+                'anchor_x': 0.38,
+                'anchor_y': 0.60,
+                'line_length': 0.3,
+                'rotation_dir': 1,
+                'extra_rotation': 180
             },
             'el_sup_groupBox': {
-                'image': "GUI_el_flex.png",
-                'anchor_x': 0.5,
-                'anchor_y': 0.5,
-                'line_length': 0.2
+                'image': "el_sup_image.png",
+                'anchor_x': 0.38,
+                'anchor_y': 0.60,
+                'line_length': 0.3,
+                'rotation_dir': -1,
+                'extra_rotation': 180
             }
         }
 
@@ -192,12 +208,14 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
             # Create and add the widget
             pixmap = QPixmap(join(self.image_folder, config['image']))
-            scaled_pixmap = pixmap.scaled(300, 450, Qt.AspectRatioMode.KeepAspectRatio)  # Adjust size as needed
+            # scaled_pixmap = pixmap.scaled(300, 450, Qt.AspectRatioMode.KeepAspectRatio)  # Adjust size as needed
             widget = LineAngleWidget(
-                scaled_pixmap,
+                pixmap,
                 anchor_x_factor=config['anchor_x'],
                 anchor_y_factor=config['anchor_y'],
-                line_length_factor=config['line_length']
+                line_length_factor=config['line_length'],
+                rotation_dir=config['rotation_dir'],
+                extra_rotation=config['extra_rotation']
             )
 
             setattr(self, widget_name, widget)  # Store widget as class attribute

@@ -15,7 +15,7 @@ class LineAngleWidget(QWidget):
     A widget that draws a single red line whose angle (in degrees)
     is controlled via set_angle(). The left end of the line is fixed.
     """
-    def __init__(self, pixmap, parent=None, anchor_x_factor=0.5, anchor_y_factor=0.5, line_length_factor=0.2):
+    def __init__(self, pixmap, parent=None, anchor_x_factor=0.5, anchor_y_factor=0.5, line_length_factor=0.2, rotation_dir=1, extra_rotation=0):
         super().__init__(parent)
         self._pix = pixmap
         if self._pix.isNull():
@@ -26,6 +26,8 @@ class LineAngleWidget(QWidget):
         self._anchor_x_factor = anchor_x_factor  # percentage of width
         self._anchor_y_factor = anchor_y_factor  # percentage of height
         self._line_length_factor = line_length_factor
+        self._rotation_dir = rotation_dir
+        self._extra_rotation = extra_rotation
 
     @Slot(float)
     def set_angle(self, angle_deg: float):
@@ -55,7 +57,7 @@ class LineAngleWidget(QWidget):
         painter.drawPixmap(x, y, scaled_pixmap)
 
         painter.translate(anchor_x, anchor_y)
-        painter.rotate(-self._angle)           # rotate CCW by default
+        painter.rotate(self._rotation_dir * self._angle + self._extra_rotation)           # rotate CCW by default
         painter.setPen(self._pen)
 
         # Draw line from fixed anchor (0,0) to right
