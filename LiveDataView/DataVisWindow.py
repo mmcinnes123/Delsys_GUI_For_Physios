@@ -5,6 +5,8 @@ from os.path import join
 from PySide6.QtWidgets import *
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt
+
 
 from LiveDataView.LineAngleWidget import LineAngleWidget
 from LiveDataView.live_data_widget1 import Ui_LiveWindow
@@ -124,20 +126,61 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         Sets up animation widgets for all joint angles by adding LineAngleWidgets
         to their respective groupBoxes.
         """
-        # Dictionary mapping groupBox attributes to their corresponding image files
+        # Dictionary mapping groupBox attributes to their corresponding image files and anchor positions
         joint_mappings = {
-            'sh_flex_groupBox': "GUI_el_flex.png",
-            'sh_abd_groupBox': "GUI_el_flex.png",
-            'sh_introt_groupBox': "GUI_el_flex.png",
-            'sh_extrot_groupBox': "GUI_el_flex.png",
-            'el_flex_groupBox': "GUI_el_flex.png",
-            'el_ext_groupBox': "GUI_el_flex.png",
-            'el_pro_groupBox': "GUI_el_flex.png",
-            'el_sup_groupBox': "GUI_el_flex.png"
+            'sh_flex_groupBox': {
+                'image': "GUI_el_flex.png",
+                'anchor_x': 0.3,
+                'anchor_y': 0.5,
+                'line_length': 0.3
+            },
+            'sh_abd_groupBox': {
+                'image': "GUI_el_flex.png",
+                'anchor_x': 0.4,
+                'anchor_y': 0.6,
+                'line_length': 0.25
+            },
+            'sh_introt_groupBox': {
+                'image': "GUI_el_flex.png",
+                'anchor_x': 0.5,
+                'anchor_y': 0.5,
+                'line_length': 0.2
+            },
+            'sh_extrot_groupBox': {
+                'image': "GUI_el_flex.png",
+                'anchor_x': 0.5,
+                'anchor_y': 0.5,
+                'line_length': 0.2
+            },
+            'el_flex_groupBox': {
+                'image': "el_flex_image.png",
+                'anchor_x': 0.34,
+                'anchor_y': 0.62,
+                'line_length': 0.35
+            },
+            'el_ext_groupBox': {
+                'image': "GUI_el_flex.png",
+                'anchor_x': 0.5,
+                'anchor_y': 0.5,
+                'line_length': 0.2
+            },
+            'el_pro_groupBox': {
+                'image': "GUI_el_flex.png",
+                'anchor_x': 0.5,
+                'anchor_y': 0.5,
+                'line_length': 0.2
+            },
+            'el_sup_groupBox': {
+                'image': "GUI_el_flex.png",
+                'anchor_x': 0.5,
+                'anchor_y': 0.5,
+                'line_length': 0.2
+            }
         }
 
         # Add image and line widget to each groupBox
-        for groupBox_name, image_name in joint_mappings.items():
+        for groupBox_name, config in joint_mappings.items():
+
             # Get the groupBox object
             groupBox = getattr(self, groupBox_name)
 
@@ -148,10 +191,18 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             widget_name = groupBox_name.replace('_groupBox', '_ani_widget')
 
             # Create and add the widget
-            widget = LineAngleWidget(QPixmap(join(self.image_folder, image_name)))
+            pixmap = QPixmap(join(self.image_folder, config['image']))
+            scaled_pixmap = pixmap.scaled(300, 450, Qt.AspectRatioMode.KeepAspectRatio)  # Adjust size as needed
+            widget = LineAngleWidget(
+                scaled_pixmap,
+                anchor_x_factor=config['anchor_x'],
+                anchor_y_factor=config['anchor_y'],
+                line_length_factor=config['line_length']
+            )
+
             setattr(self, widget_name, widget)  # Store widget as class attribute
             layout.addWidget(widget, 1, 0, 1, 2)
-            widget.setMinimumSize(200, 100)
+            widget.setMinimumSize(300, 400)
 
 
     def toggle_groupbox_state(self, groupbox, enabled=True):
