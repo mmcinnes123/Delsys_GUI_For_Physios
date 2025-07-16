@@ -302,7 +302,7 @@ class IMUDataController():
             self.el_flex = None
 
         # We are either in pronation (above 90) or supination (below 90)
-        if self.el_PS > 90:
+        if 90 < self.el_PS or -90 > self.el_PS:
             self.el_sup = None
         if -90 < self.el_PS <= 90:
             self.el_pro = None
