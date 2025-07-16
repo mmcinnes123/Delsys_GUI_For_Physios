@@ -126,44 +126,44 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         Sets up animation widgets for all joint angles by adding LineAngleWidgets
         to their respective groupBoxes.
         """
-        # Dictionary mapping groupBox attributes to their corresponding image files and anchor positions
+        # Dictionary mapping configurations for the live visualisation to the groupBox for each joint angle
         joint_mappings = {
             'sh_flex_groupBox': {
-                'image': "GUI_el_flex.png",
-                'anchor_x': 0.3,
-                'anchor_y': 0.5,
-                'line_length': 0.3,
-                'rotation_dir': -1,
-                'extra_rotation': 0
+                'image': "sh_flex_image.png", # The name of the image file in the Images folder
+                'anchor_x': 0.28,    # The x-coordinate where the red line begins (as fraction of the widget width, from left)
+                'anchor_y': 0.4,    # The y-coordinate where the red line begins (as fraction of the widget height, from top down)
+                'line_length': 0.45, # The length of the red line
+                'rotation_dir': -1, # Whether the line should sweep in the opposite direction (1 or -1)
+                'extra_rotation': 0 # Whether the line should begin from a different orientation (-90, 90, 180, etc)
             },
             'sh_abd_groupBox': {
-                'image': "GUI_el_flex.png",
-                'anchor_x': 0.4,
-                'anchor_y': 0.6,
-                'line_length': 0.25,
-                'rotation_dir': -1,
+                'image': "sh_abd_image.png",
+                'anchor_x': 0.6,
+                'anchor_y': 0.43,
+                'line_length': 0.45,
+                'rotation_dir': 1,
                 'extra_rotation': 0
             },
             'sh_introt_groupBox': {
-                'image': "GUI_el_flex.png",
-                'anchor_x': 0.5,
-                'anchor_y': 0.5,
-                'line_length': 0.2,
+                'image': "sh_introt_image.png",
+                'anchor_x': 0.58,
+                'anchor_y': 0.61,
+                'line_length': 0.45,
                 'rotation_dir': -1,
-                'extra_rotation': 0
+                'extra_rotation': 180
             },
             'sh_extrot_groupBox': {
-                'image': "GUI_el_flex.png",
-                'anchor_x': 0.5,
-                'anchor_y': 0.5,
-                'line_length': 0.2,
+                'image': "sh_extrot_image.png",
+                'anchor_x': 0.58,
+                'anchor_y': 0.61,
+                'line_length': 0.45,
                 'rotation_dir': -1,
-                'extra_rotation': 0
+                'extra_rotation': 180
             },
             'el_flex_groupBox': {
                 'image': "el_flex_image.png",
                 'anchor_x': 0.34,
-                'anchor_y': 0.62,
+                'anchor_y': 0.60,
                 'line_length': 0.35,
                 'rotation_dir': -1,
                 'extra_rotation': 0
@@ -171,7 +171,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             'el_ext_groupBox': {
                 'image': "el_ext_image.png",
                 'anchor_x': 0.34,
-                'anchor_y': 0.62,
+                'anchor_y': 0.60,
                 'line_length': 0.35,
                 'rotation_dir': -1,
                 'extra_rotation': 0
