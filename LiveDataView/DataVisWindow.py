@@ -52,6 +52,13 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                 button = getattr(self, f"{joint_name}_reset_pushButton")
                 button.clicked.connect(lambda checked, j=joint_name: self.reset_buttonCallback(j))
 
+            # Set check box functionalities
+            for joint_name in self.joint_mapping:
+                # Create the attribute for each joint_angle
+                setattr(self, f"{joint_name}_checkBox_enabled", False)
+                checkBox = getattr(self, f"{joint_name}_checkBox")
+                checkBox.toggled.connect(self.on_checkbox_toggled)
+
             # Create a timer to update the display
             self.update_timer = QTimer()
             self.update_timer.timeout.connect(self.update_display)
@@ -66,6 +73,9 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             if hasattr(self.connector, joint_name):
                 joint_value = getattr(self.connector, joint_name)
                 max_value = getattr(self.connector, f"{joint_name}_max")
+
+                # Check whether to include target line
+                include_target = getattr(self, f"{joint_name}_checkBox_enabled")
                 target_value = getattr(self, f"{joint_name}_target_spinBox").value()
 
                 if joint_value is not None:
@@ -80,7 +90,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                     # ani_widget.set_angle(0)  # Reset animation to 0 when no value
                     ani_widget.set_target(target_value)
 
-
                 if max_value is not None:
                     max_widget.setText(f"{max_value:.0f}°")
                 else:
@@ -93,7 +102,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
 
-    # --- Reset Button callback
+    # --- Button/Checkbox callbacks
 
     def reset_buttonCallback(self, joint_name):
 
@@ -109,6 +118,14 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                     setattr(self.connector, f"{joint_name}_max", 90)
                 else:
                     setattr(self.connector, f"{joint_name}_max", 0)
+
+    # Define the slot
+    def on_checkbox_toggled(self, checked: bool):
+        checkbox = self.sender()
+        joint_name = checkbox.objectName().replace("_checkBox", "")
+        ani_widget = getattr(self, f"{joint_name}_ani_widget")
+        ani_widget._include_target = checked
+
 
     # --- Other functions
 

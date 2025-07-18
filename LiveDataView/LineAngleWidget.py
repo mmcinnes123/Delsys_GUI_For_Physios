@@ -33,6 +33,7 @@ class LineAngleWidget(QWidget):
         self._line_length_factor = line_length_factor
         self._rotation_dir = rotation_dir
         self._extra_rotation = extra_rotation
+        self._include_target = True     # Bool which indicates whether to draw target line
 
     @Slot(float)
     def set_angle(self, angle_deg: float):
@@ -84,12 +85,13 @@ class LineAngleWidget(QWidget):
         painter.restore()
 
         # Draw the target value line
-        painter.save()
-        painter.translate(anchor_x, anchor_y)
-        painter.rotate(self._rotation_dir * self._target_angle + self._extra_rotation)
-        painter.setPen(self._target_pen)
-        painter.drawLine(0, 0, 0, 1.1*line_length)
-        painter.restore()
+        if self._include_target:
+            painter.save()
+            painter.translate(anchor_x, anchor_y)
+            painter.rotate(self._rotation_dir * self._target_angle + self._extra_rotation)
+            painter.setPen(self._target_pen)
+            painter.drawLine(0, 0, 0, 1.1*line_length)
+            painter.restore()
 
         painter.end()
 
