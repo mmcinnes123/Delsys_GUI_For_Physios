@@ -21,7 +21,9 @@ class LineAngleWidget(QWidget):
         if self._pix.isNull():
             print("Warning: Pixmap failed to load!")
         self._angle = 0.0                      # in degrees
+        self._max_angle = 0.0                      # in degrees
         self._pen   = QPen(Qt.red, 4, Qt.SolidLine, Qt.RoundCap)
+        self._maxline_pen   = QPen(Qt.blue, 4, Qt.SolidLine, Qt.RoundCap)
         self.setAttribute(Qt.WA_TranslucentBackground)  # lets the image show through
         self._anchor_x_factor = anchor_x_factor  # percentage of width
         self._anchor_y_factor = anchor_y_factor  # percentage of height
@@ -35,6 +37,12 @@ class LineAngleWidget(QWidget):
         self._angle = angle_deg % 360
         self.update()
 
+    @Slot(float)
+    def set_maxangle(self, angle_deg: float):
+        """Update the line’s angle and repaint."""
+        self._max_angle = angle_deg % 360
+        self.update()
+
     def paintEvent(self, event):
 
         w, h = self.width(), self.height()
@@ -42,26 +50,31 @@ class LineAngleWidget(QWidget):
         anchor_y = int(h * self._anchor_y_factor)
         line_length = w * self._line_length_factor
 
-
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
         # Scale pixmap to fit widget size while maintaining aspect ratio
         scaled_pixmap = self._pix.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-
-        # Calculate position to center the pixmap
-        x = (w - scaled_pixmap.width()) // 2
+        x = (w - scaled_pixmap.width()) // 2    # Calculate position to center the pixmap
         y = (h - scaled_pixmap.height()) // 2
+        painter.drawPixmap(x, y, scaled_pixmap) # Draw the backgroudn image
 
-        # --- 1. draw the background image ---
-        painter.drawPixmap(x, y, scaled_pixmap)
-
+        # Draw current joint position line
+        painter.save()
         painter.translate(anchor_x, anchor_y)
         painter.rotate(self._rotation_dir * self._angle + self._extra_rotation)           # rotate CCW by default
         painter.setPen(self._pen)
-
-        # Draw line from fixed anchor (0,0) to right
         painter.drawLine(0, 0, 0, line_length)
+        painter.restore()
+
+        # Draw the max value line
+        painter.save()
+        painter.translate(anchor_x, anchor_y)
+        painter.rotate(self._rotation_dir * self._max_angle + self._extra_rotation)
+        painter.setPen(self._maxline_pen)
+        painter.drawLine(0, 0, 0, line_length)
+        painter.restore()
+
 
         painter.end()
 

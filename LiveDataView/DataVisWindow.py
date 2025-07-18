@@ -35,6 +35,13 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                           self.sh_extrot_ani_widget)
         }
 
+        # Reset all max values
+        for joint_name in self.joint_mapping:
+            if joint_name in ['el_flex', 'el_ext']:
+                setattr(connector, f"{joint_name}_max", 90)
+            else:
+                setattr(connector, f"{joint_name}_max", 0)
+
         if self.controller:  # Don't run if just testing UI
 
             # Set button functionalities
@@ -52,7 +59,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
     def update_display(self):
 
-
         connector = self.controller.collectWindow.CallbackConnector
 
         for joint_name, (value_widget, max_widget, groupbox, ani_widget) in self.joint_mapping.items():
@@ -64,6 +70,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                     value_widget.setText(f"{joint_value:.0f}°")
                     self.toggle_groupbox_state(groupbox, ani_widget, True)  # Enable groupbox
                     ani_widget.set_angle(joint_value)  # Update the animation angle
+                    ani_widget.set_maxangle(max_value)
                 else:
                     value_widget.setText("-°")
                     self.toggle_groupbox_state(groupbox, ani_widget, False)  # Disable groupbox
