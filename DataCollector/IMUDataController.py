@@ -227,7 +227,7 @@ class IMUDataController():
         self.sh_abd = self.sh_EA
         self.sh_flex = self.sh_EA
         self.sh_introt = self.sh_IE
-        self.sh_extrot = self.sh_IE
+        self.sh_extrot = -self.sh_IE
 
         # Adjust these to match clinical definitions of PS
         if self.el_PS > 0:
@@ -334,7 +334,7 @@ class IMUDataController():
                 self.el_pro_max = self.el_pro
 
         if self.el_sup is not None:
-            if self.el_sup < self.el_sup_max:
+            if self.el_sup > self.el_sup_max:
                 self.el_sup_max = self.el_sup
 
         if self.sh_flex is not None:
@@ -350,5 +350,5 @@ class IMUDataController():
                 self.sh_introt_max = self.sh_introt
 
         if self.sh_extrot is not None:
-            if self.sh_extrot < self.sh_extrot_max:
+            if self.sh_extrot > self.sh_extrot_max:
                 self.sh_extrot_max = self.sh_extrot

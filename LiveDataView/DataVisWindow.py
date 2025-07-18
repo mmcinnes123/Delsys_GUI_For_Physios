@@ -21,29 +21,8 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         # Add image and line widget to each groupBox
         self.setup_joint_animations()
 
-        if self.controller:  # Don't run if just testing UI
-
-            # Set button functionalities
-            self.el_flex_reset_pushButton.clicked.connect(self.reset_el_flex_max_buttonCallback)
-            self.el_ext_reset_pushButton.clicked.connect(self.reset_el_ext_max_buttonCallback)
-            self.el_pro_reset_pushButton.clicked.connect(self.reset_el_pro_max_buttonCallback)
-            self.el_sup_reset_pushButton.clicked.connect(self.reset_el_sup_max_buttonCallback)
-            self.sh_flex_reset_pushButton.clicked.connect(self.reset_sh_flex_max_buttonCallback)
-            self.sh_abd_reset_pushButton.clicked.connect(self.reset_sh_abd_max_buttonCallback)
-            self.sh_introt_reset_pushButton.clicked.connect(self.reset_sh_introt_max_buttonCallback)
-            self.sh_extrot_reset_pushButton.clicked.connect(self.reset_sh_extrot_max_buttonCallback)
-
-            # Create a timer to update the display
-            self.update_timer = QTimer()
-            self.update_timer.timeout.connect(self.update_display)
-            self.update_timer.start(100)  # Update every 100ms
-
-    # -----------------------------------------------------------------------
-    # ---- Callback Functions
-
-    def update_display(self):
         # Define joint mapping: (attribute_name, value_widget, max_value_widget)
-        joint_mapping = {
+        self.joint_mapping = {
             'el_flex': (self.el_flex_value, self.el_flex_max_value, self.el_flex_groupBox, self.el_flex_ani_widget),
             'el_ext': (self.el_ext_value, self.el_ext_max_value, self.el_ext_groupBox, self.el_ext_ani_widget),
             'el_pro': (self.el_pro_value, self.el_pro_max_value, self.el_pro_groupBox, self.el_pro_ani_widget),
@@ -56,9 +35,27 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                           self.sh_extrot_ani_widget)
         }
 
+        if self.controller:  # Don't run if just testing UI
+
+            # Set button functionalities
+            for joint_name in self.joint_mapping:
+                button = getattr(self, f"{joint_name}_reset_pushButton")
+                button.clicked.connect(lambda checked, j=joint_name: self.reset_buttonCallback(j))
+
+            # Create a timer to update the display
+            self.update_timer = QTimer()
+            self.update_timer.timeout.connect(self.update_display)
+            self.update_timer.start(100)  # Update every 100ms
+
+    # -----------------------------------------------------------------------
+    # ---- Callback Functions
+
+    def update_display(self):
+
+
         connector = self.controller.collectWindow.CallbackConnector
 
-        for joint_name, (value_widget, max_widget, groupbox, ani_widget) in joint_mapping.items():
+        for joint_name, (value_widget, max_widget, groupbox, ani_widget) in self.joint_mapping.items():
             if hasattr(connector, joint_name):
                 joint_value = getattr(connector, joint_name)
                 max_value = getattr(connector, f"{joint_name}_max")
@@ -84,40 +81,20 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
 
-    # --- Reset Button callbacks
+    # --- Reset Button callback
 
-        """ When reset buttons are clicked, Max value is set to current value of that joint angle"""
-    def reset_el_flex_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'el_FE'):
-            self.controller.collectWindow.CallbackConnector.el_flex_max = self.controller.collectWindow.CallbackConnector.el_FE
+    def reset_buttonCallback(self, joint_name):
 
-    def reset_el_ext_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'el_FE'):
-            self.controller.collectWindow.CallbackConnector.el_ext_max = self.controller.collectWindow.CallbackConnector.el_FE
+        """ When reset buttons are clicked, Max value is set to current value of that joint angle, or 0 if joint angle is None"""
+        connector = self.controller.collectWindow.CallbackConnector
 
-    def reset_el_pro_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'el_PS'):
-            self.controller.collectWindow.CallbackConnector.el_pro_max = self.controller.collectWindow.CallbackConnector.el_PS
+        if hasattr(connector, joint_name):
+            current_value = getattr(connector, joint_name)
 
-    def reset_el_sup_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'el_PS'):
-            self.controller.collectWindow.CallbackConnector.el_sup_max = self.controller.collectWindow.CallbackConnector.el_PS
-
-    def reset_sh_flex_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_FE'):
-            self.controller.collectWindow.CallbackConnector.sh_flex_max = self.controller.collectWindow.CallbackConnector.sh_FE
-
-    def reset_sh_abd_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_AB'):
-            self.controller.collectWindow.CallbackConnector.sh_abd_max = self.controller.collectWindow.CallbackConnector.sh_AB
-
-    def reset_sh_introt_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
-            self.controller.collectWindow.CallbackConnector.sh_introt_max = self.controller.collectWindow.CallbackConnector.sh_IE
-
-    def reset_sh_extrot_max_buttonCallback(self):
-        if hasattr(self.controller.collectWindow.CallbackConnector, 'sh_IE'):
-            self.controller.collectWindow.CallbackConnector.sh_extrot_max = self.controller.collectWindow.CallbackConnector.sh_IE
+            if current_value is not None:
+                setattr(connector, f"{joint_name}_max", current_value)
+            else:
+                setattr(connector, f"{joint_name}_max", 0)
 
     # --- Other functions
 
@@ -157,7 +134,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                 'anchor_x': 0.58,
                 'anchor_y': 0.61,
                 'line_length': 0.45,
-                'rotation_dir': -1,
+                'rotation_dir': 1,
                 'extra_rotation': 180
             },
             'el_flex_groupBox': {
