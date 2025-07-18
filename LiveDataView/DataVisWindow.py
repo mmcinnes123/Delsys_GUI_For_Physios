@@ -40,13 +40,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
             self.connector = self.controller.collectWindow.CallbackConnector
 
-            # Reset all max values
-            for joint_name in self.joint_mapping:
-                if joint_name in ['el_flex', 'el_ext']:
-                    setattr(self.connector, f"{joint_name}_max", 90)
-                else:
-                    setattr(self.connector, f"{joint_name}_max", 0)
-
             # Set button functionalities
             for joint_name in self.joint_mapping:
                 button = getattr(self, f"{joint_name}_reset_pushButton")
@@ -66,6 +59,16 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
     # -----------------------------------------------------------------------
     # ---- Callback Functions
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        # Reset all max values when window is shown
+        if self.controller:  # Keep the check for controller
+            for joint_name in self.joint_mapping:
+                if joint_name in ['el_flex', 'el_ext']:
+                    setattr(self.connector, f"{joint_name}_max", 90)
+                else:
+                    setattr(self.connector, f"{joint_name}_max", 0)
 
     def update_display(self):
 
