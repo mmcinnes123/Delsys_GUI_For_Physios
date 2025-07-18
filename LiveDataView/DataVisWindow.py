@@ -94,7 +94,10 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             if current_value is not None:
                 setattr(connector, f"{joint_name}_max", current_value)
             else:
-                setattr(connector, f"{joint_name}_max", 0)
+                if joint_name in ['el_flex', 'el_ext']:
+                    setattr(connector, f"{joint_name}_max", 90)
+                else:
+                    setattr(connector, f"{joint_name}_max", 0)
 
     # --- Other functions
 
