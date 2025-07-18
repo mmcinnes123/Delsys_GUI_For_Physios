@@ -16,6 +16,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         super().__init__()
         self.setupUi(self)
         self.controller = controller
+        self.connector = self.controller.collectWindow.CallbackConnector
         self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
 
         # Add image and line widget to each groupBox
@@ -38,9 +39,9 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         # Reset all max values
         for joint_name in self.joint_mapping:
             if joint_name in ['el_flex', 'el_ext']:
-                setattr(connector, f"{joint_name}_max", 90)
+                setattr(self.connector, f"{joint_name}_max", 90)
             else:
-                setattr(connector, f"{joint_name}_max", 0)
+                setattr(self.connector, f"{joint_name}_max", 0)
 
         if self.controller:  # Don't run if just testing UI
 
@@ -59,12 +60,10 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
     def update_display(self):
 
-        connector = self.controller.collectWindow.CallbackConnector
-
         for joint_name, (value_widget, max_widget, groupbox, ani_widget) in self.joint_mapping.items():
-            if hasattr(connector, joint_name):
-                joint_value = getattr(connector, joint_name)
-                max_value = getattr(connector, f"{joint_name}_max")
+            if hasattr(self.connector, joint_name):
+                joint_value = getattr(self.connector, joint_name)
+                max_value = getattr(self.connector, f"{joint_name}_max")
 
                 if joint_value is not None:
                     value_widget.setText(f"{joint_value:.0f}°")
@@ -83,7 +82,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
     def closeEvent(self, event):
         if self.controller:
-            self.controller.collectWindow.CallbackConnector.vis_dataFlag = False
+            self.connector.vis_dataFlag = False
             self.controller.collectWindow.start_vis_button.setEnabled(True)
             self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
@@ -93,18 +92,17 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     def reset_buttonCallback(self, joint_name):
 
         """ When reset buttons are clicked, Max value is set to current value of that joint angle, or 0 if joint angle is None"""
-        connector = self.controller.collectWindow.CallbackConnector
 
-        if hasattr(connector, joint_name):
-            current_value = getattr(connector, joint_name)
+        if hasattr(self.connector, joint_name):
+            current_value = getattr(self.connector, joint_name)
 
             if current_value is not None:
-                setattr(connector, f"{joint_name}_max", current_value)
+                setattr(self.connector, f"{joint_name}_max", current_value)
             else:
                 if joint_name in ['el_flex', 'el_ext']:
-                    setattr(connector, f"{joint_name}_max", 90)
+                    setattr(self.connector, f"{joint_name}_max", 90)
                 else:
-                    setattr(connector, f"{joint_name}_max", 0)
+                    setattr(self.connector, f"{joint_name}_max", 0)
 
     # --- Other functions
 
