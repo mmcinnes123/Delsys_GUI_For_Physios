@@ -4,7 +4,8 @@ np.set_printoptions(suppress=True)
 
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout
 from PySide6.QtCore    import Qt, QTimer, Slot
-from PySide6.QtGui     import QPainter, QPen
+from PySide6.QtGui     import QPainter, QPen, QColor
+
 import math
 import sys
 import random    # stand‑in for your live sensor
@@ -22,8 +23,10 @@ class LineAngleWidget(QWidget):
             print("Warning: Pixmap failed to load!")
         self._angle = 0.0                      # in degrees
         self._max_angle = 0.0                      # in degrees
-        self._pen   = QPen(Qt.blue, 4, Qt.SolidLine, Qt.RoundCap)
-        self._maxline_pen   = QPen(Qt.red, 4, Qt.SolidLine, Qt.RoundCap)
+        self._target_angle = 0.0                      # in degrees
+        self._pen = QPen(QColor(0, 0, 255, 128), 4, Qt.SolidLine, Qt.RoundCap)  # Semi-transparent blue
+        self._maxline_pen = QPen(Qt.blue, 4, Qt.SolidLine, Qt.RoundCap)
+        self._target_pen = QPen(Qt.red, 3, Qt.SolidLine, Qt.RoundCap)
         self.setAttribute(Qt.WA_TranslucentBackground)  # lets the image show through
         self._anchor_x_factor = anchor_x_factor  # percentage of width
         self._anchor_y_factor = anchor_y_factor  # percentage of height
@@ -39,8 +42,13 @@ class LineAngleWidget(QWidget):
 
     @Slot(float)
     def set_maxangle(self, angle_deg: float):
-        """Update the line’s angle and repaint."""
+        """Update the max line’s angle and repaint."""
         self._max_angle = angle_deg % 360
+        self.update()
+
+    def set_target(self, angle_deg: float):
+        """Update the target line’s angle and repaint."""
+        self._target_angle = angle_deg % 360
         self.update()
 
     def paintEvent(self, event):
@@ -75,6 +83,13 @@ class LineAngleWidget(QWidget):
         painter.drawLine(0, 0, 0, line_length)
         painter.restore()
 
+        # Draw the target value line
+        painter.save()
+        painter.translate(anchor_x, anchor_y)
+        painter.rotate(self._rotation_dir * self._target_angle + self._extra_rotation)
+        painter.setPen(self._target_pen)
+        painter.drawLine(0, 0, 0, 1.1*line_length)
+        painter.restore()
 
         painter.end()
 

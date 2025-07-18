@@ -410,14 +410,14 @@ class Ui_LiveWindow(object):
 
         self.gridLayout_10.addWidget(self.sh_abd_max_value, 2, 1, 1, 1)
 
-        self.el_ext_target_spinBox_3 = QSpinBox(self.sh_abd_groupBox)
-        self.el_ext_target_spinBox_3.setObjectName(u"el_ext_target_spinBox_3")
-        self.el_ext_target_spinBox_3.setFont(font)
-        self.el_ext_target_spinBox_3.setMaximum(180)
-        self.el_ext_target_spinBox_3.setSingleStep(10)
-        self.el_ext_target_spinBox_3.setValue(150)
+        self.sh_abd_target_spinBox = QSpinBox(self.sh_abd_groupBox)
+        self.sh_abd_target_spinBox.setObjectName(u"sh_abd_target_spinBox")
+        self.sh_abd_target_spinBox.setFont(font)
+        self.sh_abd_target_spinBox.setMaximum(180)
+        self.sh_abd_target_spinBox.setSingleStep(10)
+        self.sh_abd_target_spinBox.setValue(150)
 
-        self.gridLayout_10.addWidget(self.el_ext_target_spinBox_3, 5, 1, 1, 1)
+        self.gridLayout_10.addWidget(self.sh_abd_target_spinBox, 5, 1, 1, 1)
 
         self.verticalSpacer_17 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -577,7 +577,7 @@ class Ui_LiveWindow(object):
 
         self.retranslateUi(LiveWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(LiveWindow)

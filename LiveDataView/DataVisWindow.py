@@ -4,7 +4,7 @@ from os.path import join
 
 from PySide6.QtWidgets import *
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QColor
 from PySide6.QtCore import Qt
 
 
@@ -66,16 +66,20 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             if hasattr(self.connector, joint_name):
                 joint_value = getattr(self.connector, joint_name)
                 max_value = getattr(self.connector, f"{joint_name}_max")
+                target_value = getattr(self, f"{joint_name}_target_spinBox").value()
 
                 if joint_value is not None:
                     value_widget.setText(f"{joint_value:.0f}°")
                     self.toggle_groupbox_state(groupbox, ani_widget, True)  # Enable groupbox
                     ani_widget.set_angle(joint_value)  # Update the animation angle
                     ani_widget.set_maxangle(max_value)
+                    ani_widget.set_target(target_value)
                 else:
                     value_widget.setText("-°")
                     self.toggle_groupbox_state(groupbox, ani_widget, False)  # Disable groupbox
-                    ani_widget.set_angle(0)  # Reset animation to 0 when no value
+                    # ani_widget.set_angle(0)  # Reset animation to 0 when no value
+                    ani_widget.set_target(target_value)
+
 
                 if max_value is not None:
                     max_widget.setText(f"{max_value:.0f}°")
@@ -215,8 +219,9 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         if enabled:
             # Reset to default style (black text)
             groupbox.setStyleSheet("")
-            ani_widget._pen.setColor(Qt.blue)
-            ani_widget._maxline_pen.setColor(Qt.red)
+            ani_widget._pen.setColor(QColor(0, 0, 255, 128))
+            ani_widget._maxline_pen.setColor(Qt.blue)
+            ani_widget._target_pen.setColor(Qt.red)
 
         else:
             # Grey out the text
@@ -232,6 +237,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             # Grey the red line
             ani_widget._pen.setColor(Qt.gray)
             ani_widget._maxline_pen.setColor(Qt.gray)
+            ani_widget._target_pen.setColor(Qt.gray)
 
 
 if __name__ == "__main__":
