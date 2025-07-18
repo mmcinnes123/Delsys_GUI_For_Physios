@@ -65,11 +65,11 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
                 if joint_value is not None:
                     value_widget.setText(f"{joint_value:.0f}°")
-                    self.toggle_groupbox_state(groupbox, True)  # Enable groupbox
+                    self.toggle_groupbox_state(groupbox, ani_widget, True)  # Enable groupbox
                     ani_widget.set_angle(joint_value)  # Update the animation angle
                 else:
                     value_widget.setText("-°")
-                    self.toggle_groupbox_state(groupbox, False)  # Disable groupbox
+                    self.toggle_groupbox_state(groupbox, ani_widget, False)  # Disable groupbox
                     ani_widget.set_angle(0)  # Reset animation to 0 when no value
 
                 if max_value is not None:
@@ -84,7 +84,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
 
-    # --- Reset button callbacks
+    # --- Reset Button callbacks
 
         """ When reset buttons are clicked, Max value is set to current value of that joint angle"""
     def reset_el_flex_max_buttonCallback(self):
@@ -223,11 +223,13 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             widget.setMinimumSize(300, 400)
 
 
-    def toggle_groupbox_state(self, groupbox, enabled=True):
+    def toggle_groupbox_state(self, groupbox, ani_widget, enabled=True):
 
         if enabled:
             # Reset to default style (black text)
             groupbox.setStyleSheet("")
+            ani_widget._pen.setColor(Qt.red)
+
         else:
             # Grey out the text
             groupbox.setStyleSheet("""
@@ -238,6 +240,9 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                     color: gray;
                 }
             """)
+
+            # Grey the red line
+            ani_widget._pen.setColor(Qt.gray)
 
 
 if __name__ == "__main__":
