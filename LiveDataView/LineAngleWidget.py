@@ -22,8 +22,8 @@ class LineAngleWidget(QWidget):
             print("Warning: Pixmap failed to load!")
         self._angle = 0.0                      # in degrees
         self._max_angle = 0.0                      # in degrees
-        self._pen   = QPen(Qt.red, 4, Qt.SolidLine, Qt.RoundCap)
-        self._maxline_pen   = QPen(Qt.blue, 4, Qt.SolidLine, Qt.RoundCap)
+        self._pen   = QPen(Qt.blue, 4, Qt.SolidLine, Qt.RoundCap)
+        self._maxline_pen   = QPen(Qt.red, 4, Qt.SolidLine, Qt.RoundCap)
         self.setAttribute(Qt.WA_TranslucentBackground)  # lets the image show through
         self._anchor_x_factor = anchor_x_factor  # percentage of width
         self._anchor_y_factor = anchor_y_factor  # percentage of height

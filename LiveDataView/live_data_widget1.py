@@ -72,6 +72,15 @@ class Ui_LiveWindow(object):
 
         self.el_flex_max_value = QLabel(self.el_flex_groupBox)
         self.el_flex_max_value.setObjectName(u"el_flex_max_value")
+        palette = QPalette()
+        brush = QBrush(QColor(216, 8, 8, 255))
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
+        palette.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        brush1 = QBrush(QColor(120, 120, 120, 255))
+        brush1.setStyle(Qt.BrushStyle.SolidPattern)
+        palette.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.el_flex_max_value.setPalette(palette)
         font3 = QFont()
         font3.setPointSize(18)
         self.el_flex_max_value.setFont(font3)
@@ -137,6 +146,11 @@ class Ui_LiveWindow(object):
 
         self.el_ext_max_value = QLabel(self.el_ext_groupBox)
         self.el_ext_max_value.setObjectName(u"el_ext_max_value")
+        palette1 = QPalette()
+        palette1.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette1.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette1.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.el_ext_max_value.setPalette(palette1)
         self.el_ext_max_value.setFont(font3)
 
         self.gridLayout_3.addWidget(self.el_ext_max_value, 2, 1, 1, 1)
@@ -208,6 +222,11 @@ class Ui_LiveWindow(object):
 
         self.el_pro_max_value = QLabel(self.el_pro_groupBox)
         self.el_pro_max_value.setObjectName(u"el_pro_max_value")
+        palette2 = QPalette()
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.el_pro_max_value.setPalette(palette2)
         self.el_pro_max_value.setFont(font3)
 
         self.gridLayout_5.addWidget(self.el_pro_max_value, 2, 1, 1, 1)
@@ -266,6 +285,11 @@ class Ui_LiveWindow(object):
 
         self.el_sup_max_value = QLabel(self.el_sup_groupBox)
         self.el_sup_max_value.setObjectName(u"el_sup_max_value")
+        palette3 = QPalette()
+        palette3.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette3.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette3.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.el_sup_max_value.setPalette(palette3)
         self.el_sup_max_value.setFont(font3)
 
         self.gridLayout_6.addWidget(self.el_sup_max_value, 2, 1, 1, 1)
@@ -329,6 +353,27 @@ class Ui_LiveWindow(object):
 
         self.sh_flex_max_value = QLabel(self.sh_flex_groupBox)
         self.sh_flex_max_value.setObjectName(u"sh_flex_max_value")
+        palette4 = QPalette()
+        palette4.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        brush2 = QBrush(QColor(0, 0, 0, 255))
+        brush2.setStyle(Qt.BrushStyle.SolidPattern)
+        palette4.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.Text, brush2)
+        brush3 = QBrush(QColor(0, 0, 0, 128))
+        brush3.setStyle(Qt.BrushStyle.SolidPattern)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette4.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.PlaceholderText, brush3)
+#endif
+        palette4.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette4.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.Text, brush2)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette4.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.PlaceholderText, brush3)
+#endif
+        palette4.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        palette4.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text, brush1)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette4.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.PlaceholderText, brush3)
+#endif
+        self.sh_flex_max_value.setPalette(palette4)
         self.sh_flex_max_value.setFont(font3)
 
         self.gridLayout_12.addWidget(self.sh_flex_max_value, 2, 1, 1, 1)
@@ -356,6 +401,11 @@ class Ui_LiveWindow(object):
 
         self.sh_abd_max_value = QLabel(self.sh_abd_groupBox)
         self.sh_abd_max_value.setObjectName(u"sh_abd_max_value")
+        palette5 = QPalette()
+        palette5.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette5.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette5.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.sh_abd_max_value.setPalette(palette5)
         self.sh_abd_max_value.setFont(font3)
 
         self.gridLayout_10.addWidget(self.sh_abd_max_value, 2, 1, 1, 1)
@@ -401,6 +451,11 @@ class Ui_LiveWindow(object):
         self.gridLayout_11.setObjectName(u"gridLayout_11")
         self.sh_introt_max_value = QLabel(self.sh_introt_groupBox)
         self.sh_introt_max_value.setObjectName(u"sh_introt_max_value")
+        palette6 = QPalette()
+        palette6.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette6.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette6.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.sh_introt_max_value.setPalette(palette6)
         self.sh_introt_max_value.setFont(font3)
 
         self.gridLayout_11.addWidget(self.sh_introt_max_value, 2, 1, 1, 1)
@@ -499,6 +554,11 @@ class Ui_LiveWindow(object):
 
         self.sh_extrot_max_value = QLabel(self.sh_extrot_groupBox)
         self.sh_extrot_max_value.setObjectName(u"sh_extrot_max_value")
+        palette7 = QPalette()
+        palette7.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette7.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette7.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.sh_extrot_max_value.setPalette(palette7)
         self.sh_extrot_max_value.setFont(font3)
 
         self.gridLayout_13.addWidget(self.sh_extrot_max_value, 2, 1, 1, 1)
@@ -517,7 +577,7 @@ class Ui_LiveWindow(object):
 
         self.retranslateUi(LiveWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(LiveWindow)

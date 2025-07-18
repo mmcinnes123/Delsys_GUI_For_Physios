@@ -16,7 +16,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         super().__init__()
         self.setupUi(self)
         self.controller = controller
-        self.connector = self.controller.collectWindow.CallbackConnector
         self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
 
         # Add image and line widget to each groupBox
@@ -36,14 +35,17 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                           self.sh_extrot_ani_widget)
         }
 
-        # Reset all max values
-        for joint_name in self.joint_mapping:
-            if joint_name in ['el_flex', 'el_ext']:
-                setattr(self.connector, f"{joint_name}_max", 90)
-            else:
-                setattr(self.connector, f"{joint_name}_max", 0)
 
         if self.controller:  # Don't run if just testing UI
+
+            self.connector = self.controller.collectWindow.CallbackConnector
+
+            # Reset all max values
+            for joint_name in self.joint_mapping:
+                if joint_name in ['el_flex', 'el_ext']:
+                    setattr(self.connector, f"{joint_name}_max", 90)
+                else:
+                    setattr(self.connector, f"{joint_name}_max", 0)
 
             # Set button functionalities
             for joint_name in self.joint_mapping:
@@ -213,7 +215,8 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         if enabled:
             # Reset to default style (black text)
             groupbox.setStyleSheet("")
-            ani_widget._pen.setColor(Qt.red)
+            ani_widget._pen.setColor(Qt.blue)
+            ani_widget._maxline_pen.setColor(Qt.red)
 
         else:
             # Grey out the text
@@ -228,6 +231,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
             # Grey the red line
             ani_widget._pen.setColor(Qt.gray)
+            ani_widget._maxline_pen.setColor(Qt.gray)
 
 
 if __name__ == "__main__":
