@@ -33,7 +33,7 @@ class LineAngleWidget(QWidget):
         self._line_length_factor = line_length_factor
         self._rotation_dir = rotation_dir
         self._extra_rotation = extra_rotation
-        self._include_target = True     # Bool which indicates whether to draw target line
+        self._include_target = False     # Bool which indicates whether to draw target line
 
     @Slot(float)
     def set_angle(self, angle_deg: float):

@@ -221,8 +221,6 @@ class IMUDataController():
         self.el_FE, self.el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(self.humerus_quat, self.forerarm_quat)
         self.sh_EA, self.sh_IE, self.sh_PoE = self.get_shoulder_angles_from_body_frames(self.thorax_quat, self.humerus_quat)
 
-        print(self.sh_PoE)
-
         # Get joint angles from joint DoFs
         self.el_flex = self.el_FE
         self.el_ext = self.el_FE

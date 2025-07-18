@@ -48,7 +48,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             # Set check box functionalities
             for joint_name in self.joint_mapping:
                 # Create the attribute for each joint_angle
-                setattr(self, f"{joint_name}_checkBox_enabled", False)
                 checkBox = getattr(self, f"{joint_name}_checkBox")
                 checkBox.toggled.connect(self.on_checkbox_toggled)
 
@@ -78,7 +77,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                 max_value = getattr(self.connector, f"{joint_name}_max")
 
                 # Check whether to include target line
-                include_target = getattr(self, f"{joint_name}_checkBox_enabled")
                 target_value = getattr(self, f"{joint_name}_target_spinBox").value()
 
                 if joint_value is not None:
