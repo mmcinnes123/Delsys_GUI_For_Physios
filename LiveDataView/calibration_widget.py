@@ -97,28 +97,52 @@ class Ui_calibrationWindow(object):
 
         self.gridLayout.addItem(self.horizontalSpacer_2, 0, 2, 1, 1)
 
+        self.pose_statusMessage = QLabel(self.groupBox)
+        self.pose_statusMessage.setObjectName(u"pose_statusMessage")
+        palette1 = QPalette()
+        brush2 = QBrush(QColor(0, 220, 0, 255))
+        brush2.setStyle(Qt.BrushStyle.SolidPattern)
+        palette1.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2)
+        palette1.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2)
+        palette1.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.pose_statusMessage.setPalette(palette1)
+        font4 = QFont()
+        font4.setPointSize(16)
+        self.pose_statusMessage.setFont(font4)
+        self.pose_statusMessage.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout.addWidget(self.pose_statusMessage, 2, 1, 1, 1)
+
 
         self.gridLayout_3.addWidget(self.groupBox, 3, 1, 1, 2)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_3.addItem(self.verticalSpacer_4, 0, 1, 1, 1)
 
         self.groupBox_2 = QGroupBox(calibrationWindow)
         self.groupBox_2.setObjectName(u"groupBox_2")
         self.groupBox_2.setFont(font1)
         self.gridLayout_2 = QGridLayout(self.groupBox_2)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer_4, 0, 3, 1, 1)
+
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_2.addItem(self.horizontalSpacer_3, 0, 0, 1, 1)
 
         self.label_5 = QLabel(self.groupBox_2)
         self.label_5.setObjectName(u"label_5")
-        palette1 = QPalette()
-        palette1.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
-        palette1.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
-        palette1.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
-        self.label_5.setPalette(palette1)
-        font4 = QFont()
-        font4.setPointSize(12)
-        self.label_5.setFont(font4)
+        palette2 = QPalette()
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.label_5.setPalette(palette2)
+        font5 = QFont()
+        font5.setPointSize(12)
+        self.label_5.setFont(font5)
         self.label_5.setAlignment(Qt.AlignCenter)
 
         self.gridLayout_2.addWidget(self.label_5, 0, 1, 1, 2)
@@ -135,9 +159,17 @@ class Ui_calibrationWindow(object):
 
         self.gridLayout_2.addWidget(self.calmove_endButton, 1, 2, 1, 1)
 
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.move_statusMessage = QLabel(self.groupBox_2)
+        self.move_statusMessage.setObjectName(u"move_statusMessage")
+        palette3 = QPalette()
+        palette3.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2)
+        palette3.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2)
+        palette3.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.move_statusMessage.setPalette(palette3)
+        self.move_statusMessage.setFont(font4)
+        self.move_statusMessage.setAlignment(Qt.AlignCenter)
 
-        self.gridLayout_2.addItem(self.horizontalSpacer_4, 0, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.move_statusMessage, 2, 1, 1, 2)
 
 
         self.gridLayout_3.addWidget(self.groupBox_2, 5, 1, 1, 2)
@@ -145,10 +177,6 @@ class Ui_calibrationWindow(object):
         self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_3.addItem(self.horizontalSpacer_6, 4, 3, 1, 1)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_3.addItem(self.verticalSpacer_4, 0, 1, 1, 1)
 
 
         self.retranslateUi(calibrationWindow)
@@ -162,9 +190,11 @@ class Ui_calibrationWindow(object):
         self.groupBox.setTitle(QCoreApplication.translate("calibrationWindow", u"Step 1. Stand or Sit Upright", None))
         self.calposeButton.setText(QCoreApplication.translate("calibrationWindow", u"Click When Holding Pose", None))
         self.label_4.setText(QCoreApplication.translate("calibrationWindow", u"It's important the subject's chest is upright and straight.", None))
+        self.pose_statusMessage.setText("")
         self.groupBox_2.setTitle(QCoreApplication.translate("calibrationWindow", u"Step 2. Bend the Elbow and Twist the Wrist", None))
         self.label_5.setText(QCoreApplication.translate("calibrationWindow", u"Ask or help the subject to bend the elbow and twist their wrist back and fourth approx. 5 times", None))
         self.calmove_startButton.setText(QCoreApplication.translate("calibrationWindow", u"Click When Starting", None))
         self.calmove_endButton.setText(QCoreApplication.translate("calibrationWindow", u"Click When Done", None))
+        self.move_statusMessage.setText("")
     # retranslateUi
 
