@@ -54,6 +54,11 @@ class IMUDataController():
         self.sh_extrot_max = 0
         self.conf_sensorOriChannels = {}
 
+        # Default transformation matrics to transform sensor local frames to match ISB body frames (based on physical alignment)
+        self.thorax_trans_quat = qmt.quatFromRotMat([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
+        self.humerus_trans_quat = qmt.quatFromRotMat([[-1, 0, 0], [0, -1, 0], [0, 0, 1]])
+        self.forearm_trans_quat = qmt.quatFromRotMat([[0, 0, -1], [0, -1, 0], [-1, 0, 0]])
+
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
     # -----------------------------------------------------------------------
@@ -93,7 +98,6 @@ class IMUDataController():
                 else:
                     print('Not all of Sensor 1, 2, and 3 are connected.')
 
-                self.calibrationCallback()  # TODO remove this
                 # Get the joint angle info from sensor orientations
                 if self.vis_dataFlag is True:
                     self.getJointAngles()
@@ -272,11 +276,7 @@ class IMUDataController():
 
     def get_body_frames_from_sensor_frame(self, sensor_quat, body_name):
 
-        # Transformation matrics to transform sensor local frames to match ISB body frames (specific to choice of placement)
-        thorax_trans_quat = qmt.quatFromRotMat([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
-        humerus_trans_quat = qmt.quatFromRotMat([[-1, 0, 0], [0, -1, 0], [0, 0, 1]])
-        forearm_trans_quat = qmt.quatFromRotMat([[0, 0, -1], [0, -1, 0], [-1, 0, 0]])
-        trans_quat = {'thorax': thorax_trans_quat, 'humerus': humerus_trans_quat, 'forearm': forearm_trans_quat}[body_name]
+        trans_quat = {'thorax': self.thorax_trans_quat, 'humerus': self.humerus_trans_quat, 'forearm': self.forearm_trans_quat}[body_name]
 
         body_quat = qmt.qmult(sensor_quat, trans_quat)
 
@@ -386,12 +386,8 @@ class IMUDataController():
 
     def calibrationCallback(self):
 
-        def angle_between_two_2D_vecs(vec1, vec2):
-            angle = np.arccos(np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))) * 180 / np.pi
-            return angle
-
         def signed_angle_between_two_2D_vecs(vec1, vec2):
-            angle = np.arctan2(vec1[0]*vec2[1] - vec1[1]*vec2[0], vec1[0]*vec2[0] + vec1[1]*vec2[1]) *180/np.pi
+            angle = np.arctan2(vec1[0]*vec2[1] - vec1[1]*vec2[0], vec1[0]*vec2[0] + vec1[1]*vec2[1])
             return angle
 
         # Sensor orientations at moment of pose
@@ -404,7 +400,34 @@ class IMUDataController():
         zAxis_on_horizontal_plane = [thorax_sen_zAxis[0], thorax_sen_zAxis[1]]  # XY componenets
         angle_rel_to_Y = signed_angle_between_two_2D_vecs(zAxis_on_horizontal_plane, [0, 1])   # I think Y axis is north
         subject_heading = angle_rel_to_Y
-        print(subject_heading)
+
+        # Expected orientation of subject's body frames, if subject faced north (in Z up Delsys global system)
+        thorax_body = qmt.quatFromRotMat([[0, 0, 1], [1, 0, 0], [0, 1, 0]])
+        humerus_body = qmt.quatFromRotMat([[0, 0, 1], [1, 0, 0], [0, 1, 0]])
+        forearm_body = qmt.quatFromRotMat([[-1, 0, 0], [0, 0, 1], [0, 1, 0]])
+
+        # Expected orientation if subject is in perfect pose by with corrected heading
+        thorax_body_corretHeading = qmt.addHeading(thorax_body, -subject_heading)
+        humerus_body_corretHeading = qmt.addHeading(humerus_body, -subject_heading)
+        forearm_body_corretHeading = qmt.addHeading(forearm_body, -subject_heading)
+
+        # Rotational difference between sensor and body frame (i.e. sensor orientation in segment local frame)
+        seg2sen_thorax = qmt.qmult(qmt.qinv(thorax_body_corretHeading), thorax_sen_atPose)
+        seg2sen_humerus = qmt.qmult(qmt.qinv(humerus_body_corretHeading), humerus_sen_atPose)
+        seg2sen_forearm = qmt.qmult(qmt.qinv(forearm_body_corretHeading), forearm_sen_atPose)
+
+        # Update the S2S transformation for the thorax only (use default physial alignment for humerus and forearm)
+        self.thorax_trans_quat = seg2sen_thorax
+
+        calibration_report = True
+        if calibration_report:
+            print(f'Subject heading at moment of pose: {subject_heading * 180 / np.pi}')
+            print('Expected orientation of thorax body (facing subject heading):')
+            print(qmt.quatToRotMat(thorax_body_corretHeading))
+            print(f'Segment2Sensor rotational offset:')
+            print(qmt.quatToRotMat(seg2sen_thorax))
+
+
 
 
 

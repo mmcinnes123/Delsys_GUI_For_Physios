@@ -23,6 +23,9 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.calposeButton.setEnabled(False)
         self.calmove_startButton.setEnabled(True)
 
+        self.connector = self.controller.collectWindow.CallbackConnector
+        self.connector.calibrationCallback()
+
 
     def calmove_startButtonCallback(self):
         self.calmove_startButton.setEnabled(False)
