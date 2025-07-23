@@ -220,14 +220,21 @@ class IMUDataController():
         # Get joint doFs from body segment frames
         self.el_FE, self.el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(self.humerus_quat, self.forerarm_quat)
         self.sh_EA, self.sh_IE, self.sh_PoE = self.get_shoulder_angles_from_body_frames(self.thorax_quat, self.humerus_quat)
+        self.sh_rotAlt = self.get_shoulder_rotation_angle_from_forearm_frame(self.thorax_quat, self.forerarm_quat)  # This uses the relative orientation of the forearm sensor instead
 
         # Get joint angles from joint DoFs
         self.el_flex = self.el_FE
         self.el_ext = self.el_FE
         self.sh_abd = self.sh_EA
         self.sh_flex = self.sh_EA
-        self.sh_introt = self.sh_IE
-        self.sh_extrot = -self.sh_IE
+
+        # Use alt version of shoulder rotation as long as elbow is bent
+        if self.el_flex > 30:
+            self.sh_introt = self.sh_rotAlt + 90
+            self.sh_extrot = - 90 - self.sh_rotAlt
+        else:
+            self.sh_introt = self.sh_IE
+            self.sh_extrot = -self.sh_IE
 
         # Adjust these to match clinical definitions of PS
         if self.el_PS > 0:
@@ -293,6 +300,17 @@ class IMUDataController():
 
         return sh_EA, sh_IE, sh_PoE
 
+    def get_shoulder_rotation_angle_from_forearm_frame(self, thorax_quat, forearm_quat):
+
+        # Forearm sensor relative to thorax sensor
+        thor_fore_joint = qmt.qmult(qmt.qinv(thorax_quat), forearm_quat)
+
+        thor_fore_euls = np.rad2deg(qmt.eulerAngles(thor_fore_joint, axes='yxy'))   # This will gimbal lock when x is near 0, but x should always be near 90
+
+        sh_rotAlt = thor_fore_euls[0]
+
+        return sh_rotAlt
+
     def applyConstraints(self):
 
         # We are either in flexion (above 90) or extension (below 90)
@@ -308,9 +326,9 @@ class IMUDataController():
             self.el_pro = None
 
         # We are either in internal (above 0) or external rotation (below 0)
-        if self.sh_IE < 0:
+        if self.sh_introt < 0:
             self.sh_introt = None
-        if self.sh_IE >= 0:
+        if self.sh_extrot < 0:
             self.sh_extrot = None
 
         # This measure of shoulder int/ext is only free of gimbal lock when elevation is low
