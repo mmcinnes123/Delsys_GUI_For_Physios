@@ -148,15 +148,15 @@ class CollectWindow(QWidget):
         buttonLayout.addWidget(self.stop_button)
 
         # ---- Live Data Window Button
-        self.start_vis_button = QPushButton('Start Visualisation', self)
-        self.start_vis_button.setToolTip('Show Live Data Window')
-        self.start_vis_button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
-        self.start_vis_button.objectName = 'ShowLive'
-        self.start_vis_button.clicked.connect(self.start_vis_callback)
-        self.start_vis_button.setStyleSheet('QPushButton {color: white;}')
-        self.start_vis_button.setEnabled(True)
-        self.start_vis_button.setFixedHeight(50)
-        buttonLayout.addWidget(self.start_vis_button)
+        self.begin_assess_button = QPushButton('Begin Assessment', self)
+        self.begin_assess_button.setToolTip('Show Live Data Window')
+        self.begin_assess_button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        self.begin_assess_button.objectName = 'ShowLive'
+        self.begin_assess_button.clicked.connect(self.start_vis_callback)
+        self.begin_assess_button.setStyleSheet('QPushButton {color: white;}')
+        self.begin_assess_button.setEnabled(True)
+        self.begin_assess_button.setFixedHeight(50)
+        buttonLayout.addWidget(self.begin_assess_button)
 
         # ---- Export CSV Button
         self.exportcsv_button = QPushButton('Export CSV', self)
@@ -472,8 +472,8 @@ class CollectWindow(QWidget):
 
         self.stop_button.setEnabled(True)
         self.stop_button.setStyleSheet("color : white")
-        self.start_vis_button.setEnabled(True)
-        self.start_vis_button.setStyleSheet("color : white")
+        self.begin_assess_button.setEnabled(True)
+        self.begin_assess_button.setStyleSheet("color : white")
         self.start_button.setEnabled(False)
         self.start_button.setStyleSheet("color : gray")
         self.exportcsv_button.setEnabled(False)
@@ -491,13 +491,13 @@ class CollectWindow(QWidget):
         self.start_button.setStyleSheet("color : white")
         self.stop_button.setEnabled(False)
         self.stop_button.setStyleSheet("color : gray")
-        self.start_vis_button.setEnabled(False)
-        self.start_vis_button.setStyleSheet("color : gray")
+        self.begin_assess_button.setEnabled(False)
+        self.begin_assess_button.setStyleSheet("color : gray")
 
 
     def start_vis_callback(self):
-        self.start_vis_button.setEnabled(False)
-        self.start_vis_button.setStyleSheet("color : gray")
+        self.begin_assess_button.setEnabled(False)
+        self.begin_assess_button.setStyleSheet("color : gray")
         self.CallbackConnector.vis_dataFlag = True
         self.controller.showViewLiveData()  # Open live data view
 

@@ -85,7 +85,7 @@ class LiveDataWindow(QWidget):
 
     def closeEvent(self, event):
         self.controller.collectWindow.CallbackConnector.vis_dataFlag = False
-        self.controller.collectWindow.start_vis_button.setEnabled(True)
-        self.controller.collectWindow.start_vis_button.setStyleSheet("color : white")
+        self.controller.collectWindow.begin_assess_button.setEnabled(True)
+        self.controller.collectWindow.begin_assess_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
 
