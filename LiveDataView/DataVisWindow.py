@@ -237,8 +237,8 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         if enabled:
             # Reset to default style (black text)
             groupbox.setStyleSheet("")
-            ani_widget._pen.setColor(QColor(0, 0, 255, 128))
-            ani_widget._maxline_pen.setColor(Qt.blue)
+            ani_widget._pen.setColor(Qt.blue)
+            ani_widget._maxline_pen.setColor(QColor(0, 0, 255, 128))
             ani_widget._target_pen.setColor(Qt.red)
 
         else:

@@ -24,8 +24,8 @@ class LineAngleWidget(QWidget):
         self._angle = 0.0                      # in degrees
         self._max_angle = 0.0                      # in degrees
         self._target_angle = 0.0                      # in degrees
-        self._pen = QPen(QColor(0, 0, 255, 128), 4, Qt.SolidLine, Qt.RoundCap)  # Semi-transparent blue
-        self._maxline_pen = QPen(Qt.blue, 4, Qt.SolidLine, Qt.RoundCap)
+        self._pen = QPen(Qt.blue, 4, Qt.SolidLine, Qt.RoundCap)  # Semi-transparent blue
+        self._maxline_pen = QPen(QColor(0, 0, 255, 128), 4, Qt.SolidLine, Qt.RoundCap)
         self._target_pen = QPen(Qt.red, 3, Qt.SolidLine, Qt.RoundCap)
         self.setAttribute(Qt.WA_TranslucentBackground)  # lets the image show through
         self._anchor_x_factor = anchor_x_factor  # percentage of width
