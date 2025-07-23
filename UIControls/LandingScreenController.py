@@ -1,12 +1,14 @@
 from DataCollector.CollectWindow import CollectWindow
 from StartMenu.StartWindow import StartWindow
 from LiveDataView.DataVisWindow import DataVisWindow
+from LiveDataView.CalWindow import CalibrationWindow
 
 class LandingScreenController():
     def __init__(self):
         self.startWindow = StartWindow(self)
         self.collectWindow = CollectWindow(self)
         self.liveWindow = DataVisWindow(self)
+        self.calWindow = CalibrationWindow(self)
 
         self.startWindow.show()
 
@@ -26,4 +28,5 @@ class LandingScreenController():
 
     def showViewLiveData(self):
         self.liveWindow.show()
+        self.calWindow.show()
 
