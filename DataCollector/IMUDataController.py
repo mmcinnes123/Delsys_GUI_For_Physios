@@ -5,6 +5,8 @@ This is the controller for the GUI that lets you connect to a base, scan via rf 
 
 from collections import deque
 import time
+
+import numpy as np
 import qmt
 
 from Plotter.GenericPlot import *
@@ -91,6 +93,7 @@ class IMUDataController():
                 else:
                     print('Not all of Sensor 1, 2, and 3 are connected.')
 
+                self.calibrationCallback()  # TODO remove this
                 # Get the joint angle info from sensor orientations
                 if self.vis_dataFlag is True:
                     self.getJointAngles()
@@ -216,6 +219,9 @@ class IMUDataController():
         self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
         self.humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
         self.forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
+
+        # Apply S2S translation from static pose
+        self.thorax_s2s_quat = np.array([1, 0, 0, 0])   # This is the rotational offset between sensor and segment (this will be set by the function)
 
         # Get joint doFs from body segment frames
         self.el_FE, self.el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(self.humerus_quat, self.forerarm_quat)
@@ -376,3 +382,30 @@ class IMUDataController():
         if self.sh_extrot is not None:
             if self.sh_extrot > self.sh_extrot_max:
                 self.sh_extrot_max = self.sh_extrot
+
+
+    def calibrationCallback(self):
+
+        def angle_between_two_2D_vecs(vec1, vec2):
+            angle = np.arccos(np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))) * 180 / np.pi
+            return angle
+
+        def signed_angle_between_two_2D_vecs(vec1, vec2):
+            angle = np.arctan2(vec1[0]*vec2[1] - vec1[1]*vec2[0], vec1[0]*vec2[0] + vec1[1]*vec2[1]) *180/np.pi
+            return angle
+
+        # Sensor orientations at moment of pose
+        thorax_sen_atPose = self.sen1_quat
+        humerus_sen_atPose = self.sen2_quat
+        forearm_sen_atPose = self.sen3_quat
+
+        # Heading of subject at moment of pose (from z-axis of thorax sensor)
+        thorax_sen_zAxis = qmt.quatToRotMat(thorax_sen_atPose)[:, 2]    # The z column
+        zAxis_on_horizontal_plane = [thorax_sen_zAxis[0], thorax_sen_zAxis[1]]  # XY componenets
+        angle_rel_to_Y = signed_angle_between_two_2D_vecs(zAxis_on_horizontal_plane, [0, 1])   # I think Y axis is north
+        subject_heading = angle_rel_to_Y
+        print(subject_heading)
+
+
+
+
