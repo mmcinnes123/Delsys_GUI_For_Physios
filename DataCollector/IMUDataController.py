@@ -220,12 +220,10 @@ class IMUDataController():
         """ Updates joint angles and max joint angles from sensor orientation data."""
 
         # Get body segment frames from sensor orientation data based on manual unit alignment
-        self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
+        self.thorax_quat = qmt.qmult(self.sen1_quat, qmt.qinv(self.thorax_trans_quat))
+        # self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
         self.humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
         self.forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
-
-        # Apply S2S translation from static pose
-        self.thorax_s2s_quat = np.array([1, 0, 0, 0])   # This is the rotational offset between sensor and segment (this will be set by the function)
 
         # Get joint doFs from body segment frames
         self.el_FE, self.el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(self.humerus_quat, self.forerarm_quat)
