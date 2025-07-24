@@ -55,9 +55,13 @@ class IMUDataController():
         self.conf_sensorOriChannels = {}
 
         # Default transformation matrics to transform sensor local frames to match ISB body frames (based on physical alignment)
-        self.thorax_trans_quat = qmt.quatFromRotMat([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
-        self.humerus_trans_quat = qmt.quatFromRotMat([[-1, 0, 0], [0, -1, 0], [0, 0, 1]])
-        self.forearm_trans_quat = qmt.quatFromRotMat([[0, 0, -1], [0, -1, 0], [-1, 0, 0]])
+        self.default_thorax_trans_quat = qmt.quatFromRotMat([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
+        self.default_humerus_trans_quat = qmt.quatFromRotMat([[-1, 0, 0], [0, -1, 0], [0, 0, 1]])
+        self.default_forearm_trans_quat = qmt.quatFromRotMat([[0, 0, -1], [0, -1, 0], [-1, 0, 0]])
+
+        self.thorax_trans_quat = self.default_thorax_trans_quat
+        self.humerus_trans_quat = self.default_humerus_trans_quat
+        self.forearm_trans_quat = self.default_forearm_trans_quat
 
         self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
 
@@ -220,8 +224,7 @@ class IMUDataController():
         """ Updates joint angles and max joint angles from sensor orientation data."""
 
         # Get body segment frames from sensor orientation data based on manual unit alignment
-        self.thorax_quat = qmt.qmult(self.sen1_quat, qmt.qinv(self.thorax_trans_quat))
-        # self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
+        self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
         self.humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
         self.forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
 
@@ -276,7 +279,7 @@ class IMUDataController():
 
         trans_quat = {'thorax': self.thorax_trans_quat, 'humerus': self.humerus_trans_quat, 'forearm': self.forearm_trans_quat}[body_name]
 
-        body_quat = qmt.qmult(sensor_quat, trans_quat)
+        body_quat = qmt.qmult(sensor_quat, qmt.qinv(trans_quat))
 
         return body_quat
 
