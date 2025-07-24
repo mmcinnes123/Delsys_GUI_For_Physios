@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1025</width>
-    <height>681</height>
+    <width>1266</width>
+    <height>688</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -339,7 +339,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Ask or help the subject to bend the elbow and twist their wrist back and fourth approx. 5 times</string>
+         <string>Ask or help the patient to bend the elbow and twist their wrist back and fourth approx. 5 times</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

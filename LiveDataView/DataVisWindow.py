@@ -87,7 +87,8 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
                     ani_widget.set_target(target_value)
                 else:
                     value_widget.setText("-°")
-                    self.toggle_groupbox_state(groupbox, ani_widget, False)  # Disable groupbox
+                    if joint_name in ['sh_flex', 'sh_abd']:
+                        self.toggle_groupbox_state(groupbox, ani_widget, False)  # Disable groupbox
                     # ani_widget.set_angle(0)  # Reset animation to 0 when no value
                     ani_widget.set_target(target_value)
 
@@ -238,7 +239,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             # Reset to default style (black text)
             groupbox.setStyleSheet("")
             ani_widget._pen.setColor(Qt.blue)
-            ani_widget._maxline_pen.setColor(QColor(0, 0, 255, 128))
+            ani_widget._maxline_pen.setColor(QColor(0, 0, 255, 80))
             ani_widget._target_pen.setColor(Qt.red)
 
         else:

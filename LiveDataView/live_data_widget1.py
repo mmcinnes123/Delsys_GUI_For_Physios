@@ -23,7 +23,7 @@ class Ui_LiveWindow(object):
     def setupUi(self, LiveWindow):
         if not LiveWindow.objectName():
             LiveWindow.setObjectName(u"LiveWindow")
-        LiveWindow.resize(1154, 653)
+        LiveWindow.resize(1152, 649)
         self.gridLayout = QGridLayout(LiveWindow)
         self.gridLayout.setObjectName(u"gridLayout")
         self.tabWidget = QTabWidget(LiveWindow)

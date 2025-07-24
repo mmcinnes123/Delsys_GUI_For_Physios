@@ -22,7 +22,7 @@ class Ui_calibrationWindow(object):
     def setupUi(self, calibrationWindow):
         if not calibrationWindow.objectName():
             calibrationWindow.setObjectName(u"calibrationWindow")
-        calibrationWindow.resize(1025, 681)
+        calibrationWindow.resize(1266, 688)
         self.gridLayout_3 = QGridLayout(calibrationWindow)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
@@ -192,7 +192,7 @@ class Ui_calibrationWindow(object):
         self.label_4.setText(QCoreApplication.translate("calibrationWindow", u"It's important the subject's chest is upright and straight.", None))
         self.pose_statusMessage.setText("")
         self.groupBox_2.setTitle(QCoreApplication.translate("calibrationWindow", u"Step 2. Bend the Elbow and Twist the Wrist", None))
-        self.label_5.setText(QCoreApplication.translate("calibrationWindow", u"Ask or help the subject to bend the elbow and twist their wrist back and fourth approx. 5 times", None))
+        self.label_5.setText(QCoreApplication.translate("calibrationWindow", u"Ask or help the patient to bend the elbow and twist their wrist back and fourth approx. 5 times", None))
         self.calmove_startButton.setText(QCoreApplication.translate("calibrationWindow", u"Click When Starting", None))
         self.calmove_endButton.setText(QCoreApplication.translate("calibrationWindow", u"Click When Done", None))
         self.move_statusMessage.setText("")
