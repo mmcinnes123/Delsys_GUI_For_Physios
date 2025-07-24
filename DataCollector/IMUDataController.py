@@ -17,7 +17,6 @@ clr.AddReference("System.Collections")
 
 app.use_app('PySide6')
 
-# TODO: Tidy this file into sections
 
 class IMUDataController():
     def __init__(self, collect_window):

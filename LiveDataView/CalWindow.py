@@ -34,8 +34,14 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.move_statusMessage.setText("Done!")
         self.calmove_endButton.setEnabled(False)
 
+    def closeEvent(self, event):
+        # Reset the button and message states
+        self.pose_statusMessage.setText("")
+        self.move_statusMessage.setText("")
 
-
+        self.calmove_startButton.setEnabled(False)
+        self.calmove_endButton.setEnabled(False)
+        event.accept()  # Allow the window to close
 
 
 if __name__ == "__main__":
