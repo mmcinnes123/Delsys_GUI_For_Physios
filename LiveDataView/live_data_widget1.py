@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'live_data_widget_2.ui'
+## Form generated from reading UI file 'live_data_widget_1.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.1
 ##
@@ -23,7 +23,7 @@ class Ui_LiveWindow(object):
     def setupUi(self, LiveWindow):
         if not LiveWindow.objectName():
             LiveWindow.setObjectName(u"LiveWindow")
-        LiveWindow.resize(1152, 649)
+        LiveWindow.resize(1107, 606)
         self.gridLayout = QGridLayout(LiveWindow)
         self.gridLayout.setObjectName(u"gridLayout")
         self.tabWidget = QTabWidget(LiveWindow)

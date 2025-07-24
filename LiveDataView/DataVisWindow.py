@@ -230,7 +230,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
             setattr(self, widget_name, widget)  # Store widget as class attribute
             layout.addWidget(widget, 1, 0, 1, 2)
-            widget.setMinimumSize(300, 400)
+            widget.setMinimumSize(200, 300)
 
 
     def toggle_groupbox_state(self, groupbox, ani_widget, enabled=True):

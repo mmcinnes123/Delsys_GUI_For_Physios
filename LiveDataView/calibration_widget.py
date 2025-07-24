@@ -22,7 +22,7 @@ class Ui_calibrationWindow(object):
     def setupUi(self, calibrationWindow):
         if not calibrationWindow.objectName():
             calibrationWindow.setObjectName(u"calibrationWindow")
-        calibrationWindow.resize(1266, 688)
+        calibrationWindow.resize(1219, 650)
         self.gridLayout_3 = QGridLayout(calibrationWindow)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
