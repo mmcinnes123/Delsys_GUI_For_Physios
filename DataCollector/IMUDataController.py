@@ -223,44 +223,80 @@ class IMUDataController():
         """ Updates joint angles and max joint angles from sensor orientation data."""
 
         # Get body segment frames from sensor orientation data based on manual unit alignment
-        self.thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
-        self.humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
-        self.forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
+        thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
+        humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
+        forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
 
         # Get joint doFs from body segment frames
-        self.el_FE, self.el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(self.humerus_quat, self.forerarm_quat)
-        self.sh_EA, self.sh_IE, self.sh_PoE, self.sh_abd_proj, self.sh_flex_proj = self.get_shoulder_angles_from_body_frames(self.thorax_quat, self.humerus_quat)
-        self.sh_rotAlt = self.get_shoulder_rotation_angle_from_forearm_frame(self.thorax_quat, self.forerarm_quat)  # This uses the relative orientation of the forearm sensor instead
+        el_FE, el_CA, el_PS = self.get_elbow_DoFs_from_body_frames(humerus_quat, forerarm_quat)
+        sh_EA, sh_IE, sh_PoE, sh_abd_proj, sh_flex_proj = self.get_shoulder_angles_from_body_frames(thorax_quat, humerus_quat)
+        sh_rotAlt = self.get_shoulder_rotation_angle_from_forearm_frame(thorax_quat, forerarm_quat)  # This uses the relative orientation of the forearm sensor instead
 
-        # Get joint angles from joint DoFs
-        self.el_flex = self.el_FE
-        self.el_ext = self.el_FE
-        self.sh_abd = self.sh_abd_proj
-        self.sh_flex = self.sh_flex_proj
+        # Get joint angles from joint DoFs or projected vectors
+        el_flex = el_FE
+        el_ext = el_FE
+        sh_abd = sh_abd_proj
+        sh_flex = sh_flex_proj
 
-        print(self.sh_PoE)
-
-        # Use alt version of shoulder rotation as long as elbow is bent
-        if self.el_flex > 30:
-            self.sh_introt = self.sh_rotAlt + 90
-            self.sh_extrot = - 90 - self.sh_rotAlt
+        # Use alt version of shoulder rotation whenever elbow is bent
+        if el_flex > 30:
+            sh_introt = sh_rotAlt + 90
+            sh_extrot = - 90 - sh_rotAlt
         else:
-            self.sh_introt = self.sh_IE
-            self.sh_extrot = -self.sh_IE
+            sh_introt = sh_IE
+            sh_extrot = -sh_IE
 
         # Adjust these to match clinical definitions of PS
-        if self.el_PS > 0:
-            self.el_sup = 180 - self.el_PS - 90
+        if el_PS > 0:
+            el_sup = 180 - el_PS - 90
         else:
-            self.el_sup = abs(self.el_PS) + 90
+            el_sup = abs(el_PS) + 90
 
-        if self.el_PS > 0:
-            self.el_pro = self.el_PS - 90
+        if el_PS > 0:
+            el_pro = el_PS - 90
         else:
-            self.el_pro = 180 - abs(self.el_PS) + 90
+            el_pro = 180 - abs(el_PS) + 90
 
         # Apply constraints to discount certain angles in certain positions
-        self.applyConstraints()
+
+            # We are either in flexion (above 90) or extension (below 90)
+        if el_FE > 90:
+            el_ext = None
+        if el_FE <= 90:
+            el_flex = None
+
+            # We are either in pronation (above 90) or supination (below 90)
+        if 90 < el_PS or -90 > el_PS:
+            el_sup = None
+        if -90 < el_PS <= 90:
+            el_pro = None
+
+            # We are either in internal (above 0) or external rotation (below 0)
+        if sh_introt < 0:
+            sh_introt = None
+        if sh_extrot < 0:
+            sh_extrot = None
+
+            # This measure of shoulder int/ext is only free of gimbal lock when elevation is low
+        if sh_EA > 45:
+            sh_introt = None
+            sh_extrot = None
+
+        if 25 < sh_EA < 135:
+            if (-45 > sh_PoE > -135) or (45 < sh_PoE < 135):
+                sh_abd = None
+            else:
+                sh_flex = None
+
+        # Update the joint angles
+        self.el_flex = el_flex
+        self.el_ext = el_ext
+        self.el_pro = el_pro
+        self.el_sup = el_sup
+        self.sh_flex = sh_flex
+        self.sh_abd = sh_abd
+        self.sh_introt = sh_introt
+        self.sh_extrot = sh_extrot
 
         # Update max value
         self.update_max_joint_angle_values()
