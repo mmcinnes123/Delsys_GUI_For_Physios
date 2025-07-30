@@ -144,7 +144,7 @@
             <brush brushstyle="SolidPattern">
              <color alpha="255">
               <red>0</red>
-              <green>220</green>
+              <green>199</green>
               <blue>0</blue>
              </color>
             </brush>
@@ -155,7 +155,7 @@
             <brush brushstyle="SolidPattern">
              <color alpha="255">
               <red>0</red>
-              <green>220</green>
+              <green>199</green>
               <blue>0</blue>
              </color>
             </brush>
@@ -251,7 +251,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>670</width>
-       <height>138</height>
+       <height>50</height>
       </size>
      </property>
     </spacer>
@@ -319,18 +319,6 @@
         </property>
        </spacer>
       </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="calmove_startButton">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Click When Starting</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
@@ -346,6 +334,11 @@
       </item>
       <item row="3" column="2">
        <widget class="QProgressBar" name="wrist_progressBar">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="value">
          <number>0</number>
         </property>
@@ -360,7 +353,7 @@
             <brush brushstyle="SolidPattern">
              <color alpha="255">
               <red>0</red>
-              <green>220</green>
+              <green>199</green>
               <blue>0</blue>
              </color>
             </brush>
@@ -371,7 +364,7 @@
             <brush brushstyle="SolidPattern">
              <color alpha="255">
               <red>0</red>
-              <green>220</green>
+              <green>199</green>
               <blue>0</blue>
              </color>
             </brush>
@@ -405,6 +398,11 @@
       </item>
       <item row="3" column="1">
        <widget class="QProgressBar" name="elbow_progressBar">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="value">
          <number>0</number>
         </property>
@@ -455,36 +453,52 @@
          </font>
         </property>
         <property name="text">
-         <string>Ask or help the patient to bend the elbow and twist their wrist back and fourth approx. 5 times</string>
+         <string>Ask or help the patient to bend the elbow and twist their wrist back and fourth until progress bars are full.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="calmove_endButton">
+      <item row="2" column="1">
+       <widget class="QLabel" name="label_2">
         <property name="font">
          <font>
           <pointsize>14</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>Click When Done</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
          <string>Elbow</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
        <widget class="QLabel" name="label_3">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Wrist</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QPushButton" name="calmove_startButton">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Click When Starting</string>
         </property>
        </widget>
       </item>
