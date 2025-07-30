@@ -51,6 +51,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
         self.calmove_startButton.setEnabled(False)
         self.calmove_endButton.setEnabled(False)
+        self.finishButton.setEnabled(False)
         event.accept()  # Allow the window to close
 
 

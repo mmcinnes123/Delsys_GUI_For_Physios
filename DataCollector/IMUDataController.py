@@ -229,14 +229,16 @@ class IMUDataController():
 
         # Get joint doFs from body segment frames
         self.el_FE, self.el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(self.humerus_quat, self.forerarm_quat)
-        self.sh_EA, self.sh_IE, self.sh_PoE = self.get_shoulder_angles_from_body_frames(self.thorax_quat, self.humerus_quat)
+        self.sh_EA, self.sh_IE, self.sh_PoE, self.sh_abd_proj, self.sh_flex_proj = self.get_shoulder_angles_from_body_frames(self.thorax_quat, self.humerus_quat)
         self.sh_rotAlt = self.get_shoulder_rotation_angle_from_forearm_frame(self.thorax_quat, self.forerarm_quat)  # This uses the relative orientation of the forearm sensor instead
 
         # Get joint angles from joint DoFs
         self.el_flex = self.el_FE
         self.el_ext = self.el_FE
-        self.sh_abd = self.sh_EA
-        self.sh_flex = self.sh_EA
+        self.sh_abd = self.sh_abd_proj
+        self.sh_flex = self.sh_flex_proj
+
+        print(self.sh_PoE)
 
         # Use alt version of shoulder rotation as long as elbow is bent
         if self.el_flex > 30:
@@ -293,6 +295,7 @@ class IMUDataController():
     def get_shoulder_angles_from_body_frames(self, thorax_quat, humerus_quat):
 
         shoulder_joint = qmt.qmult(qmt.qinv(thorax_quat), humerus_quat)
+        shoulder_joint_dcm = qmt.quatToRotMat(shoulder_joint)
 
         # Get Euler angles for elevation angle
         shoulder_eulsISB = np.rad2deg(qmt.eulerAngles(shoulder_joint, axes='yxy'))
@@ -304,7 +307,13 @@ class IMUDataController():
         shoudler_eulsYXZ = np.rad2deg(qmt.eulerAngles(shoulder_joint, axes='yxz'))
         sh_IE = shoudler_eulsYXZ[0]     # This encounters gimbal lock when elevation is near 90
 
-        return sh_EA, sh_IE, sh_PoE
+        # Get projected vector shoulder angles
+        # Abduction is y relative to Y on the YZ plane
+        sh_abd_proj = self.signed_angle_between_two_2D_vecs([shoulder_joint_dcm[1,1], shoulder_joint_dcm[2,1]], [1, 0]) * 180 / np.pi
+        # Flexion is y relative to Y on the YX plane
+        sh_flex_proj = self.signed_angle_between_two_2D_vecs([shoulder_joint_dcm[1,1], shoulder_joint_dcm[0,1]], [1, 0]) * 180 / np.pi
+
+        return sh_EA, sh_IE, sh_PoE, sh_abd_proj, sh_flex_proj
 
     def get_shoulder_rotation_angle_from_forearm_frame(self, thorax_quat, forearm_quat):
 
@@ -343,7 +352,7 @@ class IMUDataController():
             self.sh_extrot = None
 
         if 25 < self.sh_EA < 135:
-            if 0 > self.sh_PoE > -135:
+            if (-45 > self.sh_PoE > -135) or (45 < self.sh_PoE < 135):
                 self.sh_abd = None
             else:
                 self.sh_flex = None
@@ -386,10 +395,6 @@ class IMUDataController():
 
     def calibrationCallback(self):
 
-        def signed_angle_between_two_2D_vecs(vec1, vec2):
-            angle = np.arctan2(vec1[0]*vec2[1] - vec1[1]*vec2[0], vec1[0]*vec2[0] + vec1[1]*vec2[1])
-            return angle
-
         # Sensor orientations at moment of pose
         thorax_sen_atPose = self.sen1_quat
         humerus_sen_atPose = self.sen2_quat
@@ -398,7 +403,7 @@ class IMUDataController():
         # Heading of subject at moment of pose (from z-axis of thorax sensor)
         thorax_sen_zAxis = qmt.quatToRotMat(thorax_sen_atPose)[:, 2]    # The z column
         zAxis_on_horizontal_plane = [thorax_sen_zAxis[0], thorax_sen_zAxis[1]]  # XY componenets
-        angle_rel_to_Y = signed_angle_between_two_2D_vecs(zAxis_on_horizontal_plane, [0, 1])   # I think Y axis is north
+        angle_rel_to_Y = self.signed_angle_between_two_2D_vecs(zAxis_on_horizontal_plane, [0, 1])   # I think Y axis is north
         subject_heading = angle_rel_to_Y
 
         # Expected orientation of subject's body frames, if subject faced north (in Z up Delsys global system)
@@ -428,7 +433,9 @@ class IMUDataController():
             print(qmt.quatToRotMat(seg2sen_thorax))
 
 
-
+    def signed_angle_between_two_2D_vecs(self, vec1, vec2):
+        angle = np.arctan2(vec1[0]*vec2[1] - vec1[1]*vec2[0], vec1[0]*vec2[0] + vec1[1]*vec2[1])
+        return angle
 
 
 
