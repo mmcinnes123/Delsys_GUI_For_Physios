@@ -23,7 +23,7 @@ class Ui_LiveWindow(object):
     def setupUi(self, LiveWindow):
         if not LiveWindow.objectName():
             LiveWindow.setObjectName(u"LiveWindow")
-        LiveWindow.resize(1107, 606)
+        LiveWindow.resize(1105, 599)
         self.gridLayout = QGridLayout(LiveWindow)
         self.gridLayout.setObjectName(u"gridLayout")
         self.tabWidget = QTabWidget(LiveWindow)
@@ -639,7 +639,7 @@ class Ui_LiveWindow(object):
     # setupUi
 
     def retranslateUi(self, LiveWindow):
-        LiveWindow.setWindowTitle(QCoreApplication.translate("LiveWindow", u"Form", None))
+        LiveWindow.setWindowTitle(QCoreApplication.translate("LiveWindow", u"Upper Limb Assessment", None))
         self.el_flex_groupBox.setTitle(QCoreApplication.translate("LiveWindow", u"Flexion", None))
         self.el_flex_value.setText(QCoreApplication.translate("LiveWindow", u"Current Value", None))
         self.el_flex_reset_pushButton.setText(QCoreApplication.translate("LiveWindow", u"Reset", None))

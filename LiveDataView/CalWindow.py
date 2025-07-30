@@ -11,11 +11,13 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.controller = controller
         self.calmove_startButton.setEnabled(False)
         self.calmove_endButton.setEnabled(False)
+        self.finishButton.setEnabled(False)
 
         # Set callback functions
         self.calposeButton.clicked.connect(self.calposeButtonCallback)
         self.calmove_startButton.clicked.connect(self.calmove_startButtonCallback)
         self.calmove_endButton.clicked.connect(self.calmove_endButtonCallback)
+        self.finishButton.clicked.connect(self.close)  # Direct connection to close method
 
 
     def calposeButtonCallback(self):
@@ -33,6 +35,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
     def calmove_endButtonCallback(self):
         self.move_statusMessage.setText("Done!")
         self.calmove_endButton.setEnabled(False)
+        self.finishButton.setEnabled(True)
 
     def closeEvent(self, event):
         # Reset the button and message states

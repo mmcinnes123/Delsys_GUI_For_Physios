@@ -6,42 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1219</width>
+    <width>999</width>
     <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Calibration</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="2" column="1" colspan="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="6" column="1" colspan="2">
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="4" column="0">
-    <spacer name="horizontalSpacer_5">
+   <item row="4" column="3">
+    <spacer name="horizontalSpacer_6">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -49,34 +23,6 @@
       <size>
        <width>40</width>
        <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QLabel" name="label">
-     <property name="font">
-      <font>
-       <pointsize>28</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Calibrate the Joint Angles</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1" colspan="2">
-    <spacer name="verticalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>670</width>
-       <height>138</height>
       </size>
      </property>
     </spacer>
@@ -244,6 +190,98 @@
      </layout>
     </widget>
    </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>28</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Calibrate the Joint Angles</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1" colspan="2">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="8" column="1" colspan="2">
+    <widget class="QPushButton" name="finishButton">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Finish</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <spacer name="horizontalSpacer_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>670</width>
+       <height>138</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="7" column="1">
+    <spacer name="verticalSpacer_5">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item row="0" column="1">
     <spacer name="verticalSpacer_4">
      <property name="orientation">
@@ -257,7 +295,7 @@
      </property>
     </spacer>
    </item>
-   <item row="5" column="1" colspan="2">
+   <item row="5" column="1">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="font">
       <font>
@@ -265,7 +303,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Step 2. Bend the Elbow and Twist the Wrist</string>
+      <string>Step 2. Bend the Elbow (x5) and Twist the Wrist (x5)</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="3">
@@ -424,19 +462,6 @@
       </item>
      </layout>
     </widget>
-   </item>
-   <item row="4" column="3">
-    <spacer name="horizontalSpacer_6">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
