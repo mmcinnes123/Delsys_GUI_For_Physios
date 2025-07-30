@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'calibration_widget.ui'
+## Form generated from reading UI file 'calibration_widget2.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.1
 ##
@@ -16,7 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QGroupBox, QLabel,
-    QPushButton, QSizePolicy, QSpacerItem, QWidget)
+    QProgressBar, QPushButton, QSizePolicy, QSpacerItem,
+    QWidget)
 
 class Ui_calibrationWindow(object):
     def setupUi(self, calibrationWindow):
@@ -143,17 +144,47 @@ class Ui_calibrationWindow(object):
 
         self.gridLayout_2.addItem(self.horizontalSpacer_4, 0, 3, 1, 1)
 
+        self.calmove_startButton = QPushButton(self.groupBox_2)
+        self.calmove_startButton.setObjectName(u"calmove_startButton")
+        self.calmove_startButton.setFont(font1)
+
+        self.gridLayout_2.addWidget(self.calmove_startButton, 1, 1, 1, 1)
+
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_2.addItem(self.horizontalSpacer_3, 0, 0, 1, 1)
 
+        self.wrist_progressBar = QProgressBar(self.groupBox_2)
+        self.wrist_progressBar.setObjectName(u"wrist_progressBar")
+        self.wrist_progressBar.setValue(0)
+
+        self.gridLayout_2.addWidget(self.wrist_progressBar, 3, 2, 1, 1)
+
+        self.move_statusMessage = QLabel(self.groupBox_2)
+        self.move_statusMessage.setObjectName(u"move_statusMessage")
+        palette2 = QPalette()
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.move_statusMessage.setPalette(palette2)
+        self.move_statusMessage.setFont(font3)
+        self.move_statusMessage.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.move_statusMessage, 4, 1, 1, 2)
+
+        self.elbow_progressBar = QProgressBar(self.groupBox_2)
+        self.elbow_progressBar.setObjectName(u"elbow_progressBar")
+        self.elbow_progressBar.setValue(0)
+
+        self.gridLayout_2.addWidget(self.elbow_progressBar, 3, 1, 1, 1)
+
         self.label_5 = QLabel(self.groupBox_2)
         self.label_5.setObjectName(u"label_5")
-        palette2 = QPalette()
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
-        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
-        self.label_5.setPalette(palette2)
+        palette3 = QPalette()
+        palette3.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
+        palette3.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        palette3.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
+        self.label_5.setPalette(palette3)
         font5 = QFont()
         font5.setPointSize(12)
         self.label_5.setFont(font5)
@@ -161,29 +192,21 @@ class Ui_calibrationWindow(object):
 
         self.gridLayout_2.addWidget(self.label_5, 0, 1, 1, 2)
 
-        self.calmove_startButton = QPushButton(self.groupBox_2)
-        self.calmove_startButton.setObjectName(u"calmove_startButton")
-        self.calmove_startButton.setFont(font1)
-
-        self.gridLayout_2.addWidget(self.calmove_startButton, 1, 1, 1, 1)
-
         self.calmove_endButton = QPushButton(self.groupBox_2)
         self.calmove_endButton.setObjectName(u"calmove_endButton")
         self.calmove_endButton.setFont(font1)
 
         self.gridLayout_2.addWidget(self.calmove_endButton, 1, 2, 1, 1)
 
-        self.move_statusMessage = QLabel(self.groupBox_2)
-        self.move_statusMessage.setObjectName(u"move_statusMessage")
-        palette3 = QPalette()
-        palette3.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2)
-        palette3.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2)
-        palette3.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
-        self.move_statusMessage.setPalette(palette3)
-        self.move_statusMessage.setFont(font3)
-        self.move_statusMessage.setAlignment(Qt.AlignCenter)
+        self.label_2 = QLabel(self.groupBox_2)
+        self.label_2.setObjectName(u"label_2")
 
-        self.gridLayout_2.addWidget(self.move_statusMessage, 2, 1, 1, 2)
+        self.gridLayout_2.addWidget(self.label_2, 2, 1, 1, 1)
+
+        self.label_3 = QLabel(self.groupBox_2)
+        self.label_3.setObjectName(u"label_3")
+
+        self.gridLayout_2.addWidget(self.label_3, 2, 2, 1, 1)
 
 
         self.gridLayout_3.addWidget(self.groupBox_2, 5, 1, 1, 1)
@@ -203,9 +226,11 @@ class Ui_calibrationWindow(object):
         self.label.setText(QCoreApplication.translate("calibrationWindow", u"Calibrate the Joint Angles", None))
         self.finishButton.setText(QCoreApplication.translate("calibrationWindow", u"Finish", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("calibrationWindow", u"Step 2. Bend the Elbow (x5) and Twist the Wrist (x5)", None))
-        self.label_5.setText(QCoreApplication.translate("calibrationWindow", u"Ask or help the patient to bend the elbow and twist their wrist back and fourth approx. 5 times", None))
         self.calmove_startButton.setText(QCoreApplication.translate("calibrationWindow", u"Click When Starting", None))
-        self.calmove_endButton.setText(QCoreApplication.translate("calibrationWindow", u"Click When Done", None))
         self.move_statusMessage.setText("")
+        self.label_5.setText(QCoreApplication.translate("calibrationWindow", u"Ask or help the patient to bend the elbow and twist their wrist back and fourth approx. 5 times", None))
+        self.calmove_endButton.setText(QCoreApplication.translate("calibrationWindow", u"Click When Done", None))
+        self.label_2.setText(QCoreApplication.translate("calibrationWindow", u"Elbow", None))
+        self.label_3.setText(QCoreApplication.translate("calibrationWindow", u"Wrist", None))
     # retranslateUi
 

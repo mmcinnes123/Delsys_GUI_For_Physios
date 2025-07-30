@@ -228,15 +228,16 @@ class IMUDataController():
         forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
 
         # Get joint doFs from body segment frames
-        el_FE, el_CA, el_PS = self.get_elbow_DoFs_from_body_frames(humerus_quat, forerarm_quat)
+        self.el_FE, el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(humerus_quat, forerarm_quat)
         sh_EA, sh_IE, sh_PoE, sh_abd_proj, sh_flex_proj = self.get_shoulder_angles_from_body_frames(thorax_quat, humerus_quat)
         sh_rotAlt = self.get_shoulder_rotation_angle_from_forearm_frame(thorax_quat, forerarm_quat)  # This uses the relative orientation of the forearm sensor instead
 
         # Get joint angles from joint DoFs or projected vectors
-        el_flex = el_FE
-        el_ext = el_FE
+        el_flex = self.el_FE
+        el_ext = self.el_FE
         sh_abd = sh_abd_proj
         sh_flex = sh_flex_proj
+
 
         # Use alt version of shoulder rotation whenever elbow is bent
         if el_flex > 30:
@@ -247,28 +248,28 @@ class IMUDataController():
             sh_extrot = -sh_IE
 
         # Adjust these to match clinical definitions of PS
-        if el_PS > 0:
-            el_sup = 180 - el_PS - 90
+        if self.el_PS > 0:
+            el_sup = 180 - self.el_PS - 90
         else:
-            el_sup = abs(el_PS) + 90
+            el_sup = abs(self.el_PS) + 90
 
-        if el_PS > 0:
-            el_pro = el_PS - 90
+        if self.el_PS > 0:
+            el_pro = self.el_PS - 90
         else:
-            el_pro = 180 - abs(el_PS) + 90
+            el_pro = 180 - abs(self.el_PS) + 90
 
         # Apply constraints to discount certain angles in certain positions
 
             # We are either in flexion (above 90) or extension (below 90)
-        if el_FE > 90:
+        if self.el_FE > 90:
             el_ext = None
-        if el_FE <= 90:
+        if self.el_FE <= 90:
             el_flex = None
 
             # We are either in pronation (above 90) or supination (below 90)
-        if 90 < el_PS or -90 > el_PS:
+        if 90 < self.el_PS or -90 > self.el_PS:
             el_sup = None
-        if -90 < el_PS <= 90:
+        if -90 < self.el_PS <= 90:
             el_pro = None
 
             # We are either in internal (above 0) or external rotation (below 0)
