@@ -18,6 +18,12 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
         self.controller = controller
         self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
 
+        # Resize to fill screen
+        screen = QApplication.primaryScreen().geometry()
+        width = int(screen.width() * 1)
+        height = int(screen.height() * 0.9)
+        self.setGeometry(0, 0, width, height)
+
         # Add image and line widget to each groupBox
         self.setup_joint_animations()
 

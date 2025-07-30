@@ -8,6 +8,13 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
     def __init__(self, controller):
         super().__init__()
         self.setupUi(self)
+
+        # Resize to fill screen
+        screen = QApplication.primaryScreen().geometry()
+        width = int(screen.width() * 1)
+        height = int(screen.height() * 0.9)
+        self.setGeometry(0, 0, width, height)
+
         self.controller = controller
         self.calmove_startButton.setEnabled(False)
         self.calmove_endButton.setEnabled(False)

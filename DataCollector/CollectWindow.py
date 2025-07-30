@@ -29,6 +29,12 @@ class CollectWindow(QWidget):
         self.controller = controller
         self.ConnectMetricsConnector = CollectionMetricsManagement()
 
+        # Resize to fill screen
+        screen = QApplication.primaryScreen().geometry()
+        width = int(screen.width() * 1)
+        height = int(screen.height() * 0.9)
+        self.setGeometry(0, 0, width, height)
+
         self.setStyleSheet(
             "QWidget { background-color: #3d4c51; } "
             ".QLabel { font-size: 12pt; } "

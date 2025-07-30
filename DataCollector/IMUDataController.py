@@ -342,7 +342,7 @@ class IMUDataController():
             self.sh_introt = None
             self.sh_extrot = None
 
-        if self.sh_EA > 25:
+        if 25 < self.sh_EA < 135:
             if 0 > self.sh_PoE > -135:
                 self.sh_abd = None
             else:
