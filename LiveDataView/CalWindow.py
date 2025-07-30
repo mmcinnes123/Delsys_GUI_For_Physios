@@ -47,7 +47,14 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
     def calmove_startButtonCallback(self):
         self.calmove_startButton.setEnabled(False)
 
-        self.calmove_updateProgressBars()
+        # Start tracking both movements
+        FE_complete = self.track_FE_movement()
+        PS_complete = self.track_PS_movement()
+
+        if FE_complete and PS_complete:
+            # Ensure both progress bars are at 100%
+            self.elbow_progressBar.setValue(100)
+            self.wrist_progressBar.setValue(100)
 
         self.move_statusMessage.setText("Done!")
         self.finishButton.setEnabled(True)
@@ -83,6 +90,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
             # Update PS count
             PS_new = self.getJointValue('el_PS')
+            print(PS_new)
 
             if PS_prev is not None and PS_new is not None:
 
@@ -96,13 +104,57 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
                 # Update the value and wait
                 PS_prev = self.getJointValue('el_PS')
 
-            time.sleep(0.05)  # Add small delay to prevent CPU hogging
+            time.sleep(0.1)  # Add small delay to prevent CPU hogging
 
         # Manually set progress bars to exactly 100 when done
         self.wrist_progressBar.setValue(100)
         self.elbow_progressBar.setValue(100)
 
+    def track_FE_movement(self):
+        FE_range = 0
+        FE_target_range = 400
+        FE_prev = self.getJointValue('el_FE')
 
+        while FE_range < FE_target_range:
+            FE_new = self.getJointValue('el_FE')
+
+            if FE_prev is not None and FE_new is not None:
+                FE_diff = abs(FE_new - FE_prev)
+                if FE_diff > 1:
+                    FE_range = min(FE_range + FE_diff, FE_target_range)
+                    FE_progress = min((FE_range / FE_target_range) * 100, 100)
+                    self.elbow_progressBar.setValue(int(FE_progress))
+
+                FE_prev = FE_new
+
+            QApplication.processEvents()
+            time.sleep(0.05)
+
+        self.elbow_progressBar.setValue(100)
+        return True
+
+    def track_PS_movement(self):
+        PS_range = 0
+        PS_target_range = 500
+        PS_prev = self.getJointValue('el_PS')
+
+        while PS_range < PS_target_range:
+            PS_new = self.getJointValue('el_PS')
+
+            if PS_prev is not None and PS_new is not None:
+                PS_diff = abs(PS_new - PS_prev)
+                if PS_diff > 2:
+                    PS_range = min(PS_range + PS_diff, PS_target_range)
+                    PS_progress = min((PS_range / PS_target_range) * 100, 100)
+                    self.wrist_progressBar.setValue(int(PS_progress))
+
+                PS_prev = PS_new
+
+            QApplication.processEvents()
+            time.sleep(0.05)
+
+        self.wrist_progressBar.setValue(100)
+        return True
 
     def closeEvent(self, event):
         # Reset the button and message states
