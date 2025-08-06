@@ -1,6 +1,9 @@
 import sys
 import time
-from PySide6.QtWidgets import QWidget, QApplication
+from PySide6.QtWidgets import QWidget, QApplication, QLabel
+from PySide6.QtGui import QPixmap, QColor
+from PySide6.QtCore import Qt
+from os.path import join
 
 
 from LiveDataView.calibration_widget import Ui_calibrationWindow
@@ -9,6 +12,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
     def __init__(self, controller):
         super().__init__()
         self.setupUi(self)
+        self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
 
         # Resize to fill screen
         screen = QApplication.primaryScreen().geometry()
@@ -27,6 +31,15 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.calmove_startButton.clicked.connect(self.calmove_startButtonCallback)
         self.finishButton.clicked.connect(self.close)  # Direct connection to close method
 
+        # Add image into Step 1 groupbox
+        groupBox = self.step1_groupBox
+        layout = groupBox.layout()
+        pixmap = QPixmap(join(self.image_folder, 'attachment.png'))
+        widget = QLabel()
+        widget.setScaledContents(True)  # Optional: scales pixmap to fit label
+        widget.setPixmap(pixmap)
+        layout.insertWidget(1, widget)
+        widget.setMinimumSize(70, 100)
 
     def getJointValue(self, joint_name):
         if hasattr(self.connector, joint_name):
