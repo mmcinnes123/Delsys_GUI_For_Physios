@@ -17,7 +17,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
         # Resize to fill screen
         screen = QApplication.primaryScreen().geometry()
-        width = int(screen.width() * 1)
+        width = int(screen.width() * 0.99)
         height = int(screen.height() * 0.9)
         self.setGeometry(0, 0, width, height)
 

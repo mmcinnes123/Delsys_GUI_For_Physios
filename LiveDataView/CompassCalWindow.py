@@ -17,8 +17,8 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
 
         # Resize to fill screen
         screen = QApplication.primaryScreen().geometry()
-        width = int(screen.width() * 1)
-        height = int(screen.height() * 0.8)
+        width = int(screen.width() * 0.99)
+        height = int(screen.height() * 0.9)
         self.setGeometry(0, 0, width, height)
 
         self.controller = controller
@@ -43,6 +43,8 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
 
         self.finishButton.setEnabled(True)
 
+        print("Finished Compass Calibration")
+
     def track_sensor_movement(self, senNo):
 
         if senNo == '1':
@@ -63,7 +65,7 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
 
         target_range = 20
         sen_range = 0
-        while sen_range < target_range:
+        while self.isVisible() and (sen_range < target_range):
 
             # Get change in orientation as a single angle
             sen_new = getattr(self.connector, quat_att)
