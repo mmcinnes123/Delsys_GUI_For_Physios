@@ -288,7 +288,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Step 2. Bend the Elbow and Twist the Wrist</string>
+      <string>Step 3. Bend the Elbow and Twist the Wrist</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="5">

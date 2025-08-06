@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'calibration_widget3.ui'
+## Form generated from reading UI file 'calibration_widget.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.1
 ##
@@ -257,7 +257,7 @@ class Ui_calibrationWindow(object):
         self.label_4.setText(QCoreApplication.translate("calibrationWindow", u"It's important the subject's chest is upright and straight.", None))
         self.pose_statusMessage.setText("")
         self.finishButton.setText(QCoreApplication.translate("calibrationWindow", u"Finish", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("calibrationWindow", u"Step 2. Bend the Elbow and Twist the Wrist", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("calibrationWindow", u"Step 3. Bend the Elbow and Twist the Wrist", None))
         self.label_3.setText(QCoreApplication.translate("calibrationWindow", u"Wrist", None))
         self.calmove_startButton.setText(QCoreApplication.translate("calibrationWindow", u"Click To Start", None))
         self.move_statusMessage.setText("")

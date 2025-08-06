@@ -84,15 +84,17 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         progress_bar.setValue(100)
         progress_label.setText("Done!")
 
-
         return True
 
     def closeEvent(self, event):
-        # Reset the button and message states
+
+        # Reset the button, progress bar and message states
         self.sensor1_progressLabel.setText("")
         self.sensor2_progressLabel.setText("")
         self.sensor3_progressLabel.setText("")
-
+        self.sensor1_progressBar.setValue(0)
+        self.sensor2_progressBar.setValue(0)
+        self.sensor3_progressBar.setValue(0)
         self.finishButton.setEnabled(False)
 
         event.accept()  # Allow the window to close
