@@ -261,22 +261,22 @@ class IMUDataController():
         # Apply constraints to discount certain angles in certain positions
 
             # We are either in flexion (above 90) or extension (below 90)
-        if self.el_FE > 90:
-            el_ext = None
-        if self.el_FE <= 90:
-            el_flex = None
+        # if self.el_FE > 90:
+        #     el_ext = None
+        # if self.el_FE <= 90:
+        #     el_flex = None
 
             # We are either in pronation (above 90) or supination (below 90)
-        if 90 < self.el_PS or -90 > self.el_PS:
-            el_sup = None
-        if -90 < self.el_PS <= 90:
-            el_pro = None
+        # if 90 < self.el_PS or -90 > self.el_PS:
+        #     el_sup = None
+        # if -90 < self.el_PS <= 90:
+        #     el_pro = None
 
             # We are either in internal (above 0) or external rotation (below 0)
-        if sh_introt < 0:
-            sh_introt = None
-        if sh_extrot < 0:
-            sh_extrot = None
+        # if sh_introt < 0:
+        #     sh_introt = None
+        # if sh_extrot < 0:
+        #     sh_extrot = None
 
             # This measure of shoulder int/ext is only free of gimbal lock when elevation is low
         if sh_EA > 45:
@@ -362,37 +362,6 @@ class IMUDataController():
         sh_rotAlt = thor_fore_euls[0]
 
         return sh_rotAlt
-
-    def applyConstraints(self):
-
-        # We are either in flexion (above 90) or extension (below 90)
-        if self.el_FE > 90:
-            self.el_ext = None
-        if self.el_FE <= 90:
-            self.el_flex = None
-
-        # We are either in pronation (above 90) or supination (below 90)
-        if 90 < self.el_PS or -90 > self.el_PS:
-            self.el_sup = None
-        if -90 < self.el_PS <= 90:
-            self.el_pro = None
-
-        # We are either in internal (above 0) or external rotation (below 0)
-        if self.sh_introt < 0:
-            self.sh_introt = None
-        if self.sh_extrot < 0:
-            self.sh_extrot = None
-
-        # This measure of shoulder int/ext is only free of gimbal lock when elevation is low
-        if self.sh_EA > 45:
-            self.sh_introt = None
-            self.sh_extrot = None
-
-        if 25 < self.sh_EA < 135:
-            if (-45 > self.sh_PoE > -135) or (45 < self.sh_PoE < 135):
-                self.sh_abd = None
-            else:
-                self.sh_flex = None
 
 
     def update_max_joint_angle_values(self):
