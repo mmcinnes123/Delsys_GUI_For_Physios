@@ -57,6 +57,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.calmove_startButton.setEnabled(True)
 
         self.connector.calibrationCallback()
+        self.controller.liveWindow.reset_all_max_values()
 
 
     def calmove_startButtonCallback(self):
@@ -73,57 +74,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
         self.move_statusMessage.setText("Done!")
         self.finishButton.setEnabled(True)
-    #
-    # def calmove_updateProgressBars(self):
-    #
-    #     # Range counts the degrees of movement occured so far
-    #     FE_range = 0
-    #     PS_range = 0
-    #     FE_prev = self.getJointValue('el_FE')
-    #     PS_prev = self.getJointValue('el_PS')
-    #
-    #     # Set target range based on amount of movement required:
-    #     FE_target_range = 400
-    #     PS_target_range = 500
-    #
-    #     while FE_range < FE_target_range or PS_range < PS_target_range:
-    #
-    #         # Update FE count
-    #         FE_new = self.getJointValue('el_FE')
-    #
-    #         if FE_prev is not None and FE_new is not None:
-    #
-    #             # Add the difference on to the range counter
-    #             FE_diff = abs(FE_new - FE_prev)
-    #             if FE_diff > 1:
-    #                 FE_range = min(FE_range + FE_diff, FE_target_range)
-    #                 FE_progress = min((FE_range / FE_target_range) * 100, 100)
-    #                 self.elbow_progressBar.setValue(int(FE_progress))
-    #
-    #             # Update the value and wait
-    #             FE_prev = FE_new
-    #
-    #         # Update PS count
-    #         PS_new = self.getJointValue('el_PS')
-    #         print(PS_new)
-    #
-    #         if PS_prev is not None and PS_new is not None:
-    #
-    #             # Add the difference on to the range counter
-    #             PS_diff = abs(PS_new - PS_prev)
-    #             if PS_diff > 2:
-    #                 PS_range = min(PS_range + PS_diff, PS_target_range)
-    #                 PS_progress = min((PS_range / PS_target_range) * 100, 100)
-    #                 self.wrist_progressBar.setValue(int(PS_progress))
-    #
-    #             # Update the value and wait
-    #             PS_prev = self.getJointValue('el_PS')
-    #
-    #         time.sleep(0.1)  # Add small delay to prevent CPU hogging
-    #
-    #     # Manually set progress bars to exactly 100 when done
-    #     self.wrist_progressBar.setValue(100)
-    #     self.elbow_progressBar.setValue(100)
+
 
     def track_FE_movement(self):
         FE_range = 0
@@ -182,6 +133,8 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.elbow_progressBar.setValue(0)
         self.wrist_progressBar.setValue(0)
         self.finishButton.setEnabled(False)
+        self.controller.liveWindow.reset_all_max_values()
+
 
         event.accept()  # Allow the window to close
 

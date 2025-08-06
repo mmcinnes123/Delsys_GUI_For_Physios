@@ -112,6 +112,11 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
     # --- Button/Checkbox callbacks
 
+    def reset_all_max_values(self):
+
+        for joint_name in self.joint_mapping:
+            self.reset_buttonCallback(joint_name)
+
     def reset_buttonCallback(self, joint_name):
 
         """ When reset buttons are clicked, Max value is set to current value of that joint angle, or 0 if joint angle is None"""

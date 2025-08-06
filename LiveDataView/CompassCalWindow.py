@@ -15,6 +15,10 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         self.setupUi(self)
         self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
 
+        self.sen1_complete = False
+        self.sen2_complete = False
+        self.sen3_complete = False
+
         # Resize to fill screen
         screen = QApplication.primaryScreen().geometry()
         width = int(screen.width() * 0.99)
@@ -25,16 +29,28 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         self.connector = self.controller.collectWindow.CallbackConnector
         self.finishButton.setEnabled(False)
         self.finishButton.clicked.connect(self.close)  # Direct connection to close method
+        self.resetButton.clicked.connect(self.reset_buttonCallback)
 
+    def reset_buttonCallback(self):
+        self.sensor1_progressLabel.setText("")
+        self.sensor2_progressLabel.setText("")
+        self.sensor3_progressLabel.setText("")
+        self.sensor1_progressBar.setValue(0)
+        self.sensor2_progressBar.setValue(0)
+        self.sensor3_progressBar.setValue(0)
+        self.finishButton.setEnabled(False)
+        self.sen1_complete = False
+        self.sen2_complete = False
+        self.sen3_complete = False
 
     def compasscal_Callback(self):
 
         # Start tracking both movements
-        sen1_complete = self.track_sensor_movement('1')
-        sen2_complete = self.track_sensor_movement('2')
-        sen3_complete = self.track_sensor_movement('3')
+        self.sen1_complete = self.track_sensor_movement('1')
+        self.sen2_complete = self.track_sensor_movement('2')
+        self.sen3_complete = self.track_sensor_movement('3')
 
-        if sen1_complete and sen2_complete and sen3_complete:
+        if self.sen1_complete and self.sen2_complete and self.sen3_complete:
 
             # Ensure both progress bars are at 100%
             self.sensor1_progressBar.setValue(100)
@@ -65,7 +81,7 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
 
         target_range = 20
         sen_range = 0
-        while self.isVisible() and (sen_range < target_range):
+        while self._running and (sen_range < target_range):
 
             # Get change in orientation as a single angle
             sen_new = getattr(self.connector, quat_att)
@@ -87,8 +103,11 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         return True
 
     def closeEvent(self, event):
-
+        print("closeEvent triggered")
         # Reset the button, progress bar and message states
+        self.sen1_complete = False
+        self.sen2_complete = False
+        self.sen3_complete = False
         self.sensor1_progressLabel.setText("")
         self.sensor2_progressLabel.setText("")
         self.sensor3_progressLabel.setText("")
@@ -96,5 +115,6 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         self.sensor2_progressBar.setValue(0)
         self.sensor3_progressBar.setValue(0)
         self.finishButton.setEnabled(False)
+        self._running = False
 
         event.accept()  # Allow the window to close

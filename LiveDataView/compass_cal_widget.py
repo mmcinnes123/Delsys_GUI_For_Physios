@@ -23,7 +23,7 @@ class Ui_CompassCalibration(object):
     def setupUi(self, CompassCalibration):
         if not CompassCalibration.objectName():
             CompassCalibration.setObjectName(u"CompassCalibration")
-        CompassCalibration.resize(770, 650)
+        CompassCalibration.resize(772, 657)
         self.gridLayout = QGridLayout(CompassCalibration)
         self.gridLayout.setObjectName(u"gridLayout")
         self.label = QLabel(CompassCalibration)
@@ -35,14 +35,20 @@ class Ui_CompassCalibration(object):
 
         self.gridLayout.addWidget(self.label, 0, 1, 1, 1)
 
+        self.finishButton = QPushButton(CompassCalibration)
+        self.finishButton.setObjectName(u"finishButton")
+        font1 = QFont()
+        font1.setPointSize(14)
+        self.finishButton.setFont(font1)
+
+        self.gridLayout.addWidget(self.finishButton, 7, 1, 1, 1)
+
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout.addItem(self.horizontalSpacer, 0, 0, 5, 1)
+        self.gridLayout.addItem(self.horizontalSpacer, 0, 0, 6, 1)
 
         self.groupBox_2 = QGroupBox(CompassCalibration)
         self.groupBox_2.setObjectName(u"groupBox_2")
-        font1 = QFont()
-        font1.setPointSize(14)
         self.groupBox_2.setFont(font1)
         self.horizontalLayout_2 = QHBoxLayout(self.groupBox_2)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -68,7 +74,7 @@ class Ui_CompassCalibration(object):
         self.horizontalLayout_2.addWidget(self.sensor2_progressLabel)
 
 
-        self.gridLayout.addWidget(self.groupBox_2, 3, 1, 1, 1)
+        self.gridLayout.addWidget(self.groupBox_2, 4, 1, 1, 1)
 
         self.label_2 = QLabel(CompassCalibration)
         self.label_2.setObjectName(u"label_2")
@@ -108,11 +114,11 @@ class Ui_CompassCalibration(object):
         self.horizontalLayout.addWidget(self.sensor1_progressLabel)
 
 
-        self.gridLayout.addWidget(self.groupBox, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.groupBox, 3, 1, 1, 1)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout.addItem(self.horizontalSpacer_2, 0, 2, 5, 1)
+        self.gridLayout.addItem(self.horizontalSpacer_2, 0, 2, 6, 1)
 
         self.groupBox_3 = QGroupBox(CompassCalibration)
         self.groupBox_3.setObjectName(u"groupBox_3")
@@ -137,13 +143,13 @@ class Ui_CompassCalibration(object):
         self.horizontalLayout_3.addWidget(self.sensor3_progressLabel)
 
 
-        self.gridLayout.addWidget(self.groupBox_3, 4, 1, 1, 1)
+        self.gridLayout.addWidget(self.groupBox_3, 5, 1, 1, 1)
 
-        self.finishButton = QPushButton(CompassCalibration)
-        self.finishButton.setObjectName(u"finishButton")
-        self.finishButton.setFont(font1)
+        self.resetButton = QPushButton(CompassCalibration)
+        self.resetButton.setObjectName(u"resetButton")
+        self.resetButton.setFont(font2)
 
-        self.gridLayout.addWidget(self.finishButton, 5, 1, 1, 1)
+        self.gridLayout.addWidget(self.resetButton, 6, 1, 1, 1)
 
 
         self.retranslateUi(CompassCalibration)
@@ -154,6 +160,7 @@ class Ui_CompassCalibration(object):
     def retranslateUi(self, CompassCalibration):
         CompassCalibration.setWindowTitle(QCoreApplication.translate("CompassCalibration", u"Form", None))
         self.label.setText(QCoreApplication.translate("CompassCalibration", u"Calibrate the Compass", None))
+        self.finishButton.setText(QCoreApplication.translate("CompassCalibration", u"Finish", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("CompassCalibration", u"Sensor 2", None))
         self.sensor2_progressLabel.setText("")
         self.label_2.setText(QCoreApplication.translate("CompassCalibration", u"Move each sensor in a figure-of-eight at a steady speed until complete.", None))
@@ -161,6 +168,6 @@ class Ui_CompassCalibration(object):
         self.sensor1_progressLabel.setText("")
         self.groupBox_3.setTitle(QCoreApplication.translate("CompassCalibration", u"Sensor 3", None))
         self.sensor3_progressLabel.setText("")
-        self.finishButton.setText(QCoreApplication.translate("CompassCalibration", u"Finish", None))
+        self.resetButton.setText(QCoreApplication.translate("CompassCalibration", u"Reset", None))
     # retranslateUi
 

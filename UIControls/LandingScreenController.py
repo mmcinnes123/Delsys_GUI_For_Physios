@@ -32,5 +32,7 @@ class LandingScreenController():
         self.liveWindow.show()
         self.calWindow.show()
         self.compasscalWindow.show()
+        self.compasscalWindow._running = True
+        self.compasscalWindow.reset_buttonCallback()
         self.compasscalWindow.compasscal_Callback()
 
