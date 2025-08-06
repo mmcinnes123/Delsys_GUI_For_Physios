@@ -20,7 +20,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
         # Resize to fill screen
         screen = QApplication.primaryScreen().geometry()
-        width = int(screen.width() * 0.95)
+        width = int(screen.width() * 0.99)
         height = int(screen.height() * 0.9)
         self.setGeometry(0, 0, width, height)
 

@@ -36,11 +36,12 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         groupBox = self.step1_groupBox
         layout = groupBox.layout()
         pixmap = QPixmap(join(self.image_folder, 'attachment.png'))
+
         widget = QLabel()
         widget.setScaledContents(True)  # Optional: scales pixmap to fit label
         widget.setPixmap(pixmap)
         layout.insertWidget(1, widget)
-        widget.setMinimumSize(70, 100)
+        widget.setFixedSize(375, 312)
 
     def getJointValue(self, joint_name):
         if hasattr(self.connector, joint_name):
