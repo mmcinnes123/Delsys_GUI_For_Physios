@@ -429,14 +429,19 @@ class IMUDataController():
 
         # Update the S2S transformation for the thorax only (use default physial alignment for humerus and forearm)
         self.thorax_trans_quat = seg2sen_thorax
+        self.humerus_trans_quat = seg2sen_humerus
 
         calibration_report = True
         if calibration_report:
             print(f'Subject heading at moment of pose: {subject_heading * 180 / np.pi}')
             print('Expected orientation of thorax body (facing subject heading):')
             print(qmt.quatToRotMat(thorax_body_corretHeading))
-            print(f'Segment2Sensor rotational offset:')
+            print(f'Thorax Segment2Sensor rotational offset:')
             print(qmt.quatToRotMat(seg2sen_thorax))
+            print('Expected orientation of humerus body (facing subject heading):')
+            print(qmt.quatToRotMat(humerus_body_corretHeading))
+            print(f'Humerus Segment2Sensor rotational offset:')
+            print(qmt.quatToRotMat(seg2sen_humerus))
 
 
     def signed_angle_between_two_2D_vecs(self, vec1, vec2):
