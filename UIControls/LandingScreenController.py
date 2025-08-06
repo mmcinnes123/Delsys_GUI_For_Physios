@@ -2,6 +2,7 @@ from DataCollector.CollectWindow import CollectWindow
 from StartMenu.StartWindow import StartWindow
 from LiveDataView.DataVisWindow import DataVisWindow
 from LiveDataView.CalWindow import CalibrationWindow
+from LiveDataView.CompassCalWindow import CompassCalibrationWindow
 
 class LandingScreenController():
     def __init__(self):
@@ -9,6 +10,7 @@ class LandingScreenController():
         self.collectWindow = CollectWindow(self)
         self.liveWindow = DataVisWindow(self)
         self.calWindow = CalibrationWindow(self)
+        self.compasscalWindow = CompassCalibrationWindow(self)
 
         self.startWindow.show()
 
@@ -29,4 +31,6 @@ class LandingScreenController():
     def showViewLiveData(self):
         self.liveWindow.show()
         self.calWindow.show()
+        self.compasscalWindow.show()
+        self.compasscalWindow.compasscal_Callback()
 
