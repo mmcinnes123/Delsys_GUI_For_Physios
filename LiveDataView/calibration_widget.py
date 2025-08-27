@@ -137,30 +137,17 @@ class Ui_calibrationWindow(object):
 
         self.gridLayout_2.addItem(self.horizontalSpacer_8, 1, 5, 1, 1)
 
-        self.label_3 = QLabel(self.groupBox_2)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setFont(font1)
-        self.label_3.setAlignment(Qt.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.label_3, 2, 3, 1, 1)
-
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_2.addItem(self.horizontalSpacer_3, 0, 0, 1, 1)
 
-        self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_9 = QSpacerItem(30, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_2.addItem(self.horizontalSpacer_9, 1, 1, 1, 1)
 
-        self.wrist_progressBar = QProgressBar(self.groupBox_2)
-        self.wrist_progressBar.setObjectName(u"wrist_progressBar")
-        self.wrist_progressBar.setFont(font1)
-        self.wrist_progressBar.setValue(0)
-
-        self.gridLayout_2.addWidget(self.wrist_progressBar, 3, 3, 1, 1)
-
         self.calmove_startButton = QPushButton(self.groupBox_2)
         self.calmove_startButton.setObjectName(u"calmove_startButton")
+        self.calmove_startButton.setMinimumSize(QSize(200, 0))
         self.calmove_startButton.setFont(font1)
 
         self.gridLayout_2.addWidget(self.calmove_startButton, 1, 2, 1, 2)
@@ -181,21 +168,7 @@ class Ui_calibrationWindow(object):
 
         self.gridLayout_2.addWidget(self.move_statusMessage, 4, 2, 1, 2)
 
-        self.elbow_progressBar = QProgressBar(self.groupBox_2)
-        self.elbow_progressBar.setObjectName(u"elbow_progressBar")
-        self.elbow_progressBar.setFont(font1)
-        self.elbow_progressBar.setValue(0)
-
-        self.gridLayout_2.addWidget(self.elbow_progressBar, 3, 2, 1, 1)
-
-        self.label_2 = QLabel(self.groupBox_2)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setFont(font1)
-        self.label_2.setAlignment(Qt.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.label_2, 2, 2, 1, 1)
-
-        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_10 = QSpacerItem(30, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_2.addItem(self.horizontalSpacer_10, 1, 4, 1, 1)
 
@@ -212,6 +185,34 @@ class Ui_calibrationWindow(object):
         self.label_5.setAlignment(Qt.AlignCenter)
 
         self.gridLayout_2.addWidget(self.label_5, 0, 1, 1, 4)
+
+        self.label_2 = QLabel(self.groupBox_2)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setFont(font1)
+        self.label_2.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.label_2, 2, 1, 1, 2)
+
+        self.elbow_progressBar = QProgressBar(self.groupBox_2)
+        self.elbow_progressBar.setObjectName(u"elbow_progressBar")
+        self.elbow_progressBar.setFont(font1)
+        self.elbow_progressBar.setValue(0)
+
+        self.gridLayout_2.addWidget(self.elbow_progressBar, 3, 1, 1, 2)
+
+        self.label_3 = QLabel(self.groupBox_2)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setFont(font1)
+        self.label_3.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.label_3, 2, 3, 1, 2)
+
+        self.wrist_progressBar = QProgressBar(self.groupBox_2)
+        self.wrist_progressBar.setObjectName(u"wrist_progressBar")
+        self.wrist_progressBar.setFont(font1)
+        self.wrist_progressBar.setValue(0)
+
+        self.gridLayout_2.addWidget(self.wrist_progressBar, 3, 3, 1, 2)
 
 
         self.gridLayout_3.addWidget(self.groupBox_2, 4, 3, 1, 1)
@@ -258,11 +259,11 @@ class Ui_calibrationWindow(object):
         self.pose_statusMessage.setText("")
         self.finishButton.setText(QCoreApplication.translate("calibrationWindow", u"Finish", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("calibrationWindow", u"Step 3. Bend the Elbow and Twist the Wrist", None))
-        self.label_3.setText(QCoreApplication.translate("calibrationWindow", u"Wrist", None))
         self.calmove_startButton.setText(QCoreApplication.translate("calibrationWindow", u"Click To Start", None))
         self.move_statusMessage.setText("")
-        self.label_2.setText(QCoreApplication.translate("calibrationWindow", u"Elbow", None))
         self.label_5.setText(QCoreApplication.translate("calibrationWindow", u"Ask or help the patient to bend the elbow and twist their wrist back and fourth.", None))
+        self.label_2.setText(QCoreApplication.translate("calibrationWindow", u"Elbow", None))
+        self.label_3.setText(QCoreApplication.translate("calibrationWindow", u"Wrist", None))
         self.step1_groupBox.setTitle(QCoreApplication.translate("calibrationWindow", u"Step 1. Attach the Sensors", None))
     # retranslateUi
 

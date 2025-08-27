@@ -20,6 +20,8 @@ from Plotter.SimplePlot import SimplePlot
 from Plotter import GenericPlot as gp
 
 
+# TODO: This was supposed to be renamed 'Connect' window.
+
 class CollectWindow(QWidget):
     plot_enabled = False
 
@@ -56,7 +58,7 @@ class CollectWindow(QWidget):
         self.grid.addWidget(self.metricsPanel, 0, 1)
 
         self.setLayout(self.grid)
-        self.setWindowTitle("Collect Data GUI")
+        self.setWindowTitle("Connect Base and Sensors")
         self.pairing = False
         self.selectedSensor = None
 

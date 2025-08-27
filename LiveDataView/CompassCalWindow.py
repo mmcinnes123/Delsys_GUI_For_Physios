@@ -31,6 +31,25 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         self.finishButton.clicked.connect(self.close)  # Direct connection to close method
         self.resetButton.clicked.connect(self.reset_buttonCallback)
 
+        # Update progress bar styles
+        progress_bar_style = """
+            QProgressBar {
+                border: 2px solid black;
+                border-radius: 1px;
+                background-color: rgb(230, 230, 230);
+            }
+            QProgressBar::chunk {
+                background-color: rgb(0, 120, 215);
+                border-radius: 1px;
+            }
+        """
+        self.sensor1_progressBar.setStyleSheet(progress_bar_style)
+        self.sensor1_progressBar.setTextVisible(False)
+        self.sensor2_progressBar.setStyleSheet(progress_bar_style)
+        self.sensor2_progressBar.setTextVisible(False)
+        self.sensor3_progressBar.setStyleSheet(progress_bar_style)
+        self.sensor3_progressBar.setTextVisible(False)
+
     def reset_buttonCallback(self):
         self.sensor1_progressLabel.setText("")
         self.sensor2_progressLabel.setText("")

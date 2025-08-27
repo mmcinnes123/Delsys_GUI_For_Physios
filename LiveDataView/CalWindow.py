@@ -43,6 +43,24 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         layout.insertWidget(1, widget)
         widget.setFixedSize(375, 312)
 
+
+        # Update style of progress bars
+        progress_bar_style = """
+            QProgressBar {
+                border: 2px solid black;
+                border-radius: 1px;
+                background-color: rgb(230, 230, 230);
+            }
+            QProgressBar::chunk {
+                background-color: rgb(0, 120, 215);
+                border-radius: 1px;
+            }
+        """
+        self.elbow_progressBar.setTextVisible(False)
+        self.wrist_progressBar.setTextVisible(False)
+        self.elbow_progressBar.setStyleSheet(progress_bar_style)
+        self.wrist_progressBar.setStyleSheet(progress_bar_style)
+
     def getJointValue(self, joint_name):
         if hasattr(self.connector, joint_name):
             joint_value = getattr(self.connector, joint_name)
