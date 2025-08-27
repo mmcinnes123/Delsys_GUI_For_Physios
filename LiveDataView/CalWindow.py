@@ -14,7 +14,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         super().__init__()
         self.setupUi(self)
         self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
-        run_processes_flag = True
 
         # Resize to fill screen
         screen = QApplication.primaryScreen().geometry()
@@ -69,7 +68,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.run_process_flag = True
         self.elbow_progressBar.setValue(0)
         self.wrist_progressBar.setValue(0)
-        print('Running SubjectSetupWindow showEvent')
 
     def getJointValue(self, joint_name):
         if hasattr(self.connector, joint_name):
@@ -126,7 +124,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
             QApplication.processEvents()
             time.sleep(0.05)
-        print('Exited while loop')
 
         self.elbow_progressBar.setValue(100)
         return True
@@ -138,7 +135,9 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         PS_prev = self.getJointValue('el_PS')
 
         while self.run_process_flag and PS_range < PS_target_range:
-            PS_new = self.getJointValue('el_PS')
+            new_value = self.getJointValue('el_PS')
+            if new_value > 0:
+                PS_new = new_value
 
             if PS_prev is not None and PS_new is not None:
                 PS_diff = abs(PS_new - PS_prev)
@@ -169,7 +168,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.controller.liveWindow.reset_all_max_values()
         self.run_process_flag = False
 
-        print("closeEvent triggered")
         event.accept()  # Allow the window to close
 
 
