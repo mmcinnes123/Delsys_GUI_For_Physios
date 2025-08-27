@@ -45,10 +45,21 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         """
         self.sensor1_progressBar.setStyleSheet(progress_bar_style)
         self.sensor1_progressBar.setTextVisible(False)
+        self.sensor1_progressBar.setValue(0)
         self.sensor2_progressBar.setStyleSheet(progress_bar_style)
         self.sensor2_progressBar.setTextVisible(False)
+        self.sensor2_progressBar.setValue(0)
         self.sensor3_progressBar.setStyleSheet(progress_bar_style)
         self.sensor3_progressBar.setTextVisible(False)
+        self.sensor3_progressBar.setValue(0)
+
+    def showEvent(self, event):
+        super().showEvent(event)  # Call the parent class's showEvent
+        self._running = True
+        self.sensor1_progressBar.setValue(0)
+        self.sensor2_progressBar.setValue(0)
+        self.sensor3_progressBar.setValue(0)
+        print('Compass cal window showEvent called.')
 
     def reset_buttonCallback(self):
         self.sensor1_progressLabel.setText("")
@@ -122,7 +133,6 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         return True
 
     def closeEvent(self, event):
-        print("closeEvent triggered")
         # Reset the button, progress bar and message states
         self.sen1_complete = False
         self.sen2_complete = False

@@ -14,6 +14,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         super().__init__()
         self.setupUi(self)
         self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"
+        run_processes_flag = True
 
         # Resize to fill screen
         screen = QApplication.primaryScreen().geometry()
@@ -56,10 +57,19 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
                 border-radius: 1px;
             }
         """
+        self.elbow_progressBar.setValue(0)
+        self.wrist_progressBar.setValue(0)
         self.elbow_progressBar.setTextVisible(False)
         self.wrist_progressBar.setTextVisible(False)
         self.elbow_progressBar.setStyleSheet(progress_bar_style)
         self.wrist_progressBar.setStyleSheet(progress_bar_style)
+
+    def showEvent(self, event):
+        super().showEvent(event)  # Call the parent class's showEvent
+        self.run_process_flag = True
+        self.elbow_progressBar.setValue(0)
+        self.wrist_progressBar.setValue(0)
+        print('Running SubjectSetupWindow showEvent')
 
     def getJointValue(self, joint_name):
         if hasattr(self.connector, joint_name):
@@ -73,6 +83,8 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
     def calposeButtonCallback(self):
         self.pose_statusMessage.setText("Done!")
         self.calmove_startButton.setEnabled(True)
+        self.elbow_progressBar.setValue(0)
+        self.wrist_progressBar.setValue(0)
 
         self.connector.calibrationCallback()
         self.controller.liveWindow.reset_all_max_values()
@@ -95,11 +107,12 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
 
     def track_FE_movement(self):
+        self.elbow_progressBar.setValue(0)
         FE_range = 0
         FE_target_range = 400
         FE_prev = self.getJointValue('el_FE')
 
-        while FE_range < FE_target_range:
+        while self.run_process_flag and FE_range < FE_target_range: # This should mean the while loop exits when window is closed
             FE_new = self.getJointValue('el_FE')
 
             if FE_prev is not None and FE_new is not None:
@@ -113,16 +126,18 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
             QApplication.processEvents()
             time.sleep(0.05)
+        print('Exited while loop')
 
         self.elbow_progressBar.setValue(100)
         return True
 
     def track_PS_movement(self):
+        self.wrist_progressBar.setValue(0)
         PS_range = 0
         PS_target_range = 500
         PS_prev = self.getJointValue('el_PS')
 
-        while PS_range < PS_target_range:
+        while self.run_process_flag and PS_range < PS_target_range:
             PS_new = self.getJointValue('el_PS')
 
             if PS_prev is not None and PS_new is not None:
@@ -152,8 +167,9 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.wrist_progressBar.setValue(0)
         self.finishButton.setEnabled(False)
         self.controller.liveWindow.reset_all_max_values()
+        self.run_process_flag = False
 
-
+        print("closeEvent triggered")
         event.accept()  # Allow the window to close
 
 
