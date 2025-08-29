@@ -1,9 +1,17 @@
 # DelsysAPI Python Example
 
-Demonstrations of use:  
+## Demonstration of Use
+
+Calibrating the magnetometers:  
 
 <img src="ExampleVids/CompassCalWindow.gif" width="40%"/> <br> 
+
+Calibrating the subject:
+
 <img src="ExampleVids/SubjectSetUpWindow.gif" width="40%"/> <br> 
+
+Tracking elbow joint movement and setting a target:
+
 <img src="ExampleVids/AssessmentWindow1.gif" width="20%"/>
 
 Note: Mhairi's version run with Python 3.9.13. This made pip install qmt easier as there was .whl available for python version <3.11
