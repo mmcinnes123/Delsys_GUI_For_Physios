@@ -13,7 +13,6 @@ from PySide6.QtWidgets import *
 import tkinter as tk
 from tkinter import filedialog
 
-from DataCollector.CollectDataController import *
 from DataCollector.IMUDataController import *
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
 from Plotter.SimplePlot import SimplePlot

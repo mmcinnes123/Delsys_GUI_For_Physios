@@ -1,7 +1,6 @@
 """
 This is the class that handles the data that is output from the Delsys Trigno Base.
 Create an instance of this and pass it a reference to the Trigno base for initialization.
-See CollectDataController.py for a usage example.
 """
 import numpy as np
 
