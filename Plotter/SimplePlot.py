@@ -1,8 +1,8 @@
+""" Creates a live line plot of IMU euler angle data """
+
 from vispy import gloo
 from vispy import app
 import numpy as np
-
-# TODO: Work out why its running so slow
 
 class SimplePlot(app.Canvas):
     def __init__(self, plot_mode: str = 'windowed'):

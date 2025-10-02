@@ -24,16 +24,17 @@ class ConnectWindow(QWidget):
 
     def __init__(self, controller):
         QWidget.__init__(self)
-        self.pipelinetext = "Off"
         self.controller = controller
-        self.ConnectMetricsConnector = CollectionMetricsManagement()
+        self.pipelinetext = "Off"
+        self.pairing = False
+        self.selectedSensor = None
+        self.ConnectMetricsConnector = CollectionMetricsManagement()    # Handles layout of data/metrics
 
-        # Resize to fill screen
+        # Set style, title and screen size
         screen = QApplication.primaryScreen().geometry()
         width = int(screen.width() * 0.99)
         height = int(screen.height() * 0.9)
-        self.setGeometry(0, 0, width, height)
-
+        self.setGeometry(0, 0, width, height)   # Resize to fill the screen
         self.setStyleSheet(
             "QWidget { background-color: #3d4c51; } "
             ".QLabel { font-size: 12pt; } "
@@ -41,30 +42,25 @@ class ConnectWindow(QWidget):
             ".QListWidget { font-size: 12pt; } "
             ".QComboBox { font-size: 12pt; }"
         )
+        self.setWindowTitle("Connect Base and Sensors")
 
+        # Build the panels
         self.buttonPanel = self.ButtonPanel()
         self.plotPanel = self.Plotter()
-
-
         self.metricsPanel = self.MetricsPanel()
-
         self.grid = QGridLayout(self)
-
         self.grid.addWidget(self.plotPanel, 0, 2)
         self.grid.addWidget(self.buttonPanel, 0, 0)
         self.grid.addWidget(self.metricsPanel, 0, 1)
-
         self.setLayout(self.grid)
-        self.setWindowTitle("Connect Base and Sensors")
-        self.pairing = False
-        self.selectedSensor = None
 
-        self.CallbackConnector = IMUDataController(self)
+        self.CallbackConnector = IMUDataController(self)    # Holds all the callback functions
 
     # -----------------------------------------------------------------------
     # ---- GUI Components
 
     def MetricsPanel(self):
+        """ Combines the two panels below """
         self.metricsPanel = QWidget()
         self.metricspane = QVBoxLayout()
         self.connectMetricsPanel = self.ConnectMetricPanel()
@@ -81,9 +77,10 @@ class ConnectWindow(QWidget):
         self.connectmetricspane.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.collectionLabelPanel = self.CollectionLabelPanel()
         self.connectmetricspane.addWidget(self.collectionLabelPanel)
-        self.connectmetricspane.addWidget(self.ConnectMetricsConnector.collectionmetrics) # Get metrics panel from CollectionMetricsManagement
+        self.connectmetricspane.addWidget(self.ConnectMetricsConnector.collectionmetrics)
         self.collectionLabelPanel.setFixedHeight(275)
         self.ConnectMetricsConnector.collectionmetrics.setFixedHeight(275)
+
         self.connectMetricsPanel.setLayout(self.connectmetricspane)
         self.connectMetricsPanel.setFixedWidth(400)
         return self.connectMetricsPanel
@@ -335,19 +332,182 @@ class ConnectWindow(QWidget):
 
     # -----------------------------------------------------------------------
     # ---- Callback Functions
+
     def getpipelinestate(self):
         self.pipelinetext = self.CallbackConnector.base.PipelineState_Callback()
         self.ConnectMetricsConnector.pipelinestatelabel.setText(self.pipelinetext)
 
     def connect_callback(self):
+        """Connect to the Trigno Base and enable pair and scan buttons"""
         self.CallbackConnector.base.Connect_Callback()
-
         self.pair_button.setEnabled(True)
         self.pair_button.setStyleSheet('QPushButton {color: white;}')
         self.scan_button.setEnabled(True)
         self.scan_button.setStyleSheet('QPushButton {color: white;}')
         self.getpipelinestate()
-        self.ConnectMetricsConnector.pipelinestatelabel.setText(self.pipelinetext + " (Base Connected)")
+
+
+    def scan_callback(self):
+        sensorList = self.CallbackConnector.base.Scan_Callback()
+
+        self.set_sensor_list_box(sensorList)
+
+        if len(sensorList) > 0:
+            self.start_button.setEnabled(True)
+            self.start_button.setStyleSheet("color : white")
+            self.ConnectMetricsConnector.sensorsconnected.setText(str(len(sensorList)))
+            self.getpipelinestate()
+            self.exportcsv_button.setEnabled(False)
+            self.exportcsv_button.setStyleSheet("color : gray")
+
+            # Also, automatically set the sensors mode for all sensors and check the status
+            self.autosetsensorMode_callback(sensorList)
+
+            # Run this to get more info about connected sensors and channels
+            # self.get_sensor_and_channel_status()
+
+    def set_sensor_list_box(self, sensorList):
+        self.SensorListBox.clear()
+
+        number_and_names_str = []
+        for i in range(len(sensorList)):
+            number_and_names_str.append("(" + str(sensorList[i].PairNumber) + ") " + sensorList[i].FriendlyName)
+            for j in range(len(sensorList[i].TrignoChannels)):
+                if sensorList[i].TrignoChannels[j].IsEnabled and not str(sensorList[i].TrignoChannels[j].Type) == "SkinCheck":
+                    number_and_names_str[i] += "\n     -" + sensorList[i].TrignoChannels[j].Name + " (" + str(
+                        round(sensorList[i].TrignoChannels[j].SampleRate, 3)) + " Hz)"
+
+        self.SensorListBox.addItems(number_and_names_str)
+
+    def start_callback(self):
+        self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
+        self.CallbackConnector.resetmetrics()
+
+        self.stop_button.setEnabled(True)
+        self.stop_button.setStyleSheet("color : white")
+        self.begin_assess_button.setEnabled(True)
+        self.begin_assess_button.setStyleSheet("color : white")
+        self.start_button.setEnabled(False)
+        self.start_button.setStyleSheet("color : gray")
+        self.exportcsv_button.setEnabled(False)
+        self.exportcsv_button.setStyleSheet("color : gray")
+
+        self.getpipelinestate()
+
+    def stop_callback(self):
+        self.CallbackConnector.base.Stop_Callback()
+        self.getpipelinestate()
+
+        self.exportcsv_button.setEnabled(True)
+        self.exportcsv_button.setStyleSheet("color : white")
+        self.start_button.setEnabled(True)
+        self.start_button.setStyleSheet("color : white")
+        self.stop_button.setEnabled(False)
+        self.stop_button.setStyleSheet("color : gray")
+        self.begin_assess_button.setEnabled(False)
+        self.begin_assess_button.setStyleSheet("color : gray")
+
+    def start_vis_callback(self):
+        self.begin_assess_button.setEnabled(False)
+        self.begin_assess_button.setStyleSheet("color : gray")
+        self.CallbackConnector.vis_dataFlag = True
+        self.controller.showViewLiveData()  # Open live data view
+
+    def exportcsv_callback(self):
+        export = None
+        if self.CallbackConnector.streamYTData:
+            export = self.CallbackConnector.base.csv_writer.exportYTCSV()
+        else:
+            export = self.CallbackConnector.base.csv_writer.exportCSV()
+        self.getpipelinestate()
+        print("CSV Export: " + str(export))
+
+    def autosetsensorMode_callback(self, all_scanned_sensors):
+
+        # Set to this mode which has four EMG channels and 4 Orientation (q_w, q_x, q_y, q_z)
+        selMode = 'EMG RMS x4 (222Hz, 100ms win), OR 20 bits (74Hz), +/-5.5mV, 20-450Hz'
+
+        # Iterate through each sensor
+        for sensorObj in all_scanned_sensors:
+
+            # Getting sensor pair and sticker number:
+            pairNumber = sensorObj.PairNumber
+            stickerNumber = pairNumber + 1
+
+            self.CallbackConnector.base.setSampleMode(pairNumber, selMode)
+
+            # Verify each sensor's mode
+            curMode = self.CallbackConnector.base.getCurMode(pairNumber)
+            print(f"Mode for sensor sticker no. {stickerNumber} (pair number: ({pairNumber})) set to:")
+            print(curMode, '\n')
+
+        # After setting all sensors, update pipeline state
+        self.getpipelinestate()
+
+    def get_sensor_and_channel_status(self):
+
+        print('\nSUMMARY: Sensors connected: ')
+
+        all_scanned_sensors = self.CallbackConnector.base.TrigBase.GetScannedSensorsFound()
+
+        for sensor in all_scanned_sensors:
+
+            print(f'Sensor Sticker No: {sensor.PairNumber + 1}'
+                  f'\n Name: {sensor.FriendlyName}'
+                  f'\n Mode: {sensor.Configuration.ModeString}'
+                  f'\n Channels: {len(sensor.TrignoChannels)}')
+
+            # Save the sensor number and channel IDs for later use
+            for channel in sensor.TrignoChannels:
+                print(f"   Channel name: {channel.Name} "
+                      f"Channel type: {channel.Type} "
+                      f"Channel id: {channel.Id} "
+                      f"Channel sample rate: {channel.SampleRate}")
+
+    def print_available_sensor_modes(self):
+        """
+        Prints all available sensor modes for the currently selected sensor.
+        If no sensor is selected, prints a message indicating that.
+        """
+        if self.selectedSensor is not None:
+            # Get the list of available modes for the selected sensor
+            mode_list = self.CallbackConnector.base.getSampleModes(self.selectedSensor)
+
+            # Get the current mode
+            current_mode = self.CallbackConnector.base.getCurMode(self.selectedSensor)
+
+            print(f"\nAvailable modes for sensor #{self.selectedSensor}:")
+            print("-" * 40)
+
+            # Print each available mode, marking the current mode with an asterisk
+            for mode in mode_list:
+                if mode == current_mode:
+                    print(f"* {mode} (current)")
+                else:
+                    print(f"  {mode}")
+        else:
+            print("No sensor selected. Please select a sensor first.")
+
+    def closeEvent(self, event):
+        self.getpipelinestate()
+        if self.pipelinetext == 'Running':
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setText("Pipeline is still running!")
+            msg.setInformativeText("Please stop the pipeline before closing.")
+            msg.setWindowTitle("Warning")
+            msg.exec()
+            # Reject the close event
+            event.ignore()
+        else:
+            # Pipeline is not running, accept the close event
+            event.accept()
+
+    # -----------------------------------------------------------------------
+    # ---- Unused Functions from Delsys Example Repo
+
+    """ Pairing Functions """
+
 
     def pair_callback(self):
         """Pair button callback"""
@@ -439,85 +599,11 @@ class ConnectWindow(QWidget):
         else:
             self.scan_callback()
 
-    def scan_callback(self):
-        sensorList = self.CallbackConnector.base.Scan_Callback()
-
-        self.set_sensor_list_box(sensorList)
-
-        if len(sensorList) > 0:
-            self.start_button.setEnabled(True)
-            self.start_button.setStyleSheet("color : white")
-            self.ConnectMetricsConnector.sensorsconnected.setText(str(len(sensorList)))
-            self.getpipelinestate()
-            self.exportcsv_button.setEnabled(False)
-            self.exportcsv_button.setStyleSheet("color : gray")
-
-            # Also, automatically set the sensors mode for all sensors and check the status
-            self.autosetsensorMode_callback(sensorList)
-
-            # Run this to get more info about connected sensors and channels
-            # self.get_sensor_and_channel_status()
-
-    def set_sensor_list_box(self, sensorList):
-        self.SensorListBox.clear()
-
-        number_and_names_str = []
-        for i in range(len(sensorList)):
-            number_and_names_str.append("(" + str(sensorList[i].PairNumber) + ") " + sensorList[i].FriendlyName)
-            for j in range(len(sensorList[i].TrignoChannels)):
-                if sensorList[i].TrignoChannels[j].IsEnabled and not str(sensorList[i].TrignoChannels[j].Type) == "SkinCheck":
-                    number_and_names_str[i] += "\n     -" + sensorList[i].TrignoChannels[j].Name + " (" + str(
-                        round(sensorList[i].TrignoChannels[j].SampleRate, 3)) + " Hz)"
-
-        self.SensorListBox.addItems(number_and_names_str)
-
-    def start_callback(self):
-        self.CallbackConnector.base.Start_Callback(False, False)    # Set start and stop triggers to False because we're not using them
-        self.CallbackConnector.resetmetrics()
-
-        self.stop_button.setEnabled(True)
-        self.stop_button.setStyleSheet("color : white")
-        self.begin_assess_button.setEnabled(True)
-        self.begin_assess_button.setStyleSheet("color : white")
-        self.start_button.setEnabled(False)
-        self.start_button.setStyleSheet("color : gray")
-        self.exportcsv_button.setEnabled(False)
-        self.exportcsv_button.setStyleSheet("color : gray")
-
-        self.getpipelinestate()
-
-    def stop_callback(self):
-        self.CallbackConnector.base.Stop_Callback()
-        self.getpipelinestate()
-
-        self.exportcsv_button.setEnabled(True)
-        self.exportcsv_button.setStyleSheet("color : white")
-        self.start_button.setEnabled(True)
-        self.start_button.setStyleSheet("color : white")
-        self.stop_button.setEnabled(False)
-        self.stop_button.setStyleSheet("color : gray")
-        self.begin_assess_button.setEnabled(False)
-        self.begin_assess_button.setStyleSheet("color : gray")
-
-
-    def start_vis_callback(self):
-        self.begin_assess_button.setEnabled(False)
-        self.begin_assess_button.setStyleSheet("color : gray")
-        self.CallbackConnector.vis_dataFlag = True
-        self.controller.showViewLiveData()  # Open live data view
-
-    def exportcsv_callback(self):
-        export = None
-        if self.CallbackConnector.streamYTData:
-            export = self.CallbackConnector.base.csv_writer.exportYTCSV()
-        else:
-            export = self.CallbackConnector.base.csv_writer.exportCSV()
-        self.getpipelinestate()
-        print("CSV Export: " + str(export))
+    """ Manually Setting Sensor Modes """
 
     def sensorMode_callback(self):
 
-        """ NO LONGER USED - "See original repo to see how this used to work with a drop down of available sensor modes"""
+        """ NO LONGER USED - "See original repo to see how this used to work with a dropdown of available sensor modes"""
 
         # Get the current selected sensor
         current_selected = self.SensorListBox.currentRow()
@@ -539,87 +625,3 @@ class ConnectWindow(QWidget):
             curMode = self.CallbackConnector.base.getCurMode(self.selectedSensor)
             print(f"\nMode for sensor #{self.selectedSensor} set to:")
             print('\n   ', curMode)
-
-
-    def autosetsensorMode_callback(self, all_scanned_sensors):
-
-        # Set to this mode which has four EMG channels and 4 Orientation (q_w, q_x, q_y, q_z)
-        selMode = 'EMG RMS x4 (222Hz, 100ms win), OR 20 bits (74Hz), +/-5.5mV, 20-450Hz'
-
-        # Iterate through each sensor
-        for sensorObj in all_scanned_sensors:
-
-            # Getting sensor pair and sticker number:
-            pairNumber = sensorObj.PairNumber
-            stickerNumber = pairNumber + 1
-
-            self.CallbackConnector.base.setSampleMode(pairNumber, selMode)
-
-            # Verify each sensor's mode
-            curMode = self.CallbackConnector.base.getCurMode(pairNumber)
-            print(f"Mode for sensor sticker no. {stickerNumber} (pair number: ({pairNumber})) set to:")
-            print(curMode, '\n')
-
-        # After setting all sensors, update pipeline state
-        self.getpipelinestate()
-
-    def get_sensor_and_channel_status(self):
-
-        print('\nSUMMARY: Sensors connected: ')
-
-        all_scanned_sensors = self.CallbackConnector.base.TrigBase.GetScannedSensorsFound()
-
-        for sensor in all_scanned_sensors:
-
-            print(f'Sensor Sticker No: {sensor.PairNumber + 1}'
-                  f'\n Name: {sensor.FriendlyName}'
-                  f'\n Mode: {sensor.Configuration.ModeString}'
-                  f'\n Channels: {len(sensor.TrignoChannels)}')
-
-            # Save the sensor number and channel IDs for later use
-            for channel in sensor.TrignoChannels:
-                print(f"   Channel name: {channel.Name} "
-                      f"Channel type: {channel.Type} "
-                      f"Channel id: {channel.Id} "
-                      f"Channel sample rate: {channel.SampleRate}")
-
-
-    def print_available_sensor_modes(self):
-        """
-        Prints all available sensor modes for the currently selected sensor.
-        If no sensor is selected, prints a message indicating that.
-        """
-        if self.selectedSensor is not None:
-            # Get the list of available modes for the selected sensor
-            mode_list = self.CallbackConnector.base.getSampleModes(self.selectedSensor)
-
-            # Get the current mode
-            current_mode = self.CallbackConnector.base.getCurMode(self.selectedSensor)
-
-            print(f"\nAvailable modes for sensor #{self.selectedSensor}:")
-            print("-" * 40)
-
-            # Print each available mode, marking the current mode with an asterisk
-            for mode in mode_list:
-                if mode == current_mode:
-                    print(f"* {mode} (current)")
-                else:
-                    print(f"  {mode}")
-        else:
-            print("No sensor selected. Please select a sensor first.")
-
-    def closeEvent(self, event):
-        self.getpipelinestate()
-        if self.pipelinetext == 'Running':
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setText("Pipeline is still running!")
-            msg.setInformativeText("Please stop the pipeline before closing.")
-            msg.setWindowTitle("Warning")
-            msg.exec()
-            # Reject the close event
-            event.ignore()
-        else:
-            # Pipeline is not running, accept the close event
-            event.accept()
-

@@ -3,10 +3,10 @@ from PySide6.QtWidgets import *
 
 
 class CollectionMetricsManagement():
+
     def __init__(self):
         self.collectionmetrics = self.CollectionValuesPanel()
         self.imuTestValues = self.IMUTestValuesPanel()
-
 
     def CollectionValuesPanel(self):
         collectionValuesPanel = QWidget()
@@ -38,6 +38,8 @@ class CollectionMetricsManagement():
         return collectionValuesPanel
 
     def IMUTestValuesPanel(self):
+        """ These values are updated from the IMUDataController class."""
+
         imuTestValuesPanel = QWidget()
         textvaluesLayout = QVBoxLayout()
 

@@ -1,6 +1,6 @@
 """
-Controller class for the Data Collector GUI
-This is the controller for the GUI that lets you connect to a base, scan via rf for sensors, and stream data from them in real time.
+Controller class for the Collector Window
+This is the controller which holds all the callback functions for the collector window.
 """
 
 from collections import deque

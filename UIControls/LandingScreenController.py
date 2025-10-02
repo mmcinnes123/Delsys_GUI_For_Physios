@@ -26,7 +26,7 @@ class LandingScreenController():
 
     def showConnectWindow(self):
         self.startWindow.close()
-        self.connectWindow.connect_callback()
+        self.connectWindow.connect_callback()   # Connect to the base
         self.connectWindow.show()
         self.connectWindow.scan_callback()  # Automatically scan for sensors when this window opens
 
