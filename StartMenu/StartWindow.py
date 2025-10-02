@@ -43,8 +43,8 @@ class StartWindow(QWidget):
         buttonBox.setSpacing(0)
 
         button = QPushButton('Connect', self)
-        button.setToolTip('Collect Data')
-        button.objectName = 'Collect'
+        button.setToolTip('Connect to Base and Sensors')
+        button.objectName = 'Connect'
         button.clicked.connect(self.Connect_Button_Callback)
         button.setFixedSize(200, 100)
         button.setStyleSheet('QPushButton {color: white;}')
@@ -58,7 +58,7 @@ class StartWindow(QWidget):
     def Connect_Button_Callback(self):
         """Shows the Data Collector GUI window"""
         try:
-            self.controller.showCollectData()
+            self.controller.showConnectWindow()
 
         except Exception as e:
             if "product not licensed." in str(e):

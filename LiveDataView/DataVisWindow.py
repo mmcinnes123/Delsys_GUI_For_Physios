@@ -44,7 +44,7 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
 
         if self.controller:  # Don't run if just testing UI
 
-            self.connector = self.controller.collectWindow.CallbackConnector
+            self.connector = self.controller.connectWindow.CallbackConnector
 
             # Set button functionalities
             for joint_name in self.joint_mapping:
@@ -106,8 +106,8 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
     def closeEvent(self, event):
         if self.controller:
             self.connector.vis_dataFlag = False
-            self.controller.collectWindow.begin_assess_button.setEnabled(True)
-            self.controller.collectWindow.begin_assess_button.setStyleSheet("color : white")
+            self.controller.connectWindow.begin_assess_button.setEnabled(True)
+            self.controller.connectWindow.begin_assess_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
 
     # --- Button/Checkbox callbacks

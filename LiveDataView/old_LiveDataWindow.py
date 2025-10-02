@@ -84,8 +84,8 @@ class LiveDataWindow(QWidget):
     # ---- Callback Functions
 
     def closeEvent(self, event):
-        self.controller.collectWindow.CallbackConnector.vis_dataFlag = False
-        self.controller.collectWindow.begin_assess_button.setEnabled(True)
-        self.controller.collectWindow.begin_assess_button.setStyleSheet("color : white")
+        self.controller.connectWindow.CallbackConnector.vis_dataFlag = False
+        self.controller.connectWindow.begin_assess_button.setEnabled(True)
+        self.controller.connectWindow.begin_assess_button.setStyleSheet("color : white")
         event.accept()  # Allow the window to close
 

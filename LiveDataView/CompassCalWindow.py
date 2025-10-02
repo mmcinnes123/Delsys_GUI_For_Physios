@@ -26,7 +26,7 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         self.setGeometry(0, 0, width, height)
 
         self.controller = controller
-        self.connector = self.controller.collectWindow.CallbackConnector
+        self.connector = self.controller.connectWindow.CallbackConnector
         self.finishButton.setEnabled(False)
         self.finishButton.clicked.connect(self.close)  # Direct connection to close method
         self.resetButton.clicked.connect(self.reset_buttonCallback)

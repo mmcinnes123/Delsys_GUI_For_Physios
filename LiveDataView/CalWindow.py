@@ -22,7 +22,7 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.setGeometry(0, 0, width, height)
 
         self.controller = controller
-        self.connector = self.controller.collectWindow.CallbackConnector
+        self.connector = self.controller.connectWindow.CallbackConnector
 
         self.calmove_startButton.setEnabled(False)
         self.finishButton.setEnabled(False)

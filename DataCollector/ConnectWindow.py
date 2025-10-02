@@ -22,7 +22,7 @@ from Plotter import GenericPlot as gp
 
 # TODO: This was supposed to be renamed 'Connect' window.
 
-class CollectWindow(QWidget):
+class ConnectWindow(QWidget):
     plot_enabled = False
 
     def __init__(self, controller):
