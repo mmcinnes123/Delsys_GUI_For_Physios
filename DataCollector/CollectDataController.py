@@ -8,7 +8,6 @@ This is the controller for the GUI that lets you connect to a base, scan via rf 
 
 from collections import deque
 
-from Plotter.GenericPlot import *
 from AeroPy.TrignoBase import *
 from AeroPy.DataManager import *
 

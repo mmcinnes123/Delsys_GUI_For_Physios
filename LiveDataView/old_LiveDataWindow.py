@@ -7,7 +7,6 @@ from PySide6.QtWidgets import *
 from DataCollector.CollectDataController import *
 from DataCollector.IMUMetricsManagement import IMUMetricsManagement
 # from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
-from Plotter import GenericPlot as gp
 from Plotter.SimplePlot import SimplePlot
 
 class LiveDataWindow(QWidget):

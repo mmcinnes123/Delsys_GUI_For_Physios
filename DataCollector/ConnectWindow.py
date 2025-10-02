@@ -12,7 +12,6 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 import tkinter as tk
 from tkinter import filedialog
-from Plotter import GenericPlot as gp
 
 from DataCollector.CollectDataController import *
 from DataCollector.IMUDataController import *

@@ -7,7 +7,6 @@ import time
 import numpy as np
 import qmt
 
-from Plotter.GenericPlot import *
 from AeroPy.TrignoBase import *
 from AeroPy.DataManager import *
 
