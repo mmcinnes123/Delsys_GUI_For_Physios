@@ -1,3 +1,6 @@
+"""
+This is the main assessment window where joint angles are visualized with moving graphics.
+"""
 
 import sys
 from os.path import join
@@ -7,12 +10,14 @@ from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPixmap, QColor
 from PySide6.QtCore import Qt
 
-
 from LiveDataView.LineAngleWidget import LineAngleWidget
 from LiveDataView.live_data_widget1 import Ui_LiveWindow
 
+# This class used the widget created in QT Designer as a base, then adds functionality and adjusts things
 class DataVisWindow(QWidget, Ui_LiveWindow):
+
     def __init__(self, controller):
+
         super().__init__()
         self.setupUi(self)
         self.controller = controller
@@ -40,7 +45,6 @@ class DataVisWindow(QWidget, Ui_LiveWindow):
             'sh_extrot': (self.sh_extrot_value, self.sh_extrot_max_value, self.sh_extrot_groupBox,
                           self.sh_extrot_ani_widget)
         }
-
 
         if self.controller:  # Don't run if just testing UI
 

@@ -1,3 +1,8 @@
+"""
+This window is used to mimic and compass calibration for all three sensors.
+This is only for visualization to guide the user through the process. No calculations are applied here.
+"""
+
 import sys
 import time
 from PySide6.QtWidgets import QWidget, QApplication, QLabel
@@ -6,11 +11,13 @@ from PySide6.QtCore import Qt
 from os.path import join
 import qmt
 
-
 from LiveDataView.compass_cal_widget import Ui_CompassCalibration
 
+# This class used the widget created in QT Designer as a base, then adds functionality and adjusts things
 class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
+
     def __init__(self, controller):
+
         super().__init__()
         self.setupUi(self)
         self.image_folder = r"C:\Users\r03mm22\Documents\GUI Dev\Delsys Python Example\Images"

@@ -14,7 +14,9 @@ Tracking elbow joint movement and setting a target:
 
 <img src="ExampleVids/AssessmentWindow1.gif" width="20%"/>
 
-Note: Mhairi's version run with Python 3.9.13. This made pip install qmt easier as there was .whl available for python version <3.11
+Note: Mhairi's version run with Python 3.9.13. This made pip install qmt easier as there was .whl available for python version <3.11.
+
+The .ui files in LiveDataView were created in QT Designer, converted into .py files, and then these widgets are further edited in the capitalized .py files
 
 This is an example Python GUI application that uses the DelsysAPI AeroPy Layer to demonstrate functionality that users can implement in their own code. This example allows a user to connect to the base station, pair new sensors, scan for paired sensors, then stream EMG data visualized by plots. 
 

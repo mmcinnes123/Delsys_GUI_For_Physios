@@ -4,18 +4,15 @@ This is the window that lets you connect to a base, scan via rf for sensors, and
 From here, the live data, clinician-facing windows can be opened with the 'Begin Assessment' button.
 """
 
-import sys
 import threading
 import time
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-import tkinter as tk
-from tkinter import filedialog
 
-from DataCollector.IMUDataController import *
+from DataCollector.IMUDataController import IMUDataController
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
-from Plotter.SimplePlot import SimplePlot
+from DataCollector.SimplePlot import SimplePlot
 
 
 class ConnectWindow(QWidget):

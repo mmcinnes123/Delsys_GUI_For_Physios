@@ -12,8 +12,6 @@ from AeroPy.DataManager import *
 
 clr.AddReference("System.Collections")
 
-app.use_app('PySide6')
-
 
 class IMUDataController():
 

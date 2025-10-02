@@ -1,3 +1,8 @@
+"""
+This is the window that calibrates the subject, but also guides the user during sensor placement.
+The calpose button callback prompts the pose-based calibration with the method from IMUDataController.
+"""
+
 import sys
 import time
 from PySide6.QtWidgets import QWidget, QApplication, QLabel
@@ -6,9 +11,9 @@ from PySide6.QtCore import Qt
 from os.path import join
 import qmt
 
-
 from LiveDataView.calibration_widget import Ui_calibrationWindow
 
+# This class used the widget created in QT Designer as a base, then adds functionality and adjusts things
 class CalibrationWindow(QWidget, Ui_calibrationWindow):
     def __init__(self, controller):
         super().__init__()
@@ -43,7 +48,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         layout.insertWidget(1, widget)
         widget.setFixedSize(375, 312)
 
-
         # Update style of progress bars
         progress_bar_style = """
             QProgressBar {
@@ -77,7 +81,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
         return joint_value
 
-
     def calposeButtonCallback(self):
         self.pose_statusMessage.setText("Done!")
         self.calmove_startButton.setEnabled(True)
@@ -86,7 +89,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
         self.connector.calibrationCallback()
         self.controller.liveWindow.reset_all_max_values()
-
 
     def calmove_startButtonCallback(self):
         self.calmove_startButton.setEnabled(False)
@@ -102,7 +104,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
 
         self.move_statusMessage.setText("Done!")
         self.finishButton.setEnabled(True)
-
 
     def track_FE_movement(self):
         self.elbow_progressBar.setValue(0)
@@ -154,8 +155,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.wrist_progressBar.setValue(100)
         return True
 
-
-
     def closeEvent(self, event):
         # Reset the button and message states
         self.pose_statusMessage.setText("")
@@ -169,7 +168,6 @@ class CalibrationWindow(QWidget, Ui_calibrationWindow):
         self.run_process_flag = False
 
         event.accept()  # Allow the window to close
-
 
 if __name__ == "__main__":
     controller = None
