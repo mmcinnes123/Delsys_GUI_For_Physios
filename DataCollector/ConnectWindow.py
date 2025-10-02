@@ -54,7 +54,7 @@ class ConnectWindow(QWidget):
         self.grid.addWidget(self.metricsPanel, 0, 1)
         self.setLayout(self.grid)
 
-        self.CallbackConnector = IMUDataController(self)    # Holds all the callback functions
+        self.CallbackConnector = IMUDataController(self)    # Holds all the processing functions and connects to base
 
     # -----------------------------------------------------------------------
     # ---- GUI Components
