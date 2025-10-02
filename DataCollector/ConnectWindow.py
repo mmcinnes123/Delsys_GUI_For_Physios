@@ -1,6 +1,7 @@
 """
-Data Collector GUI
-This is the GUI that lets you connect to a base, scan via rf for sensors, and stream data from them in real time.
+Connect Window
+This is the window that lets you connect to a base, scan via rf for sensors, and stream data from them in real time.
+From here, the live data, clinician-facing windows can be opened with the 'Begin Assessment' button.
 """
 
 import sys
@@ -11,19 +12,15 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 import tkinter as tk
 from tkinter import filedialog
+from Plotter import GenericPlot as gp
 
 from DataCollector.CollectDataController import *
 from DataCollector.IMUDataController import *
 from DataCollector.CollectionMetricsManagement import CollectionMetricsManagement
 from Plotter.SimplePlot import SimplePlot
 
-from Plotter import GenericPlot as gp
-
-
-# TODO: This was supposed to be renamed 'Connect' window.
 
 class ConnectWindow(QWidget):
-    plot_enabled = False
 
     def __init__(self, controller):
         QWidget.__init__(self)

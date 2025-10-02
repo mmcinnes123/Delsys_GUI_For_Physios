@@ -5,15 +5,18 @@ from LiveDataView.CalWindow import CalibrationWindow
 from LiveDataView.CompassCalWindow import CompassCalibrationWindow
 
 class LandingScreenController():
+
     def __init__(self):
+
+        # Create instances of each app window, passing itself (the controller) as an argument
         self.startWindow = StartWindow(self)
         self.connectWindow = ConnectWindow(self)
         self.liveWindow = DataVisWindow(self)
         self.calWindow = CalibrationWindow(self)
         self.compasscalWindow = CompassCalibrationWindow(self)
 
+        # Open the start window
         self.startWindow.show()
-
         self.curHeight = 900
         self.curWidth = 1400
 
@@ -23,7 +26,6 @@ class LandingScreenController():
 
     def showConnectWindow(self):
         self.startWindow.close()
-        self.connectWindow.plot_enabled = True
         self.connectWindow.connect_callback()
         self.connectWindow.show()
         self.connectWindow.scan_callback()  # Automatically scan for sensors when this window opens
