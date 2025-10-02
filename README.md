@@ -6,7 +6,7 @@ Calibrating the magnetometers:
 
 <img src="ExampleVids/CompassCalWindow.gif" width="40%"/> <br> 
 
-Calibrating the subject:
+Calibrating the subject (note direction of sensor arrows during attachment):
 
 <img src="ExampleVids/SubjectSetUpWindow.gif" width="40%"/> <br> 
 

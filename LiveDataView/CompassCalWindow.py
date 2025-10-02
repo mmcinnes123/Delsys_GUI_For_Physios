@@ -59,7 +59,7 @@ class CompassCalibrationWindow(QWidget, Ui_CompassCalibration):
         self.sensor1_progressBar.setValue(0)
         self.sensor2_progressBar.setValue(0)
         self.sensor3_progressBar.setValue(0)
-        print('Compass cal window showEvent called.')
+        # print('Compass cal window showEvent called.')
 
     def reset_buttonCallback(self):
         self.sensor1_progressLabel.setText("")

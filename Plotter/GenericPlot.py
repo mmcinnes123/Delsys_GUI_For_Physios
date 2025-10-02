@@ -22,7 +22,7 @@ import numpy as np
 import math
 import random
 
-
+# TODO: Delete this file
 class GenericPlot(app.Canvas):
     def __init__(self, plot_mode: str = 'windowed'):
         app.use_app('PySide6')

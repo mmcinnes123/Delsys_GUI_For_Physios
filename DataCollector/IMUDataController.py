@@ -1,11 +1,9 @@
 """
-Controller class for the Collector Window
-This is the controller which holds all the callback functions for the collector window.
+This is the controller that holds all the functions needed to processing the incoming sensor data
 """
 
 from collections import deque
 import time
-
 import numpy as np
 import qmt
 
@@ -19,17 +17,16 @@ app.use_app('PySide6')
 
 
 class IMUDataController():
+
     def __init__(self, collect_window):
-        self.base = TrignoBase(self)
-        # self.live_data_window = live_data_window
+
+        self.base = TrignoBase(self)    # Create an instance of the Trigno Base, passing self so Base can use methods defined here.
         self.collect_window = collect_window
-        # self.live_window_metrics = live_data_window.MetricsConnector
         self.collect_window_metrics = collect_window.ConnectMetricsConnector
         self.DataHandler = DataKernel(self.base)  # Data handler for receiving data from base
         self.base.DataHandler = self.DataHandler
         self.Index = None
         self.newTransform = None
-        # self.live_window_plot = live_data_window.plotCanvas1
         self.collect_window_plot1 = collect_window.plotCanvas1
         self.collect_window_plot2 = collect_window.plotCanvas2
         self.collect_window_plot3 = collect_window.plotCanvas3
@@ -37,9 +34,9 @@ class IMUDataController():
         self.vis_dataFlag = False   # Flags stop/start of data visualisation, set to True when data vis window is opened, and false when closed
         self.pauseFlag = True  # Flags start/stop of data collection. Set to false during base config, true during stop callback
 
+        # Set some initial values
         self.packetCount = 0  # Number of packets received from base
         self.incData = None
-        self.outData = [[0]]
         self.sen1_quat = [1, 0, 0, 0]
         self.sen2_quat = [1, 0, 0, 0]
         self.sen3_quat = [1, 0, 0, 0]
@@ -62,7 +59,7 @@ class IMUDataController():
         self.humerus_trans_quat = self.default_humerus_trans_quat
         self.forearm_trans_quat = self.default_forearm_trans_quat
 
-        self.streamYTData = False # set to True to stream data in (T, Y) format (T = time stamp in seconds Y = sample value)
+        self.streamYTData = False   # An unused functionality from the Delsys example repo
 
     # -----------------------------------------------------------------------
     # ---- Threads
@@ -168,15 +165,58 @@ class IMUDataController():
         self.collect_window_metrics.sen3eul2.setText(f"{self.sen3_euls[1]:.0f}°")
         self.collect_window_metrics.sen3eul3.setText(f"{self.sen3_euls[2]:.0f}°")
 
-
     def updateCollectMetrics(self):
         self.collect_window_metrics.framescollected.setText(str(self.DataHandler.packetCount))
-
 
     def resetmetrics(self):
         self.collect_window_metrics.framescollected.setText("0")  # Reset collect data window metrics
         self.collect_window_metrics.totalchannels.setText(str(self.base.channelcount))  # Reset collect data window metrics
 
+    def calibrationCallback(self):
+        """ When user clicks button, collects current sensor orientation to apply pose-based calibration."""
+
+        # Sensor orientations at moment of pose
+        thorax_sen_atPose = self.sen1_quat
+        humerus_sen_atPose = self.sen2_quat
+        forearm_sen_atPose = self.sen3_quat
+
+        # Heading of the subject at the moment of pose (from z-axis of thorax sensor)
+        thorax_sen_zAxis = qmt.quatToRotMat(thorax_sen_atPose)[:, 2]    # The z column
+        zAxis_on_horizontal_plane = [thorax_sen_zAxis[0], thorax_sen_zAxis[1]]  # XY componenets
+        angle_rel_to_Y = self.signed_angle_between_two_2D_vecs(zAxis_on_horizontal_plane, [0, 1])   # I think Y axis is north
+        subject_heading = angle_rel_to_Y
+
+        # Expected orientation of subject's body frames based on the target pose
+        # - if the subject faced exactly north (in Z up Delsys global system)
+        thorax_body = qmt.quatFromRotMat([[0, 0, 1], [1, 0, 0], [0, 1, 0]])
+        humerus_body = qmt.quatFromRotMat([[0, 0, 1], [1, 0, 0], [0, 1, 0]])
+        forearm_body = qmt.quatFromRotMat([[-1, 0, 0], [0, 0, 1], [0, 1, 0]])
+
+        # Expected orientation of the subject, updated to match the know heading they are facing
+        thorax_body_corretHeading = qmt.addHeading(thorax_body, -subject_heading)
+        humerus_body_corretHeading = qmt.addHeading(humerus_body, -subject_heading)
+        forearm_body_corretHeading = qmt.addHeading(forearm_body, -subject_heading)
+
+        # Rotational difference between sensor and body frame (i.e., sensor orientation in segment local frame)
+        seg2sen_thorax = qmt.qmult(qmt.qinv(thorax_body_corretHeading), thorax_sen_atPose)
+        seg2sen_humerus = qmt.qmult(qmt.qinv(humerus_body_corretHeading), humerus_sen_atPose)
+        seg2sen_forearm = qmt.qmult(qmt.qinv(forearm_body_corretHeading), forearm_sen_atPose)
+
+        # Update the S2S transformation for the thorax and humerus (use default physical alignment for forearm)
+        self.thorax_trans_quat = seg2sen_thorax
+        self.humerus_trans_quat = seg2sen_humerus
+
+        calibration_report = True
+        if calibration_report:
+            print(f'Subject heading at moment of pose: {subject_heading * 180 / np.pi}')
+            print('Expected orientation of thorax body (facing subject heading):')
+            print(qmt.quatToRotMat(thorax_body_corretHeading))
+            print(f'Thorax Segment2Sensor rotational offset:')
+            print(qmt.quatToRotMat(seg2sen_thorax))
+            print('Expected orientation of humerus body (facing subject heading):')
+            print(qmt.quatToRotMat(humerus_body_corretHeading))
+            print(f'Humerus Segment2Sensor rotational offset:')
+            print(qmt.quatToRotMat(seg2sen_humerus))
 
     # -----------------------------------------------------------------------
     # ---- Thread manager
@@ -222,67 +262,42 @@ class IMUDataController():
     def getJointAngles(self):
         """ Updates joint angles and max joint angles from sensor orientation data."""
 
-        # Get body segment frames from sensor orientation data based on manual unit alignment
+        # Get body segment frames from sensor orientation data, with default transformation from manual unit alignment, 
+        # or saved transformation from the calibration step
         thorax_quat = self.get_body_frames_from_sensor_frame(self.sen1_quat, body_name='thorax')
         humerus_quat = self.get_body_frames_from_sensor_frame(self.sen2_quat, body_name='humerus')
         forerarm_quat = self.get_body_frames_from_sensor_frame(self.sen3_quat, body_name='forearm')
 
-        # Get joint doFs from body segment frames
-        self.el_FE, el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(humerus_quat, forerarm_quat)
+        # Get joint doFs from body segment frames (note, el_FE and el_PS are called in calibration script)
+        self.el_FE, el_CA, self.el_PS = self.get_elbow_DoFs_from_body_frames(humerus_quat, forerarm_quat) # ISB elbow angles
         sh_EA, sh_IE, sh_PoE, sh_abd_proj, sh_flex_proj = self.get_shoulder_angles_from_body_frames(thorax_quat, humerus_quat)
         sh_rotAlt = self.get_shoulder_rotation_angle_from_forearm_frame(thorax_quat, forerarm_quat)  # This uses the relative orientation of the forearm sensor instead
 
-        # Get joint angles from joint DoFs or projected vectors
+        # Get joint angles from joint DoFs or projected vectors,
+        # correcting for any constant offsets to better match clinical definitions
         el_flex = self.el_FE
         el_ext = self.el_FE
         sh_abd = sh_abd_proj
         sh_flex = sh_flex_proj
-
-
-        # Use alt version of shoulder rotation whenever elbow is bent
-        if el_flex > 30:
+        if el_flex > 30:    # Use alt version of shoulder rotation (based on forearm position) whenever elbow is bent
             sh_introt = sh_rotAlt + 90
             sh_extrot = - 90 - sh_rotAlt
         else:
             sh_introt = sh_IE
             sh_extrot = -sh_IE
-
-        # Adjust these to match clinical definitions of PS
         if self.el_PS > 0:
             el_sup = 180 - self.el_PS - 90
         else:
             el_sup = abs(self.el_PS) + 90
-
         if self.el_PS > 0:
             el_pro = self.el_PS - 90
         else:
             el_pro = 180 - abs(self.el_PS) + 90
 
         # Apply constraints to discount certain angles in certain positions
-
-            # We are either in flexion (above 90) or extension (below 90)
-        # if self.el_FE > 90:
-        #     el_ext = None
-        # if self.el_FE <= 90:
-        #     el_flex = None
-
-            # We are either in pronation (above 90) or supination (below 90)
-        # if 90 < self.el_PS or -90 > self.el_PS:
-        #     el_sup = None
-        # if -90 < self.el_PS <= 90:
-        #     el_pro = None
-
-            # We are either in internal (above 0) or external rotation (below 0)
-        # if sh_introt < 0:
-        #     sh_introt = None
-        # if sh_extrot < 0:
-        #     sh_extrot = None
-
-            # This measure of shoulder int/ext is only free of gimbal lock when elevation is low
-        if sh_EA > 45:
+        if sh_EA > 45:  # This measure of shoulder int/ext is only free of gimbal lock when elevation is low
             sh_introt = None
             sh_extrot = None
-
         if 25 < sh_EA < 135:
             if (-45 > sh_PoE > -135) or (45 < sh_PoE < 135):
                 sh_abd = None
@@ -309,7 +324,12 @@ class IMUDataController():
 
         # Get the four elements of the quaternion
         quat = np.array([outData[j][0] for j in [0, 1, 2, 3]])
-        quat_norm = qmt.normalized(quat)
+
+        # Check for zero vectors or NaN values before normalizing
+        if np.any(np.isnan(quat)) or np.all(quat == 0):
+            quat_norm = np.array([1., 0., 0., 0.])
+        else:
+            quat_norm = qmt.normalized(quat)
 
         return quat_norm
 
@@ -334,13 +354,12 @@ class IMUDataController():
         shoulder_joint = qmt.qmult(qmt.qinv(thorax_quat), humerus_quat)
         shoulder_joint_dcm = qmt.quatToRotMat(shoulder_joint)
 
-        # Get Euler angles for elevation angle
+        # Get Euler angles for elevation angle and plane of elevation
         shoulder_eulsISB = np.rad2deg(qmt.eulerAngles(shoulder_joint, axes='yxy'))
-
-        sh_EA = shoulder_eulsISB[1]   # Shoudler elevation angle (This doesnt encounter gimbal lock)
+        sh_EA = shoulder_eulsISB[1]   # Shoulder elevation angle (This doesn't encounter gimbal lock)
         sh_PoE = shoulder_eulsISB[0]    # Shoulder plane of elevation (Encounters gimbal lock when sh_EA is near 0)
 
-        # Get shoulder rotation from different Euler angle set
+        # Use a different Euler angle set for shoulder rotation which doesn't encounter gimbal lock at sh_EA near 0
         shoudler_eulsYXZ = np.rad2deg(qmt.eulerAngles(shoulder_joint, axes='yxz'))
         sh_IE = shoudler_eulsYXZ[0]     # This encounters gimbal lock when elevation is near 90
 
@@ -362,7 +381,6 @@ class IMUDataController():
         sh_rotAlt = thor_fore_euls[0]
 
         return sh_rotAlt
-
 
     def update_max_joint_angle_values(self):
 
@@ -397,52 +415,6 @@ class IMUDataController():
         if self.sh_extrot is not None:
             if self.sh_extrot > self.sh_extrot_max:
                 self.sh_extrot_max = self.sh_extrot
-
-
-    def calibrationCallback(self):
-
-        # Sensor orientations at moment of pose
-        thorax_sen_atPose = self.sen1_quat
-        humerus_sen_atPose = self.sen2_quat
-        forearm_sen_atPose = self.sen3_quat
-
-        # Heading of subject at moment of pose (from z-axis of thorax sensor)
-        thorax_sen_zAxis = qmt.quatToRotMat(thorax_sen_atPose)[:, 2]    # The z column
-        zAxis_on_horizontal_plane = [thorax_sen_zAxis[0], thorax_sen_zAxis[1]]  # XY componenets
-        angle_rel_to_Y = self.signed_angle_between_two_2D_vecs(zAxis_on_horizontal_plane, [0, 1])   # I think Y axis is north
-        subject_heading = angle_rel_to_Y
-
-        # Expected orientation of subject's body frames, if subject faced north (in Z up Delsys global system)
-        thorax_body = qmt.quatFromRotMat([[0, 0, 1], [1, 0, 0], [0, 1, 0]])
-        humerus_body = qmt.quatFromRotMat([[0, 0, 1], [1, 0, 0], [0, 1, 0]])
-        forearm_body = qmt.quatFromRotMat([[-1, 0, 0], [0, 0, 1], [0, 1, 0]])
-
-        # Expected orientation if subject is in perfect pose by with corrected heading
-        thorax_body_corretHeading = qmt.addHeading(thorax_body, -subject_heading)
-        humerus_body_corretHeading = qmt.addHeading(humerus_body, -subject_heading)
-        forearm_body_corretHeading = qmt.addHeading(forearm_body, -subject_heading)
-
-        # Rotational difference between sensor and body frame (i.e. sensor orientation in segment local frame)
-        seg2sen_thorax = qmt.qmult(qmt.qinv(thorax_body_corretHeading), thorax_sen_atPose)
-        seg2sen_humerus = qmt.qmult(qmt.qinv(humerus_body_corretHeading), humerus_sen_atPose)
-        seg2sen_forearm = qmt.qmult(qmt.qinv(forearm_body_corretHeading), forearm_sen_atPose)
-
-        # Update the S2S transformation for the thorax only (use default physial alignment for humerus and forearm)
-        self.thorax_trans_quat = seg2sen_thorax
-        self.humerus_trans_quat = seg2sen_humerus
-
-        calibration_report = True
-        if calibration_report:
-            print(f'Subject heading at moment of pose: {subject_heading * 180 / np.pi}')
-            print('Expected orientation of thorax body (facing subject heading):')
-            print(qmt.quatToRotMat(thorax_body_corretHeading))
-            print(f'Thorax Segment2Sensor rotational offset:')
-            print(qmt.quatToRotMat(seg2sen_thorax))
-            print('Expected orientation of humerus body (facing subject heading):')
-            print(qmt.quatToRotMat(humerus_body_corretHeading))
-            print(f'Humerus Segment2Sensor rotational offset:')
-            print(qmt.quatToRotMat(seg2sen_humerus))
-
 
     def signed_angle_between_two_2D_vecs(self, vec1, vec2):
         angle = np.arctan2(vec1[0]*vec2[1] - vec1[1]*vec2[0], vec1[0]*vec2[0] + vec1[1]*vec2[1])

@@ -23,6 +23,7 @@ from Plotter.SimplePlot import SimplePlot
 class ConnectWindow(QWidget):
 
     def __init__(self, controller):
+
         QWidget.__init__(self)
         self.controller = controller
         self.pipelinetext = "Off"
