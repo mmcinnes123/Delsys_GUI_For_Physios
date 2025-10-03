@@ -77,7 +77,7 @@ class IMUDataController():
 
     def processData(self):
         """ This thread processes the data.
-        It gets the sensor orientation data from the incData
+        Picks out the sensor orientation data from the incData
         and gets joint angle data when data vis window is open."""
 
         while self.pauseFlag is True:  # Wait for base start callback
