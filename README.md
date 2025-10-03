@@ -6,7 +6,7 @@ This repo was based on the [Delsys example GitHub repo](https://github.com/delsy
 
 Run with Python 3.9.13. This made pip install qmt easier as there was .whl available for python version <3.11.
 
-Note: The magnetometer calibration and elbow-movement step are 'dummy' examples of potential future use, and do not have any computational consequence. Subject-specific, sensor-to-segment calibration is in fact based on the single static pose, triggered during Step 2 of the Subject Set Up. 
+Note: The magnetometer calibration and elbow-movement step are 'dummy' examples for the users benefit, and do not have any computational consequence. Subject-specific/sensor-to-segment calibration is in fact based on the single static pose, triggered during Step 2 of the Subject Set Up. 
 
 ## Demo of Use
 
